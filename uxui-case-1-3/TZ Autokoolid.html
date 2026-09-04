@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UX-аудит: список инструкторов — Fogg × CREATE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B1D22;
+    --ink-2:#2A2D34;
+    --paper:#F3F3EF;
+    --paper-2:#FFFFFF;
+    --line:#E4E2DA;
+    --line-yellow:#F2C94C;
+    --blue:#3E5FE0;
+    --critical:#D8464C;
+    --critical-bg:#FBE9E9;
+    --high:#DB7E33;
+    --high-bg:#FBEEDF;
+    --medium:#4C7EA8;
+    --medium-bg:#E9F0F5;
+    --success:#2F8F5B;
+    --muted:#686A6F;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', Arial, sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+    margin:0 0 .5em 0;
+  }
+  a{color:var(--blue);}
+  a:focus-visible, button:focus-visible, .toc a:focus-visible{outline:3px solid var(--blue); outline-offset:2px;}
+
+  .wrap{max-width:900px; margin:0 auto; padding:0 28px;}
+
+  /* HERO */
+  .hero{
+    background:var(--ink);
+    color:#F3F3EF;
+    padding:76px 0 64px;
+    position:relative;
+    overflow:hidden;
+    border-bottom:6px solid var(--line-yellow);
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; bottom:-6px;
+    height:6px;
+    background:repeating-linear-gradient(90deg, var(--line-yellow) 0 34px, transparent 34px 58px);
+    opacity:.9;
+  }
+  .hero .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:#C9CBD1;
+    margin-bottom:18px;
+  }
+  .hero h1{
+    color:#fff;
+    font-size:clamp(30px, 4.4vw, 46px);
+    line-height:1.12;
+    max-width:15ch;
+  }
+  .hero p.lead{
+    max-width:56ch;
+    color:#CFD1D6;
+    font-size:17.5px;
+    margin-top:16px;
+  }
+  .hero .meta{
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+    margin-top:34px;
+    font-size:14px;
+    color:#B9BBC1;
+  }
+  .hero .meta strong{color:#EDEDEF; font-weight:600;}
+
+  section{padding:56px 0;}
+  section.tight{padding:40px 0;}
+  section + section{border-top:1px solid var(--line);}
+
+  .eyebrow-num{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--muted);
+    margin-bottom:10px;
+  }
+  .eyebrow-num span.n{
+    width:24px;height:24px;
+    border-radius:50%;
+    background:var(--ink);
+    color:#fff;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+  }
+
+  h2{font-size:28px;}
+  h2 + p.section-sub{color:var(--muted); margin-top:-6px; max-width:62ch; font-size:15.5px;}
+
+  p{max-width:70ch;}
+  ul, ol{padding-left:1.2em;}
+  li{margin-bottom:.4em;}
+
+  /* pills */
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:3px 11px;
+    border-radius:100px;
+    font-size:12.5px;
+    font-weight:600;
+    line-height:1.7;
+  }
+  .pill.critical{background:var(--critical-bg); color:var(--critical);}
+  .pill.high{background:var(--high-bg); color:var(--high);}
+  .pill.medium{background:var(--medium-bg); color:var(--medium);}
+
+  /* MAP cards for Fogg */
+  .map-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:16px;
+    margin-top:28px;
+  }
+  @media(max-width:760px){.map-grid{grid-template-columns:1fr;}}
+  .map-card{
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 20px;
+  }
+  .map-card h3{
+    font-size:17px;
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+  }
+  .map-card h3 .sub{font-family:'IBM Plex Sans'; font-weight:400; font-size:13px; color:var(--muted);}
+  .finding{
+    display:flex;
+    gap:10px;
+    padding:11px 0;
+    border-top:1px solid var(--line);
+    font-size:14.5px;
+  }
+  .finding:first-of-type{border-top:none; padding-top:14px;}
+  .finding .mark{flex:0 0 auto; font-size:16px; line-height:1.4;}
+  .finding.broken .mark{color:var(--critical);}
+  .finding.weak .mark{color:var(--high);}
+  .finding.ok .mark{color:var(--success);}
+
+  /* CREATE funnel */
+  .funnel{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:10px;
+    margin:32px 0 8px;
+  }
+  @media(max-width:900px){.funnel{grid-template-columns:repeat(3,1fr);}}
+  @media(max-width:520px){.funnel{grid-template-columns:1fr;}}
+  .stage{
+    background:var(--ink);
+    color:#EDEDEF;
+    border-radius:var(--radius);
+    padding:16px 14px 18px;
+    min-height:150px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    position:relative;
+  }
+  .stage.broken{outline:2px solid var(--critical);}
+  .stage.weak{outline:2px solid var(--high);}
+  .stage .num{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--line-yellow);
+    font-size:13px;
+  }
+  .stage h4{margin:0; font-family:'Fraunces', serif; font-size:16px; font-weight:600; color:#fff;}
+  .stage p{margin:0; font-size:12.8px; color:#C9CBD1; max-width:none;}
+  .stage .status{
+    margin-top:auto;
+    font-size:11.5px;
+    font-weight:600;
+    letter-spacing:.01em;
+  }
+  .stage.broken .status{color:#F5A6A8;}
+  .stage.weak .status{color:#F3C48F;}
+  .stage.ok .status{color:#8FD1AC;}
+
+  /* problem table */
+  table.problems{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:24px;
+    font-size:14.8px;
+  }
+  table.problems th{
+    text-align:left;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:500;
+    font-size:12px;
+    color:var(--muted);
+    text-transform:none;
+    padding:8px 12px;
+    border-bottom:2px solid var(--ink);
+  }
+  table.problems td{
+    padding:14px 12px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  table.problems tr:last-child td{border-bottom:none;}
+  table.problems td.model{color:var(--muted); font-size:13px; white-space:nowrap;}
+
+  /* TZ blocks */
+  .tz-block{
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-left:4px solid var(--ink);
+    border-radius:0 var(--radius) var(--radius) 0;
+    padding:20px 22px;
+    margin-top:18px;
+  }
+  .tz-block h3{font-size:16.5px; margin-bottom:10px;}
+  .tz-block.remove{border-left-color:var(--critical);}
+  .tz-block.add{border-left-color:var(--success);}
+  .tz-block.change{border-left-color:var(--medium);}
+
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media(max-width:700px){.two-col{grid-template-columns:1fr;}}
+
+  /* figma components */
+  .atomic{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin-top:28px;
+  }
+  @media(max-width:760px){.atomic{grid-template-columns:1fr;}}
+  .atomic-col h3{
+    font-size:14px;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:500;
+    text-transform:none;
+    color:var(--muted);
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px;
+    margin-bottom:14px;
+  }
+  .atomic-col ul{list-style:none; padding:0; margin:0;}
+  .atomic-col li{
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:10px 12px;
+    margin-bottom:8px;
+    font-size:14px;
+  }
+  .atomic-col li b{display:block; font-size:14px; margin-bottom:2px;}
+  .atomic-col li span{color:var(--muted); font-size:12.8px;}
+
+  footer{
+    padding:36px 0 60px;
+    color:var(--muted);
+    font-size:13.5px;
+  }
+
+  .callout{
+    background:#FFF9EA;
+    border:1px solid #EBD98C;
+    border-radius:var(--radius);
+    padding:16px 18px;
+    font-size:14.5px;
+    margin-top:20px;
+  }
+  .callout b{color:var(--ink);}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">UX-АУДИТ · СПИСОК ИНСТРУКТОРОВ (Instruktorid)</div>
+    <h1>Где именно ломается решение забронировать инструктора</h1>
+    <p class="lead">Разбор карточек инструкторов по модели поведения BJ Fogg (Motivation × Ability × Prompt) и по воронке действия CREATE, с приоритезированным списком проблем и техзаданием на редизайн.</p>
+    <div class="meta">
+      <div><strong>Экран</strong> — вкладка «Instruktorid», сетка из 6 карточек</div>
+      <div><strong>Модели</strong> — Fogg Behavior Model, CREATE Action Funnel</div>
+      <div><strong>Цель</strong> — рост конверсии в бронирование</div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow-num"><span class="n">1</span> Аудит по Fogg Behavior Model</div>
+    <h2>Motivation × Ability × Prompt</h2>
+    <p class="section-sub">По Fogg, действие происходит только когда мотивация, способность выполнить действие и триггер (prompt) совпадают в один момент. Ниже — что в текущем экране поддерживает каждый компонент, а что его подрывает.</p>
+
+    <div class="map-grid">
+      <div class="map-card">
+        <h3>Motivation <span class="sub">хочу забронировать именно этого</span></h3>
+        <div class="finding ok"><span class="mark">＋</span><span>Цена, фото и короткое описание видны сразу — базовый материал для решения есть.</span></div>
+        <div class="finding broken"><span class="mark">✕</span><span>У всех шести карточек рейтинг «5.0» без числа отзывов — сигнал обнулён: сравнить инструкторов по качеству невозможно, все выглядят одинаково сильными.</span></div>
+        <div class="finding broken"><span class="mark">✕</span><span>Бейджи «Elite Instructor» / «Verified Pro» стоят только у части карточек (Алексей, Иван, Андрей, Станислав), у Игоря и Вейко их нет — непонятно, это осознанный статус или недоработка данных, доверие к системе бейджей падает.</span></div>
+        <div class="finding weak"><span class="mark">!</span><span>Плашка «70% с 1. попытки» / «60% с 1. попытки» — сильный мотиватор (сдал с первого раза), но показана только у 2 из 6 карточек без объяснения, что это за метрика.</span></div>
+      </div>
+
+      <div class="map-card">
+        <h3>Ability <span class="sub">легко ли принять решение</span></h3>
+        <div class="finding broken"><span class="mark">✕</span><span>Описание обрезано многоточием почти у всех карточек — чтобы дочитать, нужно уйти с экрана списка, теряя контекст сравнения.</span></div>
+        <div class="finding broken"><span class="mark">✕</span><span>Нет фильтра и сортировки в этой зоне экрана (по цене, языку, коробке передач, району) — сравнение 6 карточек делается вручную, глазами.</span></div>
+        <div class="finding weak"><span class="mark">!</span><span>Теги языка и коробки передач («MANUAL», «RU», «EE») мелкие и низкоконтрастные — легко принять за декоративный элемент, а не за критерий выбора.</span></div>
+        <div class="finding weak"><span class="mark">!</span><span>Нигде не видно ближайшего свободного слота — чтобы узнать, когда реально можно поехать, нужно открыть профиль.</span></div>
+      </div>
+
+      <div class="map-card">
+        <h3>Prompt <span class="sub">что подталкивает нажать</span></h3>
+        <div class="finding broken"><span class="mark">✕</span><span>Кнопка «BRONEERI» залита синим только на первой карточке (Алексей Йесков), на остальных пяти — контурная, белая. Главное действие выглядит разным по значимости от карточки к карточке.</span></div>
+        <div class="finding weak"><span class="mark">!</span><span>Непонятно, ведёт ли «BRONEERI» сразу в календарь бронирования или на страницу профиля — обещание кнопки неоднозначно.</span></div>
+        <div class="finding weak"><span class="mark">!</span><span>Внизу экрана два CTA одинакового визуального веса — «Смотреть всех инструкторов» и «Подобрать через тест» — конкурируют, а не дополняют друг друга.</span></div>
+      </div>
+    </div>
+
+    <div class="callout"><b>Итог по Fogg:</b> мотивация есть, но неотличима между карточками; способность принять решение снижена нехваткой данных прямо в карточке; триггер (кнопка) слабый и непоследовательный именно там, где нужен самый ясный сигнал — в момент выбора.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow-num"><span class="n">2</span> Аудит по CREATE Action Funnel</div>
+    <h2>Cue → Reaction → Evaluation → Ability → Timing → Execution</h2>
+    <p class="section-sub">Каждый этап — точка, на которой пользователь может выйти из воронки. Ниже — что происходит на каждом шаге на этом экране.</p>
+
+    <div class="funnel">
+      <div class="stage ok">
+        <span class="num">01</span>
+        <h4>Cue</h4>
+        <p>Активная вкладка «Instruktorid» и сетка карточек ясно сообщают: здесь выбирают человека, а не пакет услуг.</p>
+        <span class="status">Работает</span>
+      </div>
+      <div class="stage broken">
+        <span class="num">02</span>
+        <h4>Reaction</h4>
+        <p>Первая, инстинктивная реакция должна отсеять слабые варианты. Но одинаковый рейтинг 5.0 у всех карточек не даёт глазу зацепиться ни за одну.</p>
+        <span class="status">Ломается</span>
+      </div>
+      <div class="stage broken">
+        <span class="num">03</span>
+        <h4>Evaluation</h4>
+        <p>Осознанное сравнение цены, языка, авто требует дочитывать обрезанные описания и держать в голове 6 карточек без таблицы сравнения.</p>
+        <span class="status">Ломается</span>
+      </div>
+      <div class="stage weak">
+        <span class="num">04</span>
+        <h4>Ability</h4>
+        <p>Кнопка «BRONEERI» физически доступна, но без данных о ближайшем слоте пользователь не уверен, что бронирование вообще возможно сейчас.</p>
+        <span class="status">Ослаблена</span>
+      </div>
+      <div class="stage broken">
+        <span class="num">05</span>
+        <h4>Timing</h4>
+        <p>Нет ни одного сигнала срочности или своевременности («свободен сегодня», «осталось 2 места на неделе») — мотивированный пользователь откладывает решение «на потом».</p>
+        <span class="status">Ломается</span>
+      </div>
+      <div class="stage weak">
+        <span class="num">06</span>
+        <h4>Execution</h4>
+        <p>Непоследовательный стиль кнопки на 5 из 6 карточек снижает аффорданс — контурная кнопка читается менее кликабельной, чем залитая.</p>
+        <span class="status">Ослаблена</span>
+      </div>
+    </div>
+
+    <div class="callout"><b>Итог по CREATE:</b> воронка ломается уже на Reaction и Evaluation — то есть до того, как пользователь вообще доходит до кнопки. Даже идеальная кнопка не спасёт конверсию, если решение не вызрело на шагах 2–3 и 5.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow-num"><span class="n">3</span> Список проблем</div>
+    <h2>Приоритизация: Critical / High / Medium</h2>
+    <p class="section-sub">Приоритет — по тому, насколько рано и насколько массово проблема останавливает пользователя.</p>
+
+    <table class="problems">
+      <thead>
+        <tr><th>Приоритет</th><th>Проблема</th><th>Модель / этап</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pill critical">Critical</span></td>
+          <td>Кнопка «BRONEERI» залита цветом только на одной карточке из шести — главный CTA не имеет единого визуального языка.</td>
+          <td class="model">Fogg: Prompt<br>CREATE: Execution</td>
+        </tr>
+        <tr>
+          <td><span class="pill critical">Critical</span></td>
+          <td>Рейтинг 5.0 одинаков у всех карточек, без числа отзывов — карточки неотличимы на этапе первой реакции.</td>
+          <td class="model">Fogg: Motivation<br>CREATE: Reaction</td>
+        </tr>
+        <tr>
+          <td><span class="pill critical">Critical</span></td>
+          <td>Нигде не видно ближайшего доступного времени — пользователь не знает, можно ли забронировать сейчас, до клика в профиль.</td>
+          <td class="model">Fogg: Ability<br>CREATE: Timing</td>
+        </tr>
+        <tr>
+          <td><span class="pill high">High</span></td>
+          <td>Бейджи «Elite Instructor» / «Verified Pro» и плашка «% с 1. попытки» показаны выборочно, без легенды — неясно, что они значат и почему не у всех.</td>
+          <td class="model">Fogg: Motivation<br>CREATE: Evaluation</td>
+        </tr>
+        <tr>
+          <td><span class="pill high">High</span></td>
+          <td>Описание инструктора обрезано многоточием — для полного сравнения нужно уходить со страницы списка.</td>
+          <td class="model">Fogg: Ability<br>CREATE: Evaluation</td>
+        </tr>
+        <tr>
+          <td><span class="pill high">High</span></td>
+          <td>В зоне списка нет фильтра/сортировки по цене, языку, коробке передач, району — сравнение 6+ карточек идёт вручную.</td>
+          <td class="model">Fogg: Ability<br>CREATE: Evaluation</td>
+        </tr>
+        <tr>
+          <td><span class="pill high">High</span></td>
+          <td>Неясно, куда ведёт «BRONEERI» — сразу в календарь или на профиль. Обещание кнопки не совпадает гарантированно с результатом.</td>
+          <td class="model">Fogg: Prompt<br>CREATE: Execution</td>
+        </tr>
+        <tr>
+          <td><span class="pill medium">Medium</span></td>
+          <td>Теги языка и коробки передач мелкие и низкоконтрастные, легко спутать с декором.</td>
+          <td class="model">Fogg: Ability</td>
+        </tr>
+        <tr>
+          <td><span class="pill medium">Medium</span></td>
+          <td>Два CTA внизу экрана одинакового веса конкурируют друг с другом вместо явной иерархии «основной / альтернативный».</td>
+          <td class="model">Fogg: Prompt</td>
+        </tr>
+        <tr>
+          <td><span class="pill medium">Medium</span></td>
+          <td>Разнородный фон и качество фото инструкторов (личные авто на фоне вместо единого стиля) — колебания в восприятии профессионализма.</td>
+          <td class="model">Fogg: Motivation</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow-num"><span class="n">4</span> Техническое задание</div>
+    <h2>ТЗ на редизайн блока «Instruktorid»</h2>
+
+    <h3 style="margin-top:28px; font-size:17px;">Цели редизайна</h3>
+    <ul>
+      <li>Поднять долю пользователей, доходящих от списка до нажатия «Забронировать», за счёт устранения обрывов на Reaction и Evaluation.</li>
+      <li>Сделать карточки сравнимыми между собой без перехода в профиль.</li>
+      <li>Дать пользователю однозначный, узнаваемый визуальный сигнал главного действия на каждой карточке.</li>
+      <li>Снизить долю отказов на этапе Timing, показывая реальную доступность инструктора.</li>
+    </ul>
+
+    <h3 style="margin-top:28px; font-size:17px;">Целевое поведение пользователя</h3>
+    <p>Пользователь открывает список → за 1–2 карточки понимает, чем инструкторы отличаются друг от друга → сужает выбор фильтром или визуальным сравнением до 2–3 кандидатов → видит ближайшее свободное время прямо в карточке → нажимает единообразную кнопку «Забронировать» и без сомнений переходит к оформлению записи.</p>
+
+    <div class="tz-block remove">
+      <h3>Убрать</h3>
+      <ul>
+        <li>Единичную залитую кнопку на одной карточке — как исключение из общего стиля.</li>
+        <li>Жёсткое обрезание описания без возможности раскрыть его в списке.</li>
+        <li>Молчаливое отсутствие бейджа/метрики там, где данных просто нет (заменить на явный нейтральный статус, а не пустоту).</li>
+      </ul>
+    </div>
+
+    <div class="tz-block add">
+      <h3>Добавить</h3>
+      <ul>
+        <li>Числовой рейтинг с количеством отзывов: «4.8 (126 отзывов)» вместо плоского «5.0».</li>
+        <li>Блок ближайшей доступности прямо в карточке: «Свободен сегодня, 16:00» / «Ближайшее время: ср».</li>
+        <li>Панель фильтра и сортировки над сеткой: цена, язык, коробка передач, район, рейтинг, доступность.</li>
+        <li>Легенду/тултип для бейджей и метрики «% с первой попытки», доступную по иконке ⓘ.</li>
+        <li>Возможность раскрыть описание по клику «читать полностью» вместо ухода со страницы.</li>
+      </ul>
+    </div>
+
+    <div class="tz-block change">
+      <h3>Изменить</h3>
+      <ul>
+        <li>Кнопку «BRONEERI» — единый залитый стиль на всех карточках без исключений; вторичное действие «Профиль» — текстовой ссылкой рядом.</li>
+        <li>Бейджи статуса — показывать по единому правилу для всех инструкторов, соответствующих критерию, без «случайных» пропусков.</li>
+        <li>Вес двух нижних CTA — оставить «Смотреть всех инструкторов» основным действием, «Подобрать через тест» сделать явно вторичным (менее контрастным) как путь для тех, кто не определился.</li>
+        <li>Контраст и размер тегов языка/коробки — поднять до уровня читаемого критерия выбора, а не мелкой подписи.</li>
+      </ul>
+    </div>
+
+    <h3 style="margin-top:32px; font-size:17px;">Принципы дизайна</h3>
+    <div class="two-col">
+      <div class="tz-block" style="margin-top:0;">
+        <h3>Один явный сигнал действия</h3>
+        <p style="margin:0; font-size:14.5px;">На каждой карточке должно быть ровно одно визуально доминирующее действие — без исключений и без конкуренции по весу.</p>
+      </div>
+      <div class="tz-block" style="margin-top:0;">
+        <h3>Сравнимость по умолчанию</h3>
+        <p style="margin:0; font-size:14.5px;">Все карточки показывают одинаковый набор полей в одинаковом порядке — сравнение не должно требовать перехода вглубь.</p>
+      </div>
+      <div class="tz-block" style="margin-top:0;">
+        <h3>Прозрачность метрик</h3>
+        <p style="margin:0; font-size:14.5px;">Любая цифра или бейдж на карточке объясняет себя за один клик или наведение — никаких «магических» пятёрок и значков без расшифровки.</p>
+      </div>
+      <div class="tz-block" style="margin-top:0;">
+        <h3>Доступность вместо догадки</h3>
+        <p style="margin:0; font-size:14.5px;">Информация, нужная для решения «можно ли записаться сейчас», видна в карточке, а не только внутри профиля.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:32px; font-size:17px;">Требования к компонентам</h3>
+    <ul>
+      <li><b>Карточка инструктора</b> должна одинаково вести себя в состояниях: с бейджем / без бейджа, с плашкой первой попытки / без неё, с длинным / коротким описанием — без визуальных «дыр».</li>
+      <li><b>Кнопка «Забронировать»</b> — один компонент, одно состояние по умолчанию (залитая), hover/focus/disabled определены явно, используется без вариаций по карточкам.</li>
+      <li><b>Блок доступности</b> — отдельный компонент с минимум двумя состояниями: «свободен сегодня» (акцентный цвет) и «ближайшее время такого-то дня» (нейтральный).</li>
+      <li><b>Панель фильтров</b> — работает как отдельный, самостоятельно тестируемый блок, не завязанный жёстко на конкретную сетку карточек.</li>
+      <li><b>Бейдж и тултип</b> — бейдж как атом, тултип/легенда как отдельный переиспользуемый компонент пояснения.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow-num"><span class="n">5</span> Компоненты для Figma</div>
+    <h2>Atoms → Molecules → Organisms</h2>
+    <p class="section-sub">Структура для сборки в библиотеке компонентов перед тем, как макетировать конкретные экраны.</p>
+
+    <div class="atomic">
+      <div class="atomic-col">
+        <h3>Atoms</h3>
+        <ul>
+          <li><b>Avatar / Photo frame</b><span>единый формат кадрирования фото инструктора</span></li>
+          <li><b>Rating value</b><span>число рейтинга, текстовый стиль</span></li>
+          <li><b>Star icon</b><span>заполненная / пустая / половина</span></li>
+          <li><b>Badge pill</b><span>Elite / Verified / New — три варианта цвета</span></li>
+          <li><b>Tag chip</b><span>язык, коробка передач, категория</span></li>
+          <li><b>Price text</b><span>стиль цены + единица «/час»</span></li>
+          <li><b>Button — Primary</b><span>залитая, единственный стиль CTA</span></li>
+          <li><b>Button — Ghost</b><span>для второстепенных действий</span></li>
+          <li><b>Icon set</b><span>галочка, локация, авто, часы, ⓘ</span></li>
+          <li><b>Divider</b><span>тонкая линия внутри карточки</span></li>
+        </ul>
+      </div>
+      <div class="atomic-col">
+        <h3>Molecules</h3>
+        <ul>
+          <li><b>Rating block</b><span>звёзды + число + кол-во отзывов</span></li>
+          <li><b>Badge group</b><span>стек из 0–2 бейджей с фиксированной логикой показа</span></li>
+          <li><b>Tag group</b><span>ряд чипов языка и коробки передач</span></li>
+          <li><b>Price + duration</b><span>цена и «за 1 час» рядом</span></li>
+          <li><b>Availability chip</b><span>«Свободен сегодня» / «Ближайшее: ср»</span></li>
+          <li><b>Name + location line</b><span>имя, город, иконка локации</span></li>
+          <li><b>CTA pair</b><span>Primary «Забронировать» + Ghost «Профиль»</span></li>
+          <li><b>Tooltip / legend</b><span>всплывающее пояснение к бейджу и метрике</span></li>
+        </ul>
+      </div>
+      <div class="atomic-col">
+        <h3>Organisms</h3>
+        <ul>
+          <li><b>Instructor card</b><span>сборка всех molecules в одну карточку с фиксированными состояниями</span></li>
+          <li><b>Filter / sort bar</b><span>цена, язык, коробка, район, рейтинг, доступность</span></li>
+          <li><b>Tabs navigation</b><span>Autokoolid / Instruktorid / Paketid / Autopark / Broneerimine</span></li>
+          <li><b>Instructor grid</b><span>контейнер сетки с пустым и загрузочным состоянием</span></li>
+          <li><b>Bottom CTA section</b><span>основной + альтернативный путь, разного визуального веса</span></li>
+          <li><b>Empty / loading card</b><span>состояние на время загрузки данных доступности</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Анализ основан на предоставленном скриншоте экрана «Instruktorid». Приоритеты и ТЗ — рабочая гипотеза для дальнейшей проверки на пользователях перед реализацией в Figma.
+  </div>
+</footer>
+
+</body>
+</html>
