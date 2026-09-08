@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sõidupraktika juhendajaga · Tallinn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #020617;
+      color: #e2e8f0;
+      font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+    a { color: #34d399; text-decoration: none; }
+    a:hover { color: #6ee7b7; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    :focus-visible { outline: 2px solid #34d399; outline-offset: 2px; }
+    input::placeholder { color: #64748b; }
+
+    /* Modal Backdrop & Container */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(2, 6, 23, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-sheet {
+      position: relative;
+      width: 100%;
+      max-width: 560px;
+      max-height: 92vh;
+      overflow-y: auto;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 30px 80px rgba(2, 6, 23, 0.85);
+      padding: 26px;
+      color: #e2e8f0;
+    }
+
+    /* Modal Top Elements */
+    .btn-close {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .btn-close:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+    /* Trust Stripe (No Upfront Payment) */
+    .trust-strip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(6, 78, 59, 0.28);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #6ee7b7;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 12.5px;
+      font-weight: 500;
+      margin-top: 14px;
+      margin-bottom: 20px;
+    }
+
+    /* Interactive T-kaart Card */
+    .tcard-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 15px;
+      border-radius: 16px;
+      background: rgba(30, 41, 59, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+    .tcard-card:hover { border-color: rgba(52, 211, 153, 0.4); background: rgba(30, 41, 59, 0.7); }
+    .tcard-card.checked {
+      background: rgba(6, 78, 59, 0.3);
+      border-color: rgba(52, 211, 153, 0.6);
+      box-shadow: 0 4px 20px rgba(6, 78, 59, 0.25);
+    }
+    .tcard-card.error-pulse {
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+      animation: qbPulse 1s infinite;
+    }
+    @keyframes qbPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+    .chk-square {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1.5px solid #475569;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+      flex-shrink: 0;
+      transition: all .15s;
+    }
+    .chk-square.checked {
+      background: #10b981;
+      border-color: #10b981;
+      color: #020617;
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    /* Chips */
+    .modal-chips-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .modal-chip {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 11px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all .15s;
+    }
+    .modal-chip:hover { border-color: rgba(255, 255, 255, 0.25); color: #fff; }
+    .modal-chip.active {
+      background: rgba(51, 65, 85, 0.95);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Inputs */
+    .m-input, .m-select {
+      height: 46px;
+      width: 100%;
+      background: rgba(2, 6, 23, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: #f1f5f9;
+      font-size: 14px;
+      padding: 0 14px;
+      outline: none;
+      transition: border-color .15s;
+      font-family: inherit;
+    }
+    .m-input:focus, .m-select:focus { border-color: #34d399; }
+    .m-input.invalid { border-color: #f43f5e; }
+
+    /* Action Buttons */
+    .btn-step-next {
+      width: 100%;
+      height: 48px;
+      background: #fff;
+      color: #020617;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 8px 24px rgba(255, 255, 255, 0.12);
+      transition: all .15s;
+    }
+    .btn-step-next:hover { background: #e2e8f0; }
+
+    .btn-step-submit {
+      flex: 1;
+      height: 48px;
+      background: #10b981;
+      color: #022c22;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+      transition: all .15s;
+    }
+    .btn-step-submit:hover { background: #34d399; }
+
+    .btn-wa-direct {
+      background: #10b981;
+      color: #022c22;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      height: 48px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 14px;
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+      margin-bottom: 18px;
+      transition: background .15s;
+    }
+    .btn-wa-direct:hover { background: #34d399; }
+  </style>
+</head>
+<body>
+
+  <!-- STICKY TOP COMPLIANCE BAR (ORIGINAL PAGE - NOT MODIFIED) -->
+  <div style="position:sticky;top:0;z-index:30;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:rgba(15,23,42,.72);border-bottom:1px solid rgba(255,255,255,.1);">
+    <div style="max-width:1240px;margin:0 auto;padding:11px clamp(14px,3vw,32px);display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px;">
+      <div style="display:flex;align-items:center;gap:9px;min-width:0;flex:1 1 300px;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style="flex:0 0 17px;"><path d="M12 3l7 3v6c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6l7-3z" stroke="#34d399" stroke-width="1.8" stroke-linejoin="round"></path><path d="M8.8 12.2l2.2 2.2 4.2-4.4" stroke="#34d399" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <span style="font-size:13px;line-height:18px;color:#cbd5e1;font-weight:500;">Ametlik juhendaja sõidupraktika. Transpordiameti nõuetele vastav.</span>
+      </div>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:#94a3b8;white-space:nowrap;">T-kaart kohustuslik (§ 109 Liiklusseadus)</span>
+    </div>
+  </div>
+
+  <!-- HERO SECTION (ORIGINAL PAGE - NOT MODIFIED) -->
+  <div style="max-width:1240px;margin:0 auto;padding:clamp(28px,5vw,60px) clamp(14px,3vw,32px) 0;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">
+      <span style="width:24px;height:1px;background:rgba(52,211,153,.7);"></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#34d399;">Juhendajad · Tallinn</span>
+    </div>
+    <h1 style="margin:0 0 14px;font-size:clamp(30px,5.2vw,52px);line-height:1.05;font-weight:800;letter-spacing:-.03em;color:#fff;">Sõidupraktika juhendajaga</h1>
+    <p style="margin:0;max-width:620px;font-size:clamp(14px,1.6vw,17px);line-height:1.6;color:#94a3b8;">Kinnista sõiduoskust enne riiklikku sõidueksamit kogenud juhendajatega Tallinna tänavatel.</p>
+  </div>
+
+  <!-- FILTERS SECTION (ORIGINAL PAGE - NOT MODIFIED) -->
+  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(14px,3vw,32px);">
+    <div style="position:sticky;top:60px;z-index:20;margin:clamp(24px,3.5vw,38px) 0 clamp(18px,2.4vw,26px);border-radius:18px;border:1px solid rgba(255,255,255,.1);background:rgba(15,23,42,.86);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 20px 45px rgba(2,6,23,.55);padding:14px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;">
+
+      <div style="display:flex;align-items:center;gap:9px;min-width:0;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#64748b;white-space:nowrap;">Käigukast</span>
+        <div style="display:flex;gap:4px;padding:3px;border-radius:12px;background:rgba(2,6,23,.6);border:1px solid rgba(255,255,255,.06);">
+          <button type="button" onclick="setFilterGear('Kõik', this)" style="font-family:inherit;font-size:13px;font-weight:700;min-height:38px;padding:0 15px;border-radius:9px;border:none;cursor:pointer;white-space:nowrap;background:#fff;color:#020617;box-shadow:0 2px 8px rgba(0,0,0,.35);">Kõik</button>
+          <button type="button" onclick="setFilterGear('Automaat', this)" style="font-family:inherit;font-size:13px;font-weight:600;min-height:38px;padding:0 15px;border-radius:9px;border:none;cursor:pointer;white-space:nowrap;background:transparent;color:#94a3b8;">Automaat</button>
+          <button type="button" onclick="setFilterGear('Manuaal', this)" style="font-family:inherit;font-size:13px;font-weight:600;min-height:38px;padding:0 15px;border-radius:9px;border:none;cursor:pointer;white-space:nowrap;background:transparent;color:#94a3b8;">Manuaal</button>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:9px;min-width:0;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#64748b;white-space:nowrap;">Auto</span>
+        <div style="display:flex;gap:4px;padding:3px;border-radius:12px;background:rgba(2,6,23,.6);border:1px solid rgba(255,255,255,.06);">
+          <button type="button" onclick="setFilterCar('Õpetaja auto', this)" style="font-family:inherit;font-size:13px;font-weight:700;min-height:38px;padding:0 15px;border-radius:9px;border:none;cursor:pointer;white-space:nowrap;background:#fff;color:#020617;box-shadow:0 2px 8px rgba(0,0,0,.35);">Õpetaja auto</button>
+          <button type="button" onclick="setFilterCar('Minu auto', this)" style="font-family:inherit;font-size:13px;font-weight:600;min-height:38px;padding:0 15px;border-radius:9px;border:none;cursor:pointer;white-space:nowrap;background:transparent;color:#94a3b8;">Minu auto</button>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:9px;">
+        <label for="district" style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#64748b;white-space:nowrap;">Piirkond</label>
+        <select id="district" onchange="renderMentors()" style="appearance:none;font-family:'JetBrains Mono',monospace;font-size:12px;color:#e2e8f0;background:rgba(2,6,23,.7);border:1px solid rgba(255,255,255,.1);border-radius:12px;min-height:44px;padding:0 34px 0 13px;cursor:pointer;">
+          <option value="All">All</option>
+          <option value="Mustamäe">Mustamäe</option>
+          <option value="Lasnamäe">Lasnamäe</option>
+          <option value="Õismäe">Õismäe</option>
+          <option value="Kesklinn">Kesklinn</option>
+        </select>
+      </div>
+
+      <button id="pedalsBtn" type="button" onclick="togglePedals()" style="display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:12.5px;font-weight:600;min-height:44px;padding:0 14px;border-radius:12px;cursor:pointer;white-space:nowrap;background:rgba(2,6,23,.6);border:1px solid rgba(255,255,255,.1);color:#94a3b8;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex:0 0 14px;"><rect x="7" y="3.5" width="7" height="12" rx="2.4" stroke="currentColor" stroke-width="1.8"></rect><path d="M10.5 15.5v2.2a2.8 2.8 0 0 0 2.8 2.8H18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+        <span>Ainult lisapedaaliga</span>
+      </button>
+
+      <div style="display:flex;align-items:center;gap:11px;margin-left:auto;min-width:190px;flex:0 1 240px;">
+        <label for="price" style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#64748b;white-space:nowrap;">Max hind</label>
+        <input id="price" type="range" min="18" max="35" step="1" value="35" oninput="updatePrice(this.value)" style="flex:1;min-width:70px;accent-color:#34d399;height:44px;cursor:pointer;background:transparent;">
+        <span id="priceLabel" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#fff;white-space:nowrap;min-width:38px;text-align:right;">35 €</span>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:16px;padding:0 2px;">
+      <span id="countNumber" style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:#fff;">3</span>
+      <span id="countText" style="font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:#64748b;">juhendajat</span>
+    </div>
+
+    <!-- INSTRUCTOR CARDS GRID (ORIGINAL AS CONTEXT - NO IMAGES INSERTED) -->
+    <div id="mentorsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:clamp(14px,1.8vw,24px);align-items:stretch;"></div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL: KIIRE BRONEERIMINE (UPGRADED VERSION PER TZ)
+       ======================================================================= -->
+  <div id="bookingBackdrop" class="modal-backdrop" onclick="closeModal()">
+    <div class="modal-sheet" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      
+      <!-- 1. HEADER WITH HUMAN CONTEXT (Avatar + Badges) -->
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding-bottom:16px; border-bottom:1px solid rgba(255,255,255,.1);">
+        <div style="display:flex; align-items:center; gap:13px; min-width:0;">
+          <div id="mAvatar" style="width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg,#10b981,#0f766e); display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px; font-weight:800; border:1px solid rgba(255,255,255,.2); box-shadow:0 4px 12px rgba(0,0,0,.3); flex-shrink:0;">
+            S
+          </div>
+          <div style="min-width:0;">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <h3 id="modalTitle" style="margin:0; font-size:19px; line-height:25px; font-weight:800; letter-spacing:-.02em; color:#fff;">
+                Broneeri sõit: Sergei Mihhailov
+              </h3>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#34d399; background:rgba(6,78,59,.7); border:1px solid rgba(16,185,129,.3); padding:2px 8px; border-radius:999px; white-space:nowrap;">
+                ✓ Ametlik juhendaja
+              </span>
+            </div>
+            <div class="font-mono" style="font-size:12px; color:#94a3b8; margin-top:3px;">
+              <span id="mCar" style="color:#e2e8f0; font-weight:600;">VW Golf</span> · 
+              <span id="mGear" style="color:#34d399;">Manuaal</span> · 
+              <span id="mPrice" style="color:#fff; font-weight:700;">22 € / 60 min</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-close" type="button" onclick="closeModal()" aria-label="Sulge aken">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
+        </button>
+      </div>
+
+      <!-- 2. TRUST STRIP (No Upfront Payment Guarantee) -->
+      <div class="trust-strip">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex-shrink:0;"><path d="M12 3l7 3v6c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6l7-3z"/></svg>
+        <span>Tasumine toimub kohapeal juhendajale. Ettemaksu ega kaardi sidumist ei ole.</span>
+      </div>
+
+      <!-- 3. STEP PROGRESS TRACKER -->
+      <div id="stepTrack" style="display:flex; align-items:center; gap:12px; margin-bottom:22px;">
+        <div id="track1" style="display:flex; align-items:center; gap:8px; font-size:11.5px; font-family:'JetBrains Mono',monospace; text-transform:uppercase; letter-spacing:.08em; color:#34d399; font-weight:700;">
+          <span id="dot1" style="width:8px; height:8px; border-radius:50%; background:#34d399; box-shadow:0 0 0 4px rgba(52,211,153,.2);"></span>
+          <span>Samm 1 · Aeg & Nõuded</span>
+        </div>
+        <span style="color:#334155;">—</span>
+        <div id="track2" style="display:flex; align-items:center; gap:8px; font-size:11.5px; font-family:'JetBrains Mono',monospace; text-transform:uppercase; letter-spacing:.08em; color:#64748b; font-weight:500;">
+          <span id="dot2" style="width:8px; height:8px; border-radius:50%; background:#334155;"></span>
+          <span>Samm 2 · Kontaktandmed</span>
+        </div>
+      </div>
+
+      <!-- ================= STEP 1: TIME, DATE & T-KAART ================= -->
+      <div id="step1">
+        
+        <!-- T-KAART CARD WITH INTERACTIVE ACCORDION -->
+        <div style="margin-bottom:18px;">
+          <div class="tcard-card" id="tCardCard" onclick="toggleTCard()">
+            <div class="chk-square" id="tCardCheckbox"></div>
+            <div style="flex:1;">
+              <div style="font-size:14px; font-weight:700; color:#fff; line-height:1.3;">
+                Mul on kehtiv autokooli T-kaart (õpingukaart)
+              </div>
+              <div style="font-size:12px; color:#94a3b8; margin-top:4px; line-height:1.4;">
+                Transpordiameti seaduslik nõue (§ 109). Sõidupraktika läheb ametlikult arvesse.
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:7px; font-size:11.5px;" class="font-mono">
+            <button type="button" onclick="toggleTCardHelp()" style="background:none; border:none; color:#34d399; cursor:pointer; text-decoration:underline;">
+              Mis on T-kaart ja kust seda näeb?
+            </button>
+            <a href="https://paberivaba.mnt.ee" target="_blank" rel="noreferrer">e-teenindus ↗</a>
+          </div>
+
+          <!-- Drawer explanation -->
+          <div id="tCardHelp" style="display:none; background:rgba(30,41,59,.8); border:1px solid rgba(255,255,255,.1); border-radius:12px; padding:12px; font-size:12.5px; color:#cbd5e1; margin-top:8px; line-height:1.5;">
+            T-kaart on autokooli väljastatud ametlik õpingukaart (e-teeninduses või paberkandjal), mis tõendab, et baasteooria ja esmased kohustuslikud tunnid on läbitud. Juhendaja allkirjastab tunni pärast sõidu toimumist.
+          </div>
+
+          <div id="tCardErrorMsg" style="display:none; color:#f59e0b; font-size:11.5px; margin-top:6px;" class="font-mono">
+            ⚠️ Jätkamiseks kinnita T-kaardi olemasolu
+          </div>
+        </div>
+
+        <!-- GEARBOX (CONFIRMED STATUS - NO REDUNDANT SELECTION BUTTONS) -->
+        <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(30,41,59,.4); border:1px solid rgba(255,255,255,.07); border-radius:12px; padding:11px 14px; margin-bottom:18px;">
+          <span class="font-mono" style="font-size:11.5px; text-transform:uppercase; color:#94a3b8;">
+            Õppesõiduk & käigukast:
+          </span>
+          <span id="mGearboxBadge" class="font-mono" style="font-size:12.5px; color:#fff; font-weight:700; display:flex; align-items:center; gap:6px;">
+            VW Golf <span style="width:4px; height:4px; border-radius:50%; background:#34d399;"></span> <span style="color:#34d399;">Manuaal</span>
+          </span>
+        </div>
+
+        <!-- SPECIFIC DAY SELECTOR (Reduces Timing Entropy) -->
+        <div style="margin-bottom:18px;">
+          <label style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:#94a3b8; display:block; margin-bottom:8px;">
+            Vali sobiv päev:
+          </label>
+          <div class="modal-chips-row">
+            <button class="modal-chip" type="button" onclick="setModalDay('Täna', this)">Täna</button>
+            <button class="modal-chip active" type="button" onclick="setModalDay('Homme', this)">Homme</button>
+            <button class="modal-chip" type="button" onclick="setModalDay('Ülehomme', this)">Ülehomme</button>
+            <button class="modal-chip" type="button" onclick="setModalDay('Muu kuupäev', this)">Muu kuupäev</button>
+          </div>
+          <div id="customDateWrap" style="display:none; margin-top:8px;">
+            <input type="date" id="customDateInput" class="m-input font-mono" style="font-size:13px;" onchange="updateSummaryText()">
+          </div>
+        </div>
+
+        <!-- PREFERRED TIME SLOTS -->
+        <div style="margin-bottom:22px;">
+          <label style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:#94a3b8; display:block; margin-bottom:8px;">
+            Eelistatud kellaaeg:
+          </label>
+          <div class="modal-chips-row">
+            <button class="modal-chip" type="button" onclick="setModalTime('Hommik (08-12)', this)">Hommik (08-12)</button>
+            <button class="modal-chip active" type="button" onclick="setModalTime('Õhtu (16-20)', this)">Õhtu (16-20)</button>
+            <button class="modal-chip" type="button" onclick="setModalTime('Päev (12-16)', this)">Päev (12-16)</button>
+          </div>
+        </div>
+
+        <!-- NEXT STEP BUTTON -->
+        <button type="button" class="btn-step-next" onclick="goToStep2()">
+          <span>Järgmine samm: Kontaktandmed</span>
+          <span style="font-size:16px;">→</span>
+        </button>
+      </div>
+
+      <!-- ================= STEP 2: CONTACT DETAILS ================= -->
+      <div id="step2" style="display:none;">
+        <form onsubmit="handleFinalSubmit(event)" style="display:flex; flex-direction:column; gap:14px;">
+          
+          <div>
+            <label style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:#94a3b8; display:block; margin-bottom:6px;" for="qbName">
+              Sinu nimi *
+            </label>
+            <input class="m-input" type="text" id="qbName" placeholder="Ees- ja perekonnanimi">
+            <span id="errName" class="font-mono" style="display:none; color:#f43f5e; font-size:11px; margin-top:4px;">Palun sisesta oma nimi</span>
+          </div>
+
+          <div>
+            <label style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:#94a3b8; display:block; margin-bottom:6px;" for="qbPhone">
+              Telefoninumber *
+            </label>
+            <input class="m-input font-mono" type="tel" id="qbPhone" value="+372 " oninput="formatPhoneInput(this)" placeholder="+372 5X XX XXXX">
+            <div style="display:flex; justify-content:space-between; font-size:11px; font-family:'JetBrains Mono',monospace; color:#94a3b8; margin-top:4px;">
+              <span>Eesti mobiilinumber (+372)</span>
+              <span id="errPhone" style="display:none; color:#f43f5e; font-weight:600;">Kontrolli numbrit</span>
+            </div>
+          </div>
+
+          <div>
+            <label style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:#94a3b8; display:block; margin-bottom:6px;" for="qbDistrict">
+              Kohtumise piirkond
+            </label>
+            <select class="m-select font-mono" id="qbDistrict">
+              <!-- Populated dynamically by JS based on selected mentor -->
+            </select>
+          </div>
+
+          <!-- GOAL CHIPS (Optional Anxiety Relief) -->
+          <div style="margin-bottom:4px;">
+            <label style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:#94a3b8; display:block; margin-bottom:6px;">
+              Sõidu peamine eesmärk (valikuline):
+            </label>
+            <div class="modal-chips-row">
+              <button class="modal-chip active" type="button" onclick="setGoal('Eksami marsruudid', this)" style="padding:7px 11px; font-size:12px;">Eksami marsruudid</button>
+              <button class="modal-chip" type="button" onclick="setGoal('Parkimine', this)" style="padding:7px 11px; font-size:12px;">Parkimine</button>
+              <button class="modal-chip" type="button" onclick="setGoal('Linnasõit', this)" style="padding:7px 11px; font-size:12px;">Linnasõit</button>
+              <button class="modal-chip" type="button" onclick="setGoal('Ringristmikud', this)" style="padding:7px 11px; font-size:12px;">Ringristmikud</button>
+            </div>
+          </div>
+
+          <!-- SUMMARY RECAP -->
+          <div class="font-mono" style="background:rgba(30,41,59,.4); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:12px; font-size:12px; color:#cbd5e1; margin-top:4px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+              <span style="color:#94a3b8;">Aeg:</span>
+              <span style="color:#fff; font-weight:700;" id="sumTime">Homme, Õhtu (16-20)</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span style="color:#94a3b8;">Maksumus:</span>
+              <span id="sumPrice" style="color:#34d399; font-weight:700;">22 € / 60 min (tasumine kohapeal)</span>
+            </div>
+          </div>
+
+          <!-- ACTIONS -->
+          <div style="display:flex; gap:10px; margin-top:4px;">
+            <button type="button" onclick="goToStep1()" style="height:48px; padding:0 18px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.1); border-radius:12px; color:#e2e8f0; font-weight:700; cursor:pointer;">
+              ← Tagasi
+            </button>
+            <button type="submit" class="btn-step-submit">
+              <span id="btnSubmitText">Kinnita sõidusoov (Sergei)</span> ✓
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ================= STEP 3: SUCCESS STATE ================= -->
+      <div id="step3" style="display:none; text-align:center; padding:12px 4px 6px;">
+        <div style="width:64px; height:64px; border-radius:50%; background:rgba(6,78,59,.5); border:2px solid #34d399; color:#34d399; font-size:30px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; box-shadow:0 10px 30px rgba(16,185,129,.2);">
+          ✓
+        </div>
+
+        <h4 style="font-size:22px; font-weight:800; color:#fff; margin-bottom:8px;">
+          Sõidusoov edastatud!
+        </h4>
+        <p style="font-size:14px; color:#cbd5e1; line-height:1.5; margin-bottom:20px; max-width:440px; margin-left:auto; margin-right:auto;">
+          Juhendaja <strong id="resMentor" style="color:#fff;">Sergei</strong> võtab sinuga ühendust 2 tunni jooksul numbril <strong id="resPhone" class="font-mono" style="color:#34d399;">+372 ...</strong> aja ja täpse kohtumiskoha kinnitamiseks.
+        </p>
+
+        <!-- DIRECT WHATSAPP BUTTON (CONVERSION ACCELERATOR) -->
+        <a id="btnWhatsApp" href="#" target="_blank" rel="noreferrer" class="btn-wa-direct">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          <span id="btnWAText">Ava vestlus WhatsAppis (Sergei)</span>
+        </a>
+
+        <!-- LESSON CHECKLIST MEMO -->
+        <div style="background:rgba(30,41,59,.4); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:14px; text-align:left; font-size:12px; margin-bottom:16px;">
+          <div class="font-mono" style="font-weight:700; color:#94a3b8; text-transform:uppercase; margin-bottom:8px;">Meelespea esimeseks sõiduks:</div>
+          <div style="color:#e2e8f0; line-height:1.6;">
+            • Isikut tõendav dokument (ID-kaart või pass)<br>
+            • Kehtiv autokooli T-kaart (paberil või e-teeninduses)<br>
+            • Mugavad õhukese tallaga jalanõud
+          </div>
+        </div>
+
+        <div style="font-size:11.5px; color:#94a3b8; margin-bottom:20px;">
+          💡 Õppesõidu kuludelt saab deklareerida 20% tulumaksutagastust, kui autokool või juhendaja väljastab arve.
+        </div>
+
+        <button type="button" onclick="closeModal()" style="width:100%; height:44px; background:rgba(30,41,59,.6); border:1px solid rgba(255,255,255,.2); color:#fff; border-radius:11px; font-weight:600; cursor:pointer;">
+          Sulge aken
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- APPLICATION JAVASCRIPT -->
+  <script>
+    const MENTORS = [
+      {
+        id: "artur",
+        name: "Artur Kallas",
+        districts: ["Mustamäe", "Õismäe"],
+        experience: "12 aastat roolis",
+        languages: ["EST", "RU", "ENG"],
+        car: "Toyota RAV4",
+        gearbox: "Automaat",
+        ownCar: false,
+        hasDualPedals: true,
+        price: 25
+      },
+      {
+        id: "sergei",
+        name: "Sergei Mihhailov",
+        districts: ["Lasnamäe", "Kesklinn"],
+        experience: "14 aastat roolis",
+        languages: ["EST", "RU"],
+        car: "VW Golf",
+        gearbox: "Manuaal",
+        ownCar: true,
+        hasDualPedals: false,
+        price: 22
+      },
+      {
+        id: "katrin",
+        name: "Katrin Lepik",
+        districts: ["Mustamäe", "Kesklinn"],
+        experience: "8 aastat roolis",
+        languages: ["EST", "ENG"],
+        car: "Škoda Octavia",
+        gearbox: "Automaat",
+        ownCar: true,
+        hasDualPedals: false,
+        price: 25
+      }
+    ];
+
+    let filterGear = "Kõik";
+    let filterCar = "Õpetaja auto";
+    let filterPedalsOnly = false;
+    let filterMaxPrice = 35;
+
+    let currentMentor = MENTORS[1]; // Sergei
+    let hasTCard = false;
+    let selectedDay = 'Homme';
+    let selectedTime = 'Õhtu (16-20)';
+    let selectedGoal = 'Eksami marsruudid';
+
+    function renderMentors() {
+      const selectedDistrict = document.getElementById('district').value;
+      const list = MENTORS.filter(m => {
+        if (filterGear !== "Kõik" && m.gearbox !== filterGear) return false;
+        if (filterCar === "Minu auto" && !m.ownCar) return false;
+        if (selectedDistrict !== "All" && !m.districts.includes(selectedDistrict)) return false;
+        if (filterPedalsOnly && !m.hasDualPedals) return false;
+        if (m.price > filterMaxPrice) return false;
+        return true;
+      });
+
+      document.getElementById('countNumber').textContent = list.length;
+      document.getElementById('countText').textContent = list.length === 1 ? "juhendaja" : "juhendajat";
+
+      const grid = document.getElementById('mentorsGrid');
+      grid.innerHTML = list.map(m => `
+        <article style="position:relative;display:flex;flex-direction:column;gap:14px;height:100%;padding:16px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:rgba(15,23,42,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
+          <div style="position:relative;border-radius:14px;overflow:hidden;aspect-ratio:4/3;background:#0b1220;display:flex;align-items:center;justify-content:center;">
+            <div class="font-mono" style="font-size:12px;color:#64748b;">[ Foto: ${m.name} ]</div>
+            <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,rgba(2,6,23,.82) 0%,rgba(2,6,23,.15) 38%,transparent 62%);"></div>
+            <div style="position:absolute;top:10px;left:10px;pointer-events:none;display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(16,185,129,.34);background:rgba(2,44,34,.86);color:#34d399;font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 10px;border-radius:999px;white-space:nowrap;">
+              ✓ Tunnistus olemas
+            </div>
+            <div style="position:absolute;bottom:10px;left:12px;right:12px;pointer-events:none;font-family:'JetBrains Mono',monospace;font-size:12px;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+              ${m.districts.join(' · ')}
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:11px;">
+            <div style="display:flex;align-items:baseline;gap:10px;">
+              <h3 style="margin:0;font-size:18px;line-height:24px;font-weight:700;color:#fff;flex:1;min-width:0;">${m.name}</h3>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#94a3b8;white-space:nowrap;">${m.experience}</span>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:5px;">
+              ${m.languages.map(l => `<span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:#cbd5e1;background:rgba(30,41,59,.7);border:1px solid rgba(255,255,255,.07);border-radius:7px;padding:4px 8px;">${l}</span>`).join('')}
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <span style="display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:10px;background:rgba(30,41,59,.6);border:1px solid rgba(255,255,255,.05);font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#cbd5e1;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex:0 0 13px;"><path d="M4 16v-3.2L6 7.6A2 2 0 0 1 7.9 6.2h8.2A2 2 0 0 1 18 7.6L20 12.8V16" stroke="#94a3b8" stroke-width="1.7" stroke-linejoin="round"></path><path d="M3.4 16h17.2v2.2H3.4z" stroke="#94a3b8" stroke-width="1.7"></path></svg>
+                ${m.car} · ${m.gearbox}
+              </span>
+              ${m.hasDualPedals ? `
+                <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:10px;background:rgba(2,44,34,.7);border:1px solid rgba(16,185,129,.28);font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#34d399;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" style="flex:0 0 12px;"><rect x="7" y="3.5" width="7" height="12" rx="2.4" stroke="currentColor" stroke-width="1.9"></rect><path d="M10.5 15.5v2.2a2.8 2.8 0 0 0 2.8 2.8H18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"></path></svg>
+                  Lisapedaal
+                </span>` : ''}
+            </div>
+          </div>
+
+          <div style="margin-top:auto;padding-top:15px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+            <div style="min-width:0;">
+              <div style="font-size:25px;line-height:29px;font-weight:800;color:#fff;letter-spacing:-.02em;white-space:nowrap;">${m.price} €</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#64748b;white-space:nowrap;">Tunni hind / 60 min</div>
+            </div>
+            <button type="button" onclick="openBookingModal('${m.id}')" style="font-family:inherit;min-height:44px;padding:0 20px;border-radius:12px;background:#fff;color:#020617;font-size:14px;font-weight:700;border:none;cursor:pointer;white-space:nowrap;">Broneeri sõit</button>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function setFilterGear(val, btn) {
+      filterGear = val;
+      btn.parentElement.querySelectorAll('button').forEach(b => {
+        b.style.background = "transparent";
+        b.style.color = "#94a3b8";
+        b.style.fontWeight = "600";
+        b.style.boxShadow = "none";
+      });
+      btn.style.background = "#fff";
+      btn.style.color = "#020617";
+      btn.style.fontWeight = "700";
+      btn.style.boxShadow = "0 2px 8px rgba(0,0,0,.35)";
+      renderMentors();
+    }
+
+    function setFilterCar(val, btn) {
+      filterCar = val;
+      btn.parentElement.querySelectorAll('button').forEach(b => {
+        b.style.background = "transparent";
+        b.style.color = "#94a3b8";
+        b.style.fontWeight = "600";
+        b.style.boxShadow = "none";
+      });
+      btn.style.background = "#fff";
+      btn.style.color = "#020617";
+      btn.style.fontWeight = "700";
+      btn.style.boxShadow = "0 2px 8px rgba(0,0,0,.35)";
+      renderMentors();
+    }
+
+    function togglePedals() {
+      filterPedalsOnly = !filterPedalsOnly;
+      const btn = document.getElementById('pedalsBtn');
+      btn.style.background = filterPedalsOnly ? "rgba(2,44,34,.85)" : "rgba(2,6,23,.6)";
+      btn.style.borderColor = filterPedalsOnly ? "rgba(16,185,129,.45)" : "rgba(255,255,255,.1)";
+      btn.style.color = filterPedalsOnly ? "#34d399" : "#94a3b8";
+      renderMentors();
+    }
+
+    function updatePrice(val) {
+      filterMaxPrice = Number(val);
+      document.getElementById('priceLabel').textContent = val + " €";
+      renderMentors();
+    }
+
+    function openBookingModal(mentorId) {
+      const m = MENTORS.find(x => x.id === mentorId) || MENTORS[1];
+      currentMentor = m;
+      hasTCard = false;
+      selectedDay = 'Homme';
+      selectedTime = 'Õhtu (16-20)';
+      selectedGoal = 'Eksami marsruudid';
+
+      const fn = m.name.split(' ')[0];
+      document.getElementById('mAvatar').textContent = fn.charAt(0);
+      document.getElementById('modalTitle').textContent = `Broneeri sõit: ${m.name}`;
+      document.getElementById('mCar').textContent = m.car;
+      document.getElementById('mGear').textContent = m.gearbox;
+      document.getElementById('mPrice').textContent = `${m.price} € / 60 min`;
+      document.getElementById('mGearboxBadge').innerHTML = `${m.car} <span style="width:4px; height:4px; border-radius:50%; background:#34d399;"></span> <span style="color:#34d399;">${m.gearbox}</span>`;
+      document.getElementById('btnSubmitText').textContent = `Kinnita sõidusoov (${fn})`;
+
+      const sel = document.getElementById('qbDistrict');
+      sel.innerHTML = `
+        ${m.districts.map(d => `<option value="${d}">${d} (Juhendaja tavapiirkond)</option>`).join('')}
+        ${['Mustamäe', 'Lasnamäe', 'Õismäe', 'Kesklinn', 'Ülemiste'].filter(d => !m.districts.includes(d)).map(d => `<option value="${d}">${d}</option>`).join('')}
+      `;
+
+      document.getElementById('tCardCheckbox').className = 'chk-square';
+      document.getElementById('tCardCheckbox').innerHTML = '';
+      document.getElementById('tCardCard').className = 'tcard-card';
+      document.getElementById('tCardHelp').style.display = 'none';
+      document.getElementById('tCardErrorMsg').style.display = 'none';
+
+      goToStep1();
+      document.getElementById('bookingBackdrop').style.display = 'flex';
+      updateSummaryText();
+    }
+
+    function closeModal() {
+      document.getElementById('bookingBackdrop').style.display = 'none';
+    }
+
+    function toggleTCard() {
+      hasTCard = !hasTCard;
+      const box = document.getElementById('tCardCard');
+      const chk = document.getElementById('tCardCheckbox');
+      const err = document.getElementById('tCardErrorMsg');
+      
+      if (hasTCard) {
+        box.classList.add('checked');
+        box.classList.remove('error-pulse');
+        chk.classList.add('checked');
+        chk.innerHTML = '✓';
+        err.style.display = 'none';
+      } else {
+        box.classList.remove('checked');
+        chk.classList.remove('checked');
+        chk.innerHTML = '';
+      }
+    }
+
+    function toggleTCardHelp() {
+      const el = document.getElementById('tCardHelp');
+      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function setModalDay(day, btn) {
+      selectedDay = day;
+      btn.parentElement.querySelectorAll('.modal-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const wrap = document.getElementById('customDateWrap');
+      wrap.style.display = day === 'Muu kuupäev' ? 'block' : 'none';
+      updateSummaryText();
+    }
+
+    function setModalTime(time, btn) {
+      selectedTime = time;
+      btn.parentElement.querySelectorAll('.modal-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      updateSummaryText();
+    }
+
+    function setGoal(goal, btn) {
+      selectedGoal = goal;
+      btn.parentElement.querySelectorAll('.modal-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function updateSummaryText() {
+      const effDay = selectedDay === 'Muu kuupäev' && document.getElementById('customDateInput').value 
+        ? document.getElementById('customDateInput').value 
+        : selectedDay;
+      document.getElementById('sumTime').textContent = `${effDay}, ${selectedTime}`;
+      document.getElementById('sumPrice').textContent = `${currentMentor.price} € / 60 min (tasumine kohapeal)`;
+    }
+
+    function goToStep2() {
+      if (!hasTCard) {
+        const box = document.getElementById('tCardCard');
+        const err = document.getElementById('tCardErrorMsg');
+        box.classList.add('error-pulse');
+        err.style.display = 'block';
+        setTimeout(() => box.classList.remove('error-pulse'), 2000);
+        return;
+      }
+
+      document.getElementById('step1').style.display = 'none';
+      document.getElementById('step2').style.display = 'block';
+      document.getElementById('track1').style.color = '#94a3b8';
+      document.getElementById('dot1').style.background = '#34d399';
+      document.getElementById('dot1').style.boxShadow = 'none';
+      document.getElementById('track2').style.color = '#34d399';
+      document.getElementById('track2').style.fontWeight = '700';
+      document.getElementById('dot2').style.background = '#34d399';
+      document.getElementById('dot2').style.boxShadow = '0 0 0 4px rgba(52,211,153,.2)';
+      document.getElementById('qbName').focus();
+    }
+
+    function goToStep1() {
+      document.getElementById('step2').style.display = 'none';
+      document.getElementById('step1').style.display = 'block';
+      document.getElementById('track2').style.color = '#64748b';
+      document.getElementById('track2').style.fontWeight = '500';
+      document.getElementById('dot2').style.background = '#334155';
+      document.getElementById('dot2').style.boxShadow = 'none';
+      document.getElementById('track1').style.color = '#34d399';
+      document.getElementById('track1').style.fontWeight = '700';
+      document.getElementById('dot1').style.boxShadow = '0 0 0 4px rgba(52,211,153,.2)';
+    }
+
+    function formatPhoneInput(inp) {
+      let val = inp.value;
+      if (!val.startsWith('+372')) {
+        const digits = val.replace(/\D/g, '');
+        val = '+372 ' + digits;
+      }
+      const raw = val.replace(/[^\d+]/g, '');
+      if (raw.startsWith('+372') && raw.length > 4) {
+        const r = raw.slice(4);
+        if (r.length <= 2) val = `+372 ${r}`;
+        else if (r.length <= 4) val = `+372 ${r.slice(0, 2)} ${r.slice(2)}`;
+        else val = `+372 ${r.slice(0, 2)} ${r.slice(2, 4)} ${r.slice(4, 8)}`;
+      }
+      inp.value = val;
+    }
+
+    function handleFinalSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('qbName').value.trim();
+      const phone = document.getElementById('qbPhone').value.trim();
+      const district = document.getElementById('qbDistrict').value;
+
+      const isNameOk = name.length >= 2;
+      const digitsOnly = phone.replace(/\D/g, '');
+      const isPhoneOk = digitsOnly.length >= 10 && digitsOnly.startsWith('3725');
+
+      document.getElementById('errName').style.display = isNameOk ? 'none' : 'block';
+      document.getElementById('qbName').className = isNameOk ? 'm-input' : 'm-input invalid';
+      document.getElementById('errPhone').style.display = isPhoneOk ? 'none' : 'block';
+      document.getElementById('qbPhone').className = isPhoneOk ? 'm-input font-mono' : 'm-input font-mono invalid';
+
+      if (!isNameOk || !isPhoneOk) return;
+
+      const fn = currentMentor.name.split(' ')[0];
+      const effDay = selectedDay === 'Muu kuupäev' && document.getElementById('customDateInput').value 
+        ? document.getElementById('customDateInput').value 
+        : selectedDay;
+
+      document.getElementById('resMentor').textContent = fn;
+      document.getElementById('resPhone').textContent = phone;
+      document.getElementById('btnWAText').textContent = `Ava vestlus WhatsAppis (${fn})`;
+
+      const waMsg = encodeURIComponent(
+        `Tere ${fn}! Saatsin veebist sõidusoovi (${effDay.toLowerCase()}, ${selectedTime.toLowerCase()}, ${district}). Minu nimi on ${name}. Kas aeg sobiks?`
+      );
+      document.getElementById('btnWhatsApp').href = `https://wa.me/37255912345?text=${waMsg}`;
+
+      document.getElementById('step2').style.display = 'none';
+      document.getElementById('stepTrack').style.display = 'none';
+      document.getElementById('step3').style.display = 'block';
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    renderMentors();
+    // Pre-open Sergei's modal to show the updated experience immediately
+    openBookingModal('sergei');
+  </script>
+</body>
+</html>
