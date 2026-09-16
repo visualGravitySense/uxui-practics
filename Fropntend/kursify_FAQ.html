@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="et" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KKK — Korduma Kippuvad Küsimused</title>
+<meta name="description" content="Korduma kippuvad küsimused — professionaalne KKK akordion klaasiefektiga.">
+<meta property="og:title" content="KKK — Korduma Kippuvad Küsimused">
+<meta property="og:description" content="Korduma kippuvad küsimused — professionaalne KKK akordion klaasiefektiga.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          ink: { 950: '#070b16', 900: '#0f172a', 800: '#1e293b' },
+          accent: { 500: '#2563eb', 600: '#1d4ed8', 700: '#1e40af' }
+        },
+        fontFamily: {
+          sans: ['"Inter"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  html { scroll-behavior: smooth; }
+  body { 
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* ==========================================================================
+     BACKGROUND AMBIENT ORBS (Ensures Glassmorphism Blur is clearly visible)
+     ========================================================================== */
+  .ambient-scene {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(75px);
+    opacity: 0.75;
+    transition: opacity 0.35s ease;
+  }
+  /* Light mode orbs situated behind content */
+  .orb-1 {
+    width: 560px;
+    height: 560px;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(147, 197, 253, 0.8) 0%, rgba(191, 219, 254, 0.4) 55%, transparent 75%);
+  }
+  .orb-2 {
+    width: 500px;
+    height: 500px;
+    top: 26%;
+    left: calc(50% - 360px);
+    background: radial-gradient(circle, rgba(165, 180, 252, 0.7) 0%, rgba(199, 210, 254, 0.35) 60%, transparent 80%);
+  }
+  .orb-3 {
+    width: 520px;
+    height: 520px;
+    top: 56%;
+    right: calc(50% - 380px);
+    background: radial-gradient(circle, rgba(125, 211, 252, 0.65) 0%, rgba(199, 210, 254, 0.35) 60%, transparent 80%);
+  }
+  .orb-4 {
+    width: 480px;
+    height: 480px;
+    top: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(199, 210, 254, 0.7) 0%, rgba(224, 231, 255, 0.4) 55%, transparent 80%);
+  }
+
+  /* Dark mode orbs */
+  .dark .orb-1 {
+    opacity: 0.5;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.6) 0%, rgba(30, 64, 175, 0.25) 60%, transparent 80%);
+  }
+  .dark .orb-2 {
+    opacity: 0.4;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.5) 0%, rgba(30, 27, 75, 0.2) 60%, transparent 80%);
+  }
+  .dark .orb-3 {
+    opacity: 0.45;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.5) 0%, rgba(15, 23, 42, 0.2) 60%, transparent 80%);
+  }
+  .dark .orb-4 {
+    opacity: 0.38;
+    background: radial-gradient(circle, rgba(79, 70, 229, 0.5) 0%, rgba(15, 23, 42, 0.2) 60%, transparent 80%);
+  }
+
+  /* ==========================================================================
+     QUESTION PLATFORMS (Distinct Frosted Glass)
+     ========================================================================== */
+  .glass-platform {
+    position: relative;
+    background: rgba(255, 255, 255, 0.52);
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    border-radius: 18px;
+    box-shadow: 
+      0 8px 32px 0 rgba(31, 38, 135, 0.06),
+      0 1px 3px 0 rgba(15, 23, 42, 0.03),
+      inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.95),
+      inset 0 -1px 1px 0 rgba(0, 0, 0, 0.02);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+
+  .dark .glass-platform {
+    background: rgba(13, 21, 38, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 
+      0 10px 36px 0 rgba(0, 0, 0, 0.45),
+      inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.16),
+      inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  /* Platform Hover: Gentle highlight, no jerking transforms */
+  .faq-item:hover .glass-platform {
+    background: rgba(255, 255, 255, 0.65);
+    border-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 
+      0 12px 36px 0 rgba(37, 99, 235, 0.09),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 1);
+  }
+  .dark .faq-item:hover .glass-platform {
+    background: rgba(18, 29, 52, 0.58);
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow: 
+      0 12px 40px 0 rgba(0, 0, 0, 0.55),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.25);
+  }
+
+  /* Platform Open State */
+  .glass-platform.is-open {
+    background: rgba(255, 255, 255, 0.72);
+    border-color: rgba(37, 99, 235, 0.32);
+    box-shadow: 
+      0 14px 40px -4px rgba(37, 99, 235, 0.12),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 1);
+  }
+  .dark .glass-platform.is-open {
+    background: rgba(20, 33, 60, 0.68);
+    border-color: rgba(96, 165, 250, 0.35);
+    box-shadow: 
+      0 16px 42px -4px rgba(0, 0, 0, 0.65),
+      0 0 20px -2px rgba(37, 99, 235, 0.25),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  /* ==========================================================================
+     • KKK • TOP GLASS PILL BADGE (Soft, Translucent Glass, No Twitch)
+     ========================================================================== */
+  .badge-pill-container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .glass-pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 7px 24px;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    user-select: none;
+    box-sizing: border-box;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Light Theme Pill: Refined Translucent Sapphire Glass */
+  .light .glass-pill,
+  :root:not(.dark) .glass-pill {
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    color: #1d4ed8;
+    box-shadow: 
+      0 4px 14px -2px rgba(37, 99, 235, 0.08),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.95);
+  }
+  .glass-pill::before {
+    content: '';
+    position: absolute;
+    top: 1.5px;
+    left: 8%;
+    right: 8%;
+    height: 44%;
+    border-radius: 9999px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.05) 85%, transparent 100%);
+    pointer-events: none;
+  }
+
+  /* Dark Theme Pill: Soft Translucent Frosted Glass */
+  .dark .glass-pill {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #f1f5f9;
+    box-shadow: 
+      0 4px 16px -2px rgba(0, 0, 0, 0.4),
+      inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  }
+  .dark .glass-pill::before {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.05) 85%, transparent 100%);
+  }
+
+  /* Lateral dots for • KKK • */
+  .pill-dot {
+    width: 5.5px;
+    height: 5.5px;
+    border-radius: 50%;
+    background-color: currentColor;
+    display: inline-block;
+    flex-shrink: 0;
+    opacity: 0.85;
+  }
+
+  /* ==========================================================================
+     GLASS BUTTONS (+) AND (-) (Translucent, Non-Harsh, No Scaling/Twitch)
+     ========================================================================== */
+  .glass-btn {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+  }
+
+  /* Light Theme Button: Soft Translucent Sapphire Glass */
+  .light .glass-btn,
+  :root:not(.dark) .glass-btn {
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    color: #1d4ed8;
+    box-shadow: 
+      0 2px 8px rgba(37, 99, 235, 0.06),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.9);
+  }
+  .faq-item:hover .glass-btn {
+    background: rgba(37, 99, 235, 0.15);
+    border-color: rgba(37, 99, 235, 0.32);
+    color: #1e40af;
+  }
+  .faq-item[data-open="true"] .glass-btn {
+    background: rgba(37, 99, 235, 0.15);
+    border-color: rgba(37, 99, 235, 0.32);
+    color: #1d4ed8;
+  }
+
+  /* Specular crescent highlight on top of circle */
+  .glass-btn::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 12%;
+    right: 12%;
+    height: 44%;
+    border-radius: 50% 50% 45% 45% / 75% 75% 30% 30%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.05) 80%, transparent 100%);
+    pointer-events: none;
+  }
+
+  /* Dark Theme Button: Soft Translucent Frosted Glass */
+  .dark .glass-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #f8fafc;
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.3),
+      inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  }
+  .dark .faq-item:hover .glass-btn {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+  }
+  .dark .faq-item[data-open="true"] .glass-btn {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+  }
+  .dark .glass-btn::before {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.05) 80%, transparent 100%);
+  }
+
+  /* ==========================================================================
+     GLASS CTA BUTTON: "Broneeri tasuta konsultatsioon"
+     ========================================================================== */
+  .glass-cta-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 13px 28px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    user-select: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  /* Light mode glass CTA: Refined semi-transparent blue */
+  .light .glass-cta-btn,
+  :root:not(.dark) .glass-cta-btn {
+    background: rgba(37, 99, 235, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+    box-shadow: 
+      0 8px 24px -4px rgba(37, 99, 235, 0.3),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.65);
+  }
+  .light .glass-cta-btn:hover,
+  :root:not(.dark) .glass-cta-btn:hover {
+    background: rgba(29, 78, 216, 0.92);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 
+      0 10px 28px -4px rgba(37, 99, 235, 0.38),
+      inset 0 1px 2px rgba(255, 255, 255, 0.8);
+  }
+
+  /* Dark mode glass CTA: Illuminated frosted glass */
+  .dark .glass-cta-btn {
+    background: rgba(37, 99, 235, 0.28);
+    border: 1px solid rgba(96, 165, 250, 0.35);
+    color: #ffffff;
+    box-shadow: 
+      0 8px 26px -4px rgba(0, 0, 0, 0.5),
+      0 0 16px rgba(37, 99, 235, 0.2),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.3);
+  }
+  .dark .glass-cta-btn:hover {
+    background: rgba(37, 99, 235, 0.42);
+    border-color: rgba(147, 197, 253, 0.55);
+    box-shadow: 
+      0 10px 30px -4px rgba(0, 0, 0, 0.6),
+      0 0 22px rgba(37, 99, 235, 0.32),
+      inset 0 1px 2px rgba(255, 255, 255, 0.45);
+  }
+
+  /* ==========================================================================
+     CLEAN PLUS AND MINUS ICONS (True Minus, no jerk, smooth opacity)
+     ========================================================================== */
+  .icon-plus, .icon-minus {
+    width: 15px;
+    height: 15px;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    position: relative;
+    z-index: 1;
+    display: block;
+    transition: opacity 0.15s ease;
+  }
+
+  /* Closed state: show plus, hide minus */
+  .faq-item[data-open="false"] .icon-plus {
+    display: block;
+    opacity: 1;
+  }
+  .faq-item[data-open="false"] .icon-minus {
+    display: none;
+    opacity: 0;
+  }
+
+  /* Open state: hide plus, show minus */
+  .faq-item[data-open="true"] .icon-plus {
+    display: none;
+    opacity: 0;
+  }
+  .faq-item[data-open="true"] .icon-minus {
+    display: block;
+    opacity: 1;
+  }
+
+  /* ==========================================================================
+     ACCORDION PANEL COLLAPSE ANIMATION
+     ========================================================================== */
+  .faq-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition: grid-template-rows 280ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease;
+  }
+  .faq-item[data-open="true"] .faq-panel {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+  .faq-panel-inner {
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  /* Question Trigger Button Reset */
+  .faq-trigger-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    text-align: left;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 20px 24px;
+  }
+  @media (max-width: 640px) {
+    .faq-trigger-btn {
+      padding: 16px 18px;
+      gap: 12px;
+    }
+  }
+
+  /* Theme Toggle in Header */
+  .theme-switch-btn {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+    transition: all 0.2s ease;
+  }
+  .dark .theme-switch-btn {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+  .theme-switch-btn:hover {
+    transform: translateY(-1px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-panel, .glass-btn, .glass-platform, .orb {
+      transition: none !important;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 3px;
+    border-radius: 12px;
+  }
+</style>
+</head>
+<body class="min-h-screen bg-[#f1f5fd] dark:bg-[#070b16] text-ink-900 dark:text-white antialiased transition-colors duration-300 relative selection:bg-blue-500/20">
+
+<!-- Ambient Background Orbs for visible Glassmorphism blur -->
+<div class="ambient-scene" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+</div>
+
+<!-- Fixed Theme Toggle -->
+<div class="fixed top-5 right-5 z-30">
+  <button id="theme-toggle" type="button" aria-label="Lülita teemat"
+    class="theme-switch-btn rounded-full px-4 py-2 text-xs font-semibold text-ink-900 dark:text-white flex items-center gap-2">
+    <span id="theme-icon" class="text-sm">☾</span>
+    <span id="theme-label">Dark</span>
+  </button>
+</div>
+
+<!-- Main Content Area with natural wide boundaries (max-w-[760px]) -->
+<main class="relative z-10 mx-auto max-w-[760px] w-full px-4 sm:px-6 py-16 sm:py-20">
+
+  <!-- Header Block with Glass • KKK • Badge -->
+  <div class="text-center mb-10 sm:mb-12">
+    
+    <!-- Top • KKK • Glass Pill Badge -->
+    <div class="badge-pill-container mb-4">
+      <div class="glass-pill">
+        <span class="pill-dot" aria-hidden="true"></span>
+        <span>KKK</span>
+        <span class="pill-dot" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <h1 class="text-2xl sm:text-4xl font-extrabold text-ink-900 dark:text-white tracking-tight mb-3">
+      Korduma kippuvad küsimused
+    </h1>
+    <p class="text-[15px] sm:text-[16px] text-ink-800/70 dark:text-white/60 max-w-lg mx-auto leading-relaxed">
+      Lühivastused Andrese kogemuse, koostöö ja koolituste kohta.
+    </p>
+    <div class="inline-flex items-center gap-2 mt-3.5 text-[13px] font-medium text-ink-800/50 dark:text-white/40">
+      <span class="w-1.5 h-1.5 rounded-full bg-accent-500"></span>
+      50+ ettevõtet on läbinud programmi
+    </div>
+  </div>
+
+  <!-- FAQ Accordion Platforms List -->
+  <div id="faq-list" class="flex flex-col gap-3.5 sm:gap-4">
+
+    <!-- Item 1 -->
+    <div class="faq-item" data-open="true" data-read="true">
+      <div class="glass-platform is-open">
+        <button type="button" class="faq-trigger-btn" aria-expanded="true">
+          <!-- Question Platform Title in CAPITAL LETTERS -->
+          <span class="text-[13px] sm:text-[14px] font-bold tracking-[0.03em] uppercase text-ink-900 dark:text-white leading-snug">
+            MIS ON LEAN JA MILLEST SELLE RAKENDAMINE ETTEVÕTTES ALGAB?
+          </span>
+          <!-- Glass Button with Plus / Minus -->
+          <div class="glass-btn" aria-hidden="true">
+            <!-- Plus Icon (Closed) -->
+            <svg class="icon-plus" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+              <path d="M8 2.5V13.5M2.5 8H13.5" />
+            </svg>
+            <!-- Minus Icon (Open) -->
+            <svg class="icon-minus" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+              <path d="M2.5 8H13.5" />
+            </svg>
+          </div>
+        </button>
+        <div class="faq-panel">
+          <div class="faq-panel-inner">
+            <div class="px-5 sm:px-6 pb-6 pt-1 text-[14px] leading-relaxed text-ink-800/75 dark:text-white/70 space-y-3 border-t border-black/5 dark:border-white/5">
+              <p class="font-medium text-ink-900 dark:text-white/95">
+                Lean on terviklik juhtimisviis — mitte üksik meetod ega tööriistade kogum.
+              </p>
+              <p>
+                Eesmärk on luua kliendile väärtust, kujundades sujuva ja kohanemisvõimelise töövoo ning vähendades raiskamist, ebastabiilsust ja ülekoormust. Selle juured on Toyota Production Systemis.
+              </p>
+              <ul class="list-disc pl-4 space-y-1.5 text-ink-800/70 dark:text-white/65">
+                <li>Rakendamine algab ettevõtte tegeliku olukorra mõistmisest — mida klient väärtustab ja kus tekivad takistused.</li>
+                <li>Kui puuduvad kord ja standardid, on hea alustada 5S-süsteemist.</li>
+                <li>Edasi valitakse lahendused ettevõtte tegelike probleemide järgi — mitte "tehakse Leani" juhuslikult valitud tööriistadega.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 2 -->
+    <div class="faq-item" data-open="false" data-read="false">
+      <div class="glass-platform">
+        <button type="button" class="faq-trigger-btn" aria-expanded="false">
+          <!-- Question Platform Title in CAPITAL LETTERS -->
+          <span class="text-[13px] sm:text-[14px] font-bold tracking-[0.03em] uppercase text-ink-900 dark:text-white leading-snug">
+            KAS ARENGUPROGRAMM SOBIB KA TEENINDUSETTEVÕTTELE JA MUJALE VÄLJASPOOL TOOTMIST?
+          </span>
+          <div class="glass-btn" aria-hidden="true">
+            <svg class="icon-plus" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+              <path d="M8 2.5V13.5M2.5 8H13.5" />
+            </svg>
+            <svg class="icon-minus" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+              <path d="M2.5 8H13.5" />
+            </svg>
+          </div>
+        </button>
+        <div class="faq-panel">
+          <div class="faq-panel-inner">
+            <div class="px-5 sm:px-6 pb-6 pt-1 text-[14px] leading-relaxed text-ink-800/75 dark:text-white/70 space-y-3 border-t border-black/5 dark:border-white/5">
+              <p class="font-medium text-ink-900 dark:text-white/95">
+                Jah — Lean põhimõtted töötavad igas väärtust looval protsessis, mitte ainult tootmises.
+              </p>
+              <p>
+                Teenindus-, kaubandus- ja kontoriprotsessides on samamoodi raiskamist, ootamist ja katkendlikku infovoogu, mida saab sama süsteemselt vähendada.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 3 -->
+    <div class="faq-item" data-open="false" data-read="false">
+      <div class="glass-platform">
+        <button type="button" class="faq-trigger-btn" aria-expanded="false">
+          <!-- Question Platform Title in CAPITAL LETTERS -->
+          <span class="text-[13px] sm:text-[14px] font-bold tracking-[0.03em] uppercase text-ink-900 dark:text-white leading-snug">
+            KAS LÄHENEMINE JA ARENGUPROGRAMM SOBIVAD KA VÄIKESELE ETTEVÕTTELE?
+          </span>
+          <div class="glass-btn" aria-hidden="true">
+            <svg class="icon-plus" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+              <path d="M8 2.5V13.5M2.5 8H13.5" />
+            </svg>
+            <svg class="icon-minus" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+              <path d="M2.5 8H13.5" />
+            </svg>
+          </div>
+        </button>
+        <div class="faq-panel">
+          <div class="faq-panel-inner">
+            <div class="px-5 sm:px-6 pb-6 pt-1 text-[14px] leading-relaxed text-ink-800/75 dark:text-white/70 space-y-3 border-t border-black/5 dark:border-white/5">
+              <p class="font-medium text-ink-900 dark:text-white/95">
+                Jah, meetodid skaleeruvad — muutub ainult rakendamise maht ja tempo.
+              </p>
+              <p>
+                Väikeses ettevõttes on otsustustee lühem, mistõttu muudatused jõustuvad sageli kiiremini kui suures organisatsioonis.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 4 -->
+    <div class="faq-item" data-open="false" data-read="false">
+      <div class="glass-platform">
+        <button type="button" class="faq-trigger-btn" aria-expanded="false">
+          <!-- Question Platform Title in CAPITAL LETTERS -->
+          <span class="text-[13px] sm:text-[14px] font-bold tracking-[0.03em] uppercase text-ink-900 dark:text-white leading-snug">
+            OLEME LEANI PROOVINUD, AGA MUUTUSED EI PÜSI. MIS NÜÜD TEISITI ON?
+          </span>
+          <div class="glass-btn" aria-hidden="true">
+            <svg class="icon-plus" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+              <path d="M8 2.5V13.5M2.5 8H13.5" />
+            </svg>
+            <svg class="icon-minus" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+              <path d="M2.5 8H13.5" />
+            </svg>
+          </div>
+        </button>
+        <div class="faq-panel">
+          <div class="faq-panel-inner">
+            <div class="px-5 sm:px-6 pb-6 pt-1 text-[14px] leading-relaxed text-ink-800/75 dark:text-white/70 space-y-3 border-t border-black/5 dark:border-white/5">
+              <p class="font-medium text-ink-900 dark:text-white/95">
+                Enamasti jäävad muutused püsimata, kui puudub juhtimissüsteem, mis neid hoiab.
+              </p>
+              <p>
+                Arenguprogramm keskendub mitte üksiku tööriista juurutamisele, vaid harjumuse ja järelevalve loomisele, mis tagab, et parendused ei vaju vanade mustrite alla tagasi.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 5 -->
+    <div class="faq-item" data-open="false" data-read="false">
+      <div class="glass-platform">
+        <button type="button" class="faq-trigger-btn" aria-expanded="false">
+          <!-- Question Platform Title in CAPITAL LETTERS -->
+          <span class="text-[13px] sm:text-[14px] font-bold tracking-[0.03em] uppercase text-ink-900 dark:text-white leading-snug">
+            KAS ARENGUPROGRAMMI SAAB TELLIDA KA ETTEVÕTTESSE?
+          </span>
+          <div class="glass-btn" aria-hidden="true">
+            <svg class="icon-plus" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+              <path d="M8 2.5V13.5M2.5 8H13.5" />
+            </svg>
+            <svg class="icon-minus" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+              <path d="M2.5 8H13.5" />
+            </svg>
+          </div>
+        </button>
+        <div class="faq-panel">
+          <div class="faq-panel-inner">
+            <div class="px-5 sm:px-6 pb-6 pt-1 text-[14px] leading-relaxed text-ink-800/75 dark:text-white/70 space-y-3 border-t border-black/5 dark:border-white/5">
+              <p class="font-medium text-ink-900 dark:text-white/95">
+                Jah, programmi saab kohandada ja viia läbi otse ettevõtte ruumides.
+              </p>
+              <p>
+                Sisu ja tempo lepitakse kokku vastavalt meeskonna suurusele ja praegusele küpsusastmele.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 6 -->
+    <div class="faq-item" data-open="false" data-read="false">
+      <div class="glass-platform">
+        <button type="button" class="faq-trigger-btn" aria-expanded="false">
+          <!-- Question Platform Title in CAPITAL LETTERS -->
+          <span class="text-[13px] sm:text-[14px] font-bold tracking-[0.03em] uppercase text-ink-900 dark:text-white leading-snug">
+            KAS ARENGUPROGRAMMIS OSALEMISEKS ON VÕIMALIK TAOTLEDA TOETUST?
+          </span>
+          <div class="glass-btn" aria-hidden="true">
+            <svg class="icon-plus" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+              <path d="M8 2.5V13.5M2.5 8H13.5" />
+            </svg>
+            <svg class="icon-minus" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+              <path d="M2.5 8H13.5" />
+            </svg>
+          </div>
+        </button>
+        <div class="faq-panel">
+          <div class="faq-panel-inner">
+            <div class="px-5 sm:px-6 pb-6 pt-1 text-[14px] leading-relaxed text-ink-800/75 dark:text-white/70 space-y-3 border-t border-black/5 dark:border-white/5">
+              <p class="font-medium text-ink-900 dark:text-white/95">
+                Sageli jah — paljud ettevõtted kasutavad koolituse osaliseks katmiseks riiklikku tuge.
+              </p>
+              <p>
+                Täpsed tingimused sõltuvad hetkel avatud meetmetest.
+                <a href="#" class="text-accent-600 dark:text-blue-400 font-semibold underline underline-offset-2 hover:no-underline inline-flex items-center gap-1">
+                  Küsi täpsemalt meie konsultandilt →
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 7 -->
+    <div class="faq-item" data-open="false" data-read="false">
+      <div class="glass-platform">
+        <button type="button" class="faq-trigger-btn" aria-expanded="false">
+          <!-- Question Platform Title in CAPITAL LETTERS -->
+          <span class="text-[13px] sm:text-[14px] font-bold tracking-[0.03em] uppercase text-ink-900 dark:text-white leading-snug">
+            KUIDAS ALUSTADA KOOSTÖÖD VÕI KÜSIDA PAKKUMIST?
+          </span>
+          <div class="glass-btn" aria-hidden="true">
+            <svg class="icon-plus" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+              <path d="M8 2.5V13.5M2.5 8H13.5" />
+            </svg>
+            <svg class="icon-minus" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+              <path d="M2.5 8H13.5" />
+            </svg>
+          </div>
+        </button>
+        <div class="faq-panel">
+          <div class="faq-panel-inner">
+            <div class="px-5 sm:px-6 pb-6 pt-1 text-[14px] leading-relaxed text-ink-800/75 dark:text-white/70 space-y-3 border-t border-black/5 dark:border-white/5">
+              <p class="font-medium text-ink-900 dark:text-white/95">
+                Kõige lihtsam on broneerida lühike tasuta konsultatsioon.
+              </p>
+              <p>
+                Selle käigus vaatame üle teie hetkeolukorra ja sobiva lähenemise, enne kui teete otsust.
+                <a href="#" class="text-accent-600 dark:text-blue-400 font-semibold underline underline-offset-2 hover:no-underline inline-flex items-center gap-1">
+                  Küsi täpsemalt meie konsultandilt →
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Action Bar -->
+  <div class="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <a href="#" class="text-[14px] font-semibold text-ink-800/60 dark:text-white/55 hover:text-accent-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1.5">
+      Vaata kõiki küsimusi
+      <svg class="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none">
+        <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <a href="#" class="glass-cta-btn w-full sm:w-auto text-center">
+      Broneeri tasuta konsultatsioon
+    </a>
+  </div>
+
+</main>
+
+<script>
+  // Clean Accordion Toggle with True Plus and Minus
+  document.querySelectorAll('.faq-trigger-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var item = btn.closest('.faq-item');
+      var isOpen = item.getAttribute('data-open') === 'true';
+      var nextState = !isOpen;
+
+      item.setAttribute('data-open', String(nextState));
+      item.setAttribute('data-read', 'true');
+      btn.setAttribute('aria-expanded', String(nextState));
+
+      var platform = item.querySelector('.glass-platform');
+      if (nextState) {
+        platform.classList.add('is-open');
+        // Smooth scroll into comfortable viewport if overflowing
+        requestAnimationFrame(function () {
+          var rect = item.getBoundingClientRect();
+          if (rect.bottom > window.innerHeight) {
+            item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        });
+      } else {
+        platform.classList.remove('is-open');
+      }
+    });
+  });
+
+  // Theme Toggle: Light / Dark
+  var root = document.documentElement;
+  var toggle = document.getElementById('theme-toggle');
+  var icon = document.getElementById('theme-icon');
+  var label = document.getElementById('theme-label');
+
+  function syncThemeUI() {
+    var isDark = root.classList.contains('dark');
+    if (isDark) {
+      root.classList.remove('light');
+      icon.textContent = '☼';
+      label.textContent = 'Light';
+    } else {
+      root.classList.add('light');
+      icon.textContent = '☾';
+      label.textContent = 'Dark';
+    }
+  }
+
+  // Set default initial state
+  syncThemeUI();
+
+  toggle.addEventListener('click', function () {
+    root.classList.toggle('dark');
+    syncThemeUI();
+  });
+</script>
+
+</body>
+</html>
