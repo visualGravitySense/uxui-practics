@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="et" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kursify — Edulood & Juhtumianalüüsid (Keisid)</title>
+<meta name="description" content="Reaalsed õpilaste tulemused ja edulood: kuidas läbida autokool 28 päevaga või sooritada Transpordiameti eksam esimese korraga.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          ink: { 950: '#070b16', 900: '#0f172a', 800: '#1e293b' },
+          accent: { 500: '#2563eb', 600: '#1d4ed8', 700: '#1e40af', 800: '#1e3a8a' }
+        },
+        fontFamily: {
+          sans: ['"Inter"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { 
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* ==========================================================================
+     BACKGROUND AMBIENT ORBS (Deep vibrant gradient mesh for glass refraction)
+     ========================================================================== */
+  .ambient-scene {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(75px);
+    opacity: 0.85;
+    transition: opacity 0.35s ease;
+  }
+  .orb-1 {
+    width: 680px;
+    height: 680px;
+    top: -5%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(147, 197, 253, 0.85) 0%, rgba(191, 219, 254, 0.45) 50%, transparent 75%);
+  }
+  .orb-2 {
+    width: 580px;
+    height: 580px;
+    top: 25%;
+    left: calc(50% - 480px);
+    background: radial-gradient(circle, rgba(165, 180, 252, 0.75) 0%, rgba(199, 210, 254, 0.4) 55%, transparent 80%);
+  }
+  .orb-3 {
+    width: 600px;
+    height: 600px;
+    top: 30%;
+    right: calc(50% - 480px);
+    background: radial-gradient(circle, rgba(125, 211, 252, 0.75) 0%, rgba(186, 230, 253, 0.4) 55%, transparent 80%);
+  }
+  .orb-4 {
+    width: 720px;
+    height: 480px;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse, rgba(199, 210, 254, 0.6) 0%, rgba(224, 231, 255, 0.25) 60%, transparent 80%);
+  }
+
+  .dark .orb-1 {
+    opacity: 0.55;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.6) 0%, rgba(30, 64, 175, 0.25) 60%, transparent 80%);
+  }
+  .dark .orb-2 {
+    opacity: 0.45;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.55) 0%, rgba(30, 27, 75, 0.25) 60%, transparent 80%);
+  }
+  .dark .orb-3 {
+    opacity: 0.5;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.5) 0%, rgba(15, 23, 42, 0.25) 60%, transparent 80%);
+  }
+  .dark .orb-4 {
+    opacity: 0.4;
+    background: radial-gradient(ellipse, rgba(79, 70, 229, 0.4) 0%, transparent 75%);
+  }
+
+  /* ==========================================================================
+     FROSTED GLASS CASE CARDS (.case-glass-card)
+     Identical signature to Instructor Hero & FAQ:
+     translucent glass, specular top edge, ambient refraction, no jumping.
+     ========================================================================== */
+  .case-glass-card {
+    position: relative;
+    border-radius: 28px;
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+  }
+
+  .light .case-glass-card,
+  :root:not(.dark) .case-glass-card {
+    background: rgba(255, 255, 255, 0.68);
+    border: 1px solid rgba(255, 255, 255, 0.88);
+    box-shadow: 
+      0 20px 50px -12px rgba(37, 99, 235, 0.12),
+      0 4px 20px -2px rgba(15, 23, 42, 0.04),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95),
+      inset 0 -1px 1px 0 rgba(0, 0, 0, 0.02);
+  }
+  .light .case-glass-card:hover {
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(37, 99, 235, 0.4);
+    box-shadow: 
+      0 24px 60px -10px rgba(37, 99, 235, 0.2),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 1);
+  }
+
+  .dark .case-glass-card {
+    background: rgba(13, 21, 38, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 
+      0 22px 60px -10px rgba(0, 0, 0, 0.6),
+      0 0 28px rgba(37, 99, 235, 0.15),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3);
+  }
+  .dark .case-glass-card:hover {
+    background: rgba(17, 28, 52, 0.75);
+    border-color: rgba(96, 165, 250, 0.45);
+    box-shadow: 
+      0 24px 65px -10px rgba(0, 0, 0, 0.7),
+      0 0 35px rgba(37, 99, 235, 0.3),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.28);
+  }
+
+  /* Nested Glass Container for Metric Pod */
+  .case-metric-glass {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.95),
+      0 2px 8px -2px rgba(37, 99, 235, 0.06);
+    border-radius: 18px;
+  }
+  .dark .case-metric-glass {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.16);
+  }
+
+  /* Status Badge inside Card */
+  .badge-metric {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* Micro CTA Button (Exact matching frosted glass, NO translateY, smooth transitions) */
+  .btn-case-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    padding: 9px 18px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    cursor: pointer;
+    user-select: none;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+  }
+  .light .btn-case-cta {
+    background: rgba(37, 99, 235, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #ffffff;
+    box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.7);
+  }
+  .light .btn-case-cta:hover {
+    background: rgba(29, 78, 216, 0.98);
+    border-color: rgba(255, 255, 255, 0.75);
+    box-shadow: 0 6px 18px -2px rgba(37, 99, 235, 0.45), inset 0 1px 1.5px rgba(255, 255, 255, 0.85);
+  }
+  .dark .btn-case-cta {
+    background: rgba(37, 99, 235, 0.35);
+    border: 1px solid rgba(96, 165, 250, 0.4);
+    color: #ffffff;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  }
+  .dark .btn-case-cta:hover {
+    background: rgba(37, 99, 235, 0.5);
+    border-color: rgba(147, 197, 253, 0.6);
+    box-shadow: 0 6px 20px -2px rgba(0, 0, 0, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.45);
+  }
+
+  /* Modal Backdrop */
+  .modal-backdrop {
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: rgba(15, 23, 42, 0.7);
+  }
+</style>
+</head>
+<body class="min-h-screen bg-[#f1f5fd] dark:bg-[#070b16] text-ink-900 dark:text-white antialiased transition-colors duration-250 relative selection:bg-blue-500/20 flex flex-col justify-center py-12 sm:py-16">
+
+<!-- AMBIENT BACKGROUND ORBS -->
+<div class="ambient-scene" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- FLOATING THEME TOGGLE -->
+<div class="fixed top-4 right-4 sm:top-6 sm:right-8 z-50">
+  <button id="theme-toggle" type="button" aria-label="Lülita teemat"
+    class="rounded-full px-3.5 py-1.5 text-xs font-semibold text-ink-900 dark:text-white flex items-center gap-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/80 dark:border-white/15 shadow-sm hover:border-blue-500/40 transition-colors cursor-pointer">
+    <span id="theme-icon" class="text-sm">☾</span>
+    <span id="theme-label">Dark</span>
+  </button>
+</div>
+
+<!-- MAIN CONTAINER -->
+<main class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+
+  <!-- HEADER OF CASE SECTION -->
+  <div class="text-center max-w-2xl mx-auto">
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 mb-3.5">
+      <span>• TÕESTATUD TULEMUSED & PERFORMANS •</span>
+    </div>
+    <h1 class="text-3xl sm:text-4xl font-black text-ink-900 dark:text-white tracking-tight leading-tight mb-3">
+      Kuidas meie õpilased load kätte said
+    </h1>
+    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+      Konkreetsed lood ja numbrid: kiirkursused, eksami sooritamine esimese korraga ja hirmudest vabanemine.
+    </p>
+  </div>
+
+  <!-- 3 CASE CARDS GRID -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- ====================================================================
+         CASE 1: LOAD 28 PÄEVAGA
+         ==================================================================== -->
+    <div class="case-glass-card p-6 sm:p-7 flex flex-col justify-between" onclick="openCaseModal(1)">
+      <div>
+        <!-- Top Row: School & Badge -->
+        <div class="flex items-center justify-between gap-2 mb-4">
+          <span class="text-xs font-bold text-accent-600 dark:text-blue-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+            Zebra Autokool
+          </span>
+          <span class="badge-metric bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+            ⚡ 28 PÄEVAGA
+          </span>
+        </div>
+
+        <!-- Instructor & Student Tag -->
+        <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-2">
+          Õpetaja: <strong class="text-ink-900 dark:text-white">Andres K.</strong> • Õpilane: <strong class="text-ink-900 dark:text-white">Markus (22 a)</strong>
+        </div>
+
+        <!-- Headline -->
+        <h2 class="text-lg font-black text-ink-900 dark:text-white tracking-tight leading-snug mb-2.5">
+          B-kategooria load 28 päevaga esimese korraga
+        </h2>
+
+        <!-- Short description -->
+        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+          Õpilasel oli vaja uue töökoha tõttu kiiresti lube. E-teooria läbimine 6 päevaga ja intensiivne 3x nädalas sõidugraafik.
+        </p>
+
+        <!-- Metric highlights -->
+        <div class="grid grid-cols-2 gap-2 p-3.5 case-metric-glass mb-5 text-center">
+          <div>
+            <div class="text-base font-black text-ink-900 dark:text-white">28 päeva</div>
+            <div class="text-[10px] text-slate-500 dark:text-slate-400">Algusest eksamini</div>
+          </div>
+          <div>
+            <div class="text-base font-black text-emerald-600 dark:text-emerald-400">100%</div>
+            <div class="text-[10px] text-slate-500 dark:text-slate-400">Läbivus Transpordiametis</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer: Platform Verification + Action -->
+      <div class="pt-4 border-t border-slate-200/70 dark:border-white/10 flex items-center justify-between">
+        <div class="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg>
+          <span>Eksamiga kinnitatud</span>
+        </div>
+        <button type="button" class="btn-case-cta">
+          <span>Loe keisi</span>
+          <span class="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         CASE 2: SÕIDUHIRMUST VABANEMINE
+         ==================================================================== -->
+    <div class="case-glass-card p-6 sm:p-7 flex flex-col justify-between" onclick="openCaseModal(2)">
+      <div>
+        <!-- Top Row: School & Badge -->
+        <div class="flex items-center justify-between gap-2 mb-4">
+          <span class="text-xs font-bold text-accent-600 dark:text-blue-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+            Autosõit OÜ
+          </span>
+          <span class="badge-metric bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+            🎯 1. KORRAGA
+          </span>
+        </div>
+
+        <!-- Instructor & Student Tag -->
+        <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-2">
+          Õpetaja: <strong class="text-ink-900 dark:text-white">Sergei M.</strong> • Õpilane: <strong class="text-ink-900 dark:text-white">Laura (29 a)</strong>
+        </div>
+
+        <!-- Headline -->
+        <h2 class="text-lg font-black text-ink-900 dark:text-white tracking-tight leading-snug mb-2.5">
+          Paanikahoogudest eduka linnasõiduni
+        </h2>
+
+        <!-- Short description -->
+        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+          Laura oli varem teises koolis kogenud instruktori karjumist ja kartis rooli istuda. Rahuliku metoodika abil sooritas riikliku eksami vigadeta.
+        </p>
+
+        <!-- Metric highlights -->
+        <div class="grid grid-cols-2 gap-2 p-3.5 case-metric-glass mb-5 text-center">
+          <div>
+            <div class="text-base font-black text-ink-900 dark:text-white">0 viga</div>
+            <div class="text-[10px] text-slate-500 dark:text-slate-400">Riiklikul sõidueksamil</div>
+          </div>
+          <div>
+            <div class="text-base font-black text-blue-600 dark:text-blue-400">14 tundi</div>
+            <div class="text-[10px] text-slate-500 dark:text-slate-400">Taastavat sõitu</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer: Platform Verification + Action -->
+      <div class="pt-4 border-t border-slate-200/70 dark:border-white/10 flex items-center justify-between">
+        <div class="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg>
+          <span>Eksamiga kinnitatud</span>
+        </div>
+        <button type="button" class="btn-case-cta">
+          <span>Loe keisi</span>
+          <span class="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         CASE 3: ÜLEMINEK AUTOMAATKÄIGUKASTILE
+         ==================================================================== -->
+    <div class="case-glass-card p-6 sm:p-7 flex flex-col justify-between" onclick="openCaseModal(3)">
+      <div>
+        <!-- Top Row: School & Badge -->
+        <div class="flex items-center justify-between gap-2 mb-4">
+          <span class="text-xs font-bold text-accent-600 dark:text-blue-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+            DriveLab Autokool
+          </span>
+          <span class="badge-metric bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+            💡 SÄÄST 420 €
+          </span>
+        </div>
+
+        <!-- Instructor & Student Tag -->
+        <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-2">
+          Õpetaja: <strong class="text-ink-900 dark:text-white">Priit T.</strong> • Õpilane: <strong class="text-ink-900 dark:text-white">Kristjan (34 a)</strong>
+        </div>
+
+        <!-- Headline -->
+        <h2 class="text-lg font-black text-ink-900 dark:text-white tracking-tight leading-snug mb-2.5">
+          3 ebaõnnestunud katset → kiirümberõpe automaadile
+        </h2>
+
+        <!-- Short description -->
+        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+          Kukkus 3 korda läbi manuaalkäigukastiga siduri väljasuretamise tõttu. Kursify kaudu leitud automaadiõpe tagas load 12 päevaga.
+        </p>
+
+        <!-- Metric highlights -->
+        <div class="grid grid-cols-2 gap-2 p-3.5 case-metric-glass mb-5 text-center">
+          <div>
+            <div class="text-base font-black text-ink-900 dark:text-white">12 päeva</div>
+            <div class="text-[10px] text-slate-500 dark:text-slate-400">Ümberõppe kestus</div>
+          </div>
+          <div>
+            <div class="text-base font-black text-indigo-600 dark:text-indigo-400">420 €</div>
+            <div class="text-[10px] text-slate-500 dark:text-slate-400">Säästetud lisatundidelt</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer: Platform Verification + Action -->
+      <div class="pt-4 border-t border-slate-200/70 dark:border-white/10 flex items-center justify-between">
+        <div class="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg>
+          <span>Eksamiga kinnitatud</span>
+        </div>
+        <button type="button" class="btn-case-cta">
+          <span>Loe keisi</span>
+          <span class="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">→</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- ==========================================================================
+     INTERACTIVE POPUP MODAL (CASE STUDY DETAILS)
+     ========================================================================== -->
+<div id="caseModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+  <div class="modal-backdrop fixed inset-0" onclick="closeCaseModal()"></div>
+  <div class="relative z-10 w-full max-w-2xl rounded-3xl bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-white/15 p-6 sm:p-8 shadow-2xl backdrop-blur-xl max-h-[90vh] overflow-y-auto">
+    
+    <!-- Modal Header -->
+    <div class="flex items-start justify-between pb-4 border-b border-slate-100 dark:border-white/10">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span id="modalSchoolBadge" class="text-xs font-bold text-blue-600 dark:text-blue-400">Zebra Autokool</span>
+          <span class="text-slate-300 dark:text-white/20">•</span>
+          <span id="modalPerformanceBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-600">28 PÄEVAGA</span>
+        </div>
+        <h3 id="modalCaseTitle" class="text-lg sm:text-xl font-black text-ink-900 dark:text-white">
+          B-kategooria load 28 päevaga esimese korraga
+        </h3>
+        <p id="modalCaseSub" class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+          Õpilane: Markus (22) • Juhendaja: Andres K. • Tallinn
+        </p>
+      </div>
+      <button onclick="closeCaseModal()" class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors">✕</button>
+    </div>
+
+    <!-- Case Narrative / Body -->
+    <div class="mt-5 space-y-4 text-xs sm:text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+      
+      <!-- Problem block -->
+      <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20">
+        <h4 class="font-bold text-amber-700 dark:text-amber-400 text-xs uppercase tracking-wider mb-1">Lähteülesanne ja probleem</h4>
+        <p id="modalProblemText" class="text-xs text-slate-700 dark:text-slate-300 leading-normal">
+          Markusele pakuti tööd logistikaalal, kus auto juhtimise oskus oli vältimatu eeltingimus. Tavalises autokoolis prognoositi kestuseks 3–5 kuud pikkade järjekordade tõttu.
+        </p>
+      </div>
+
+      <!-- Solution & Roadmap Timeline -->
+      <div class="p-4 rounded-2xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10">
+        <h4 class="font-bold text-ink-900 dark:text-white text-xs uppercase tracking-wider mb-2">Kuidas tulemus saavutati (Tegevuskava):</h4>
+        <ul id="modalStepsList" class="space-y-2 text-xs text-slate-600 dark:text-slate-300">
+          <li class="flex items-start gap-2">
+            <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">1</span>
+            <span><strong>Nädal 1:</strong> Täielik e-teooria läbimine Kursify partnerplatvormil 6 päevaga + esmaabikoolitus.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">2</span>
+            <span><strong>Nädal 2–3:</strong> 16 kohustuslikku sõidutundi Andres K. juhendamisel tiheda graafikuga (iga päev 2 tundi).</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">3</span>
+            <span><strong>Nädal 4:</strong> Koolieksam esimese korraga + riiklik Transpordiameti eksam sooritatud 0 veaga 28. päeval.</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Student Quote -->
+      <div class="p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50">
+        <p id="modalQuote" class="italic text-xs text-blue-950 dark:text-blue-200">
+          „Arvasin, et autokoolis läheb pool aastat. Tänu Kursifyle sain valida instruktori, kellel olid kohe vabad ajad igal hommikul. Andres õpetas ilma närvilisuseta ja eksami tegin esimese korraga ära!“
+        </p>
+        <span id="modalQuoteAuthor" class="block mt-2 font-bold text-[11px] text-blue-700 dark:text-blue-400">— Markus, Zebra Autokooli lõpetaja</span>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+        <svg class="w-4 h-4 text-emerald-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg>
+        <span>Tulemus on kinnitatud Transpordiameti ametliku eksamiprotokolli alusel.</span>
+      </div>
+      <button onclick="closeCaseModal()" class="btn-case-cta w-full sm:w-auto">
+        Sulge aken
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Case Data Dictionary
+  const casesData = {
+    1: {
+      school: "Zebra Autokool",
+      perfBadge: "⚡ 28 PÄEVAGA",
+      title: "B-kategooria load 28 päevaga esimese korraga",
+      sub: "Õpilane: Markus (22) • Juhendaja: Andres K. • Tallinn",
+      problem: "Markusele pakuti tööd logistikaalal, kus juhtimisõigus oli kohustuslik. Tavalises autokoolis prognoositi kestuseks 3–5 kuud pikkade sõidujärjekordade tõttu.",
+      steps: [
+        "<strong>Nädal 1:</strong> Täielik e-teooria läbimine Kursify partnerplatvormil 6 päevaga + esmaabikoolitus.",
+        "<strong>Nädal 2–3:</strong> 16 kohustuslikku sõidutundi Andres K. juhendamisel tiheda graafikuga (iga päev 2 tundi).",
+        "<strong>Nädal 4:</strong> Koolieksam esimese korraga + riiklik Transpordiameti eksam sooritatud 0 veaga 28. päeval."
+      ],
+      quote: "„Arvasin, et autokoolis läheb pool aastat. Tänu Kursifyle sain valida instruktori, kellel olid kohe vabad ajad igal hommikul. Andres õpetas ilma närvilisuseta ja eksami tegin esimese korraga ära!“",
+      quoteAuthor: "— Markus, Zebra Autokooli lõpetaja"
+    },
+    2: {
+      school: "Autosõit OÜ",
+      perfBadge: "🎯 1. KORRAGA",
+      title: "Paanikahoogudest eduka linnasõiduni",
+      sub: "Õpilane: Laura (29) • Juhendaja: Sergei M. • Tartu",
+      problem: "Laura oli varem teises koolis kogenud instruktori emotsionaalset survet ja pidevat karjumist, mille tagajärjel tekkis paaniline hirm liikluse ees. Ta loobus õppimisest 1,5 aastaks.",
+      steps: [
+        "<strong>Etapp 1 (Usalduse taastamine):</strong> Esimene proovitund Sergei M. rahustava metoodikaga vaiksetel äärelinna tänavatel.",
+        "<strong>Etapp 2 (Samm-sammuline linnaliiklus):</strong> Ristmike ja ringteede lahtimõtestamine ilma stressi ja kiirustamiseta.",
+        "<strong>Etapp 3 (Eksami simulatsioon):</strong> Transpordiameti tüüpmarsruutide läbisõit ja hirmudest vabanemine."
+      ],
+      quote: "„Sergei on esimene õpetaja, kes ei tõstnud kordagi häält, vaid seletas rahulikult puust ja punaseks. Sooritasin eksami esimese korraga, ilma ühegi veata!“",
+      quoteAuthor: "— Laura, Autosõit OÜ lõpetaja"
+    },
+    3: {
+      school: "DriveLab Autokool",
+      perfBadge: "💡 SÄÄST 420 €",
+      title: "3 ebaõnnestunud katset → kiirümberõpe automaadile",
+      sub: "Õpilane: Kristjan (34) • Juhendaja: Priit T. • Pärnu",
+      problem: "Kristjan kukkus kolm korda riiklikul eksamil läbi manuaalkäigukastiga siduri väljasuretamise ja närvilisuse tõttu, kulutades üle 450 € lisaeksamitele.",
+      steps: [
+        "<strong>Diagnoos:</strong> Kursify kaudu tuvastati, et probleem polnud liiklustunnetuses, vaid stressis manuaalkasti siduriga.",
+        "<strong>Otsus:</strong> Kiire üleminek B-automaat kategooriale Priit T. juhendamisel.",
+        "<strong>Tulemus:</strong> Vaid 6 lisatundi uuel hübriidautol ja eksam sooritatud 12 päeva pärast."
+      ],
+      quote: "„Miks keegi varem ei öelnud, et automaadiga on nii lihtne? Säästsin sadu eurosid ja sain lõpuks juhiloa kätte ilma närvivapustuseta.“",
+      quoteAuthor: "— Kristjan, DriveLab lõpetaja"
+    }
+  };
+
+  function openCaseModal(id) {
+    const data = casesData[id];
+    if (!data) return;
+
+    document.getElementById('modalSchoolBadge').textContent = data.school;
+    document.getElementById('modalPerformanceBadge').textContent = data.perfBadge;
+    document.getElementById('modalCaseTitle').textContent = data.title;
+    document.getElementById('modalCaseSub').textContent = data.sub;
+    document.getElementById('modalProblemText').innerHTML = data.problem;
+    
+    const stepsContainer = document.getElementById('modalStepsList');
+    stepsContainer.innerHTML = '';
+    data.steps.forEach((step, idx) => {
+      const li = document.createElement('li');
+      li.className = 'flex items-start gap-2';
+      li.innerHTML = `
+        <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">${idx + 1}</span>
+        <span>${step}</span>
+      `;
+      stepsContainer.appendChild(li);
+    });
+
+    document.getElementById('modalQuote').textContent = data.quote;
+    document.getElementById('modalQuoteAuthor').textContent = data.quoteAuthor;
+
+    const modal = document.getElementById('caseModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  function closeCaseModal() {
+    const modal = document.getElementById('caseModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+
+  // Theme Toggle
+  const themeToggle = document.getElementById('theme-toggle');
+  const themeIcon = document.getElementById('theme-icon');
+  const themeLabel = document.getElementById('theme-label');
+  const html = document.documentElement;
+
+  function updateThemeUI(isDark) {
+    if (isDark) {
+      html.classList.add('dark');
+      html.classList.remove('light');
+      if (themeIcon) themeIcon.textContent = '☼';
+      if (themeLabel) themeLabel.textContent = 'Light';
+    } else {
+      html.classList.remove('dark');
+      html.classList.add('light');
+      if (themeIcon) themeIcon.textContent = '☾';
+      if (themeLabel) themeLabel.textContent = 'Dark';
+    }
+  }
+
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    updateThemeUI(true);
+  } else {
+    updateThemeUI(false);
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const isDark = html.classList.contains('dark');
+      const newTheme = !isDark;
+      updateThemeUI(newTheme);
+      localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+    });
+  }
+</script>
+
+</body>
+</html>

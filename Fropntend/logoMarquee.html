@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="et" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kursify — Logo Marquee (Partnerid)</title>
+<meta name="description" content="Kursify partnerautokoolid ja ametlikud liikluspartnerid üle terve Eesti: usaldusväärne sotsiaalne tõestus ja reaalajas vabad kohad.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          ink: { 950: '#070b16', 900: '#0f172a', 800: '#1e293b' },
+          accent: { 500: '#2563eb', 600: '#1d4ed8', 700: '#1e40af', 800: '#1e3a8a' }
+        },
+        fontFamily: {
+          sans: ['"Inter"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { 
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* ==========================================================================
+     BACKGROUND AMBIENT ORBS (100% Exact match to Instructor Hero, FAQ, Final CTA)
+     ========================================================================== */
+  .ambient-scene {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.75;
+    transition: opacity 0.35s ease;
+  }
+  .orb-1 {
+    width: 620px;
+    height: 620px;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(147, 197, 253, 0.8) 0%, rgba(191, 219, 254, 0.35) 55%, transparent 75%);
+  }
+  .orb-2 {
+    width: 520px;
+    height: 520px;
+    top: 35%;
+    left: calc(50% - 420px);
+    background: radial-gradient(circle, rgba(165, 180, 252, 0.65) 0%, rgba(199, 210, 254, 0.3) 60%, transparent 80%);
+  }
+  .orb-3 {
+    width: 540px;
+    height: 540px;
+    top: 35%;
+    right: calc(50% - 420px);
+    background: radial-gradient(circle, rgba(125, 211, 252, 0.65) 0%, rgba(199, 210, 254, 0.3) 60%, transparent 80%);
+  }
+
+  .dark .orb-1 {
+    opacity: 0.45;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.5) 0%, rgba(30, 64, 175, 0.2) 60%, transparent 80%);
+  }
+  .dark .orb-2 {
+    opacity: 0.35;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.45) 0%, rgba(30, 27, 75, 0.2) 60%, transparent 80%);
+  }
+  .dark .orb-3 {
+    opacity: 0.4;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.45) 0%, rgba(15, 23, 42, 0.2) 60%, transparent 80%);
+  }
+
+  /* ==========================================================================
+     MAIN MARQUEE CONTAINER (FROSTED GLASS CARD)
+     ========================================================================== */
+  .marquee-glass-container {
+    position: relative;
+    border-radius: 32px;
+    overflow: hidden;
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .light .marquee-glass-container,
+  :root:not(.dark) .marquee-glass-container {
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.88);
+    box-shadow: 
+      0 20px 54px -10px rgba(37, 99, 235, 0.1),
+      0 4px 20px -2px rgba(15, 23, 42, 0.03),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95),
+      inset 0 -1px 1px 0 rgba(0, 0, 0, 0.02);
+  }
+  .dark .marquee-glass-container {
+    background: rgba(13, 21, 38, 0.58);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 
+      0 26px 68px -12px rgba(0, 0, 0, 0.65),
+      0 0 32px rgba(37, 99, 235, 0.14),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.18),
+      inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  /* Specular top glow */
+  .marquee-glass-container::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    height: 180px;
+    background: radial-gradient(ellipse at center, rgba(147, 197, 253, 0.3) 0%, rgba(59, 130, 246, 0.06) 50%, transparent 75%);
+    pointer-events: none;
+    border-radius: 50%;
+    z-index: 1;
+  }
+  .dark .marquee-glass-container::before {
+    background: radial-gradient(ellipse at center, rgba(96, 165, 250, 0.2) 0%, rgba(37, 99, 235, 0.06) 50%, transparent 75%);
+  }
+
+  /* ==========================================================================
+     STATUS PILLS (Exact match to Final CTA)
+     ========================================================================== */
+  .glass-pill-cta {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 16px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    user-select: none;
+    white-space: nowrap;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  .light .glass-pill-cta,
+  :root:not(.dark) .glass-pill-cta {
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.22);
+    color: #1d4ed8;
+    box-shadow: 
+      0 2px 8px rgba(37, 99, 235, 0.06),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.9);
+  }
+  .dark .glass-pill-cta {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #f1f5f9;
+    box-shadow: 
+      0 2px 10px rgba(0, 0, 0, 0.35),
+      inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  }
+
+  /* ==========================================================================
+     MARQUEE TRACK & GRADIENT EDGE MASKS
+     ========================================================================== */
+  .marquee-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    /* Clean horizontal mask for fading edges */
+    mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  }
+
+  .marquee-track {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: max-content;
+    animation: marquee-scroll 45s linear infinite;
+    will-change: transform;
+  }
+
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Reverse direction optional track */
+  .marquee-track-reverse {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: max-content;
+    animation: marquee-scroll-reverse 48s linear infinite;
+    will-change: transform;
+  }
+  .marquee-track-reverse:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee-scroll-reverse {
+    0% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  /* ==========================================================================
+     LOGO ITEM CARD (.glass-logo-item)
+     Monochrome at rest, luminous & detailed on hover
+     ========================================================================== */
+  .glass-logo-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 22px;
+    border-radius: 20px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    cursor: pointer;
+    user-select: none;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .light .glass-logo-item,
+  :root:not(.dark) .glass-logo-item {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 
+      0 4px 14px rgba(31, 38, 135, 0.04),
+      inset 0 1px 1px rgba(255, 255, 255, 0.95);
+    color: #334155;
+  }
+
+  .light .glass-logo-item:hover {
+    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(37, 99, 235, 0.35);
+    color: #0f172a;
+    transform: translateY(-2px);
+    box-shadow: 
+      0 10px 24px -4px rgba(37, 99, 235, 0.15),
+      inset 0 1px 2px rgba(255, 255, 255, 1);
+  }
+
+  .dark .glass-logo-item {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 4px 16px rgba(0, 0, 0, 0.25),
+      inset 0 1px 1px rgba(255, 255, 255, 0.15);
+    color: #94a3b8;
+  }
+
+  .dark .glass-logo-item:hover {
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(96, 165, 250, 0.4);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 
+      0 10px 26px -4px rgba(0, 0, 0, 0.5),
+      0 0 18px rgba(37, 99, 235, 0.25),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.25);
+  }
+
+  /* Logo glyph container */
+  .logo-glyph {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 15px;
+    letter-spacing: -0.02em;
+    filter: grayscale(100%);
+    opacity: 0.75;
+    transition: all 0.25s ease;
+  }
+
+  .glass-logo-item:hover .logo-glyph {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  /* Modal Backdrop */
+  .modal-backdrop {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(15, 23, 42, 0.65);
+  }
+</style>
+</head>
+<body class="min-h-screen bg-[#f1f5fd] dark:bg-[#070b16] text-ink-900 dark:text-white antialiased transition-colors duration-250 relative selection:bg-blue-500/20 flex flex-col justify-center py-12 sm:py-20">
+
+<!-- AMBIENT BACKGROUND ORBS -->
+<div class="ambient-scene" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- FLOATING THEME TOGGLE (Clean, isolated, NO top header/navbar) -->
+<div class="fixed top-4 right-4 sm:top-6 sm:right-8 z-50">
+  <button id="theme-toggle" type="button" aria-label="Lülita teemat"
+    class="rounded-full px-3.5 py-1.5 text-xs font-semibold text-ink-900 dark:text-white flex items-center gap-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/80 dark:border-white/15 shadow-sm hover:border-blue-500/40 transition-colors cursor-pointer">
+    <span id="theme-icon" class="text-sm">☾</span>
+    <span id="theme-label">Dark</span>
+  </button>
+</div>
+
+<!-- MAIN CONTENT CONTAINER -->
+<main class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+
+  <!-- ========================================================================
+       LOGO MARQUEE CONTAINER (Frosted Glass Card)
+       ======================================================================== -->
+  <div class="marquee-glass-container py-10 sm:py-14 px-4 sm:px-8 text-center flex flex-col items-center">
+
+    <!-- TOP CATEGORY HEADING (Matching original "KLIENDID JA PARTNERID" wide letter-spacing style) -->
+    <div class="relative z-10 flex flex-col items-center mb-6 sm:mb-8">
+      
+      <!-- Top Pill Status Tag -->
+      <div class="glass-pill-cta mb-3.5">
+        <span>• AMETLIKULT KONTROLLITUD VÕRGUSTIK •</span>
+      </div>
+
+      <!-- Main Headline: Preserves wide tracking from original B2B design, but upgraded for Driving Schools -->
+      <h2 class="text-xs sm:text-sm font-extrabold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">
+        MEIE PARTNERAUTOKOOLID JA LIIKLUSPARTNERID
+      </h2>
+      
+      <!-- Sub-caption with aggregated social proof -->
+      <p class="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium max-w-xl">
+        Üle 120 Transpordiameti nõuetele vastava autokooli ja partneri Tallinnas, Tartus, Pärnus ja teistes Eesti linnades.
+      </p>
+
+    </div>
+
+    <!-- ====================================================================
+         HORIZONTAL MARQUEE ROW 1: Driving Schools
+         ==================================================================== -->
+    <div class="marquee-wrapper mb-4">
+      <div class="marquee-track">
+        
+        <!-- SET 1 -->
+        <!-- 1. Autosõit OÜ -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Autosõit OÜ', 'Eesti suurim autokool', '4.9', 'Tallinn, Tartu, Pärnu', 'B, A, C, D', '1240+ õpilast', 'bg-blue-600 text-white')">
+          <div class="logo-glyph bg-blue-600 text-white shadow-xs">
+            A
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">AUTOSÕIT OÜ</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Eesti suurim autokool • 4.9★</span>
+          </div>
+        </div>
+
+        <!-- 2. Zebra Autokool -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Zebra Autokool', 'Tallinna & Tartu lemmik', '4.8', 'Tallinn, Tartu', 'B, A (Automaat/Manuaal)', '920+ õpilast', 'bg-amber-500 text-ink-950')">
+          <div class="logo-glyph bg-amber-500 text-slate-900 shadow-xs">
+            Z
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">ZEBRA AUTOKOOL</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Tallinn & Tartu • 4.8★</span>
+          </div>
+        </div>
+
+        <!-- 3. DriveLab Autokool -->
+        <div class="glass-logo-item" onclick="openSchoolModal('DriveLab Autokool', 'Uuenduslik digiõpe & simulaatorid', '4.9', 'Tallinn (Kesklinn, Mustamäe)', 'B-kategooria', '680+ õpilast', 'bg-emerald-600 text-white')">
+          <div class="logo-glyph bg-emerald-600 text-white shadow-xs">
+            DL
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">DRIVELAB</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Digitaalne e-õpe • 4.9★</span>
+          </div>
+        </div>
+
+        <!-- 4. Niguliste Autokool -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Niguliste Autokool', 'Rahulik ja kogenud meeskond', '4.8', 'Tallinn (Vanalinn/Kesklinn)', 'B, BE, A', '810+ õpilast', 'bg-indigo-600 text-white')">
+          <div class="logo-glyph bg-indigo-600 text-white shadow-xs">
+            N
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">NIGULISTE</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Kesklinna partner • 4.8★</span>
+          </div>
+        </div>
+
+        <!-- 5. E-Autokoolitus -->
+        <div class="glass-logo-item" onclick="openSchoolModal('E-Autokoolitus', 'Mugav teooria kodust lahkumata', '4.7', 'Üle-eestiline e-õpe', 'B, A1, A2', '1100+ õpilast', 'bg-cyan-600 text-white')">
+          <div class="logo-glyph bg-cyan-600 text-white shadow-xs">
+            eA
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">E-AUTOKOOLITUS</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">E-teooria platvorm • 4.7★</span>
+          </div>
+        </div>
+
+        <!-- 6. Sky Autokool -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Sky Autokool', 'Nooruslikud sõiduõpetajad', '4.8', 'Tallinn, Maardu', 'B (Automaat/Manuaal)', '540+ õpilast', 'bg-sky-500 text-white')">
+          <div class="logo-glyph bg-sky-500 text-white shadow-xs">
+            SKY
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">SKY AUTOKOOL</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Nooruslik tiim • 4.8★</span>
+          </div>
+        </div>
+
+        <!-- DUPLICATE SET 1 FOR SEAMLESS INFINITE LOOP -->
+        <!-- 1. Autosõit OÜ -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Autosõit OÜ', 'Eesti suurim autokool', '4.9', 'Tallinn, Tartu, Pärnu', 'B, A, C, D', '1240+ õpilast', 'bg-blue-600 text-white')">
+          <div class="logo-glyph bg-blue-600 text-white shadow-xs">
+            A
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">AUTOSÕIT OÜ</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Eesti suurim autokool • 4.9★</span>
+          </div>
+        </div>
+
+        <!-- 2. Zebra Autokool -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Zebra Autokool', 'Tallinna & Tartu lemmik', '4.8', 'Tallinn, Tartu', 'B, A (Automaat/Manuaal)', '920+ õpilast', 'bg-amber-500 text-ink-950')">
+          <div class="logo-glyph bg-amber-500 text-slate-900 shadow-xs">
+            Z
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">ZEBRA AUTOKOOL</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Tallinn & Tartu • 4.8★</span>
+          </div>
+        </div>
+
+        <!-- 3. DriveLab Autokool -->
+        <div class="glass-logo-item" onclick="openSchoolModal('DriveLab Autokool', 'Uuenduslik digiõpe & simulaatorid', '4.9', 'Tallinn (Kesklinn, Mustamäe)', 'B-kategooria', '680+ õpilast', 'bg-emerald-600 text-white')">
+          <div class="logo-glyph bg-emerald-600 text-white shadow-xs">
+            DL
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">DRIVELAB</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Digitaalne e-õpe • 4.9★</span>
+          </div>
+        </div>
+
+        <!-- 4. Niguliste Autokool -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Niguliste Autokool', 'Rahulik ja kogenud meeskond', '4.8', 'Tallinn (Vanalinn/Kesklinn)', 'B, BE, A', '810+ õpilast', 'bg-indigo-600 text-white')">
+          <div class="logo-glyph bg-indigo-600 text-white shadow-xs">
+            N
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">NIGULISTE</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Kesklinna partner • 4.8★</span>
+          </div>
+        </div>
+
+        <!-- 5. E-Autokoolitus -->
+        <div class="glass-logo-item" onclick="openSchoolModal('E-Autokoolitus', 'Mugav teooria kodust lahkumata', '4.7', 'Üle-eestiline e-õpe', 'B, A1, A2', '1100+ õpilast', 'bg-cyan-600 text-white')">
+          <div class="logo-glyph bg-cyan-600 text-white shadow-xs">
+            eA
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">E-AUTOKOOLITUS</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">E-teooria platvorm • 4.7★</span>
+          </div>
+        </div>
+
+        <!-- 6. Sky Autokool -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Sky Autokool', 'Nooruslikud sõiduõpetajad', '4.8', 'Tallinn, Maardu', 'B (Automaat/Manuaal)', '540+ õpilast', 'bg-sky-500 text-white')">
+          <div class="logo-glyph bg-sky-500 text-white shadow-xs">
+            SKY
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">SKY AUTOKOOL</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Nooruslik tiim • 4.8★</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         HORIZONTAL MARQUEE ROW 2: Certification & Official Ecosystem Partners (Reverse Direction)
+         ==================================================================== -->
+    <div class="marquee-wrapper">
+      <div class="marquee-track-reverse">
+        
+        <!-- PARTNER 1: Transpordiamet nõuetele vastavus -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Transpordiamet Partner', 'Ametlikult akrediteeritud õppekavad', 'Riiklik standard', 'Kogu Eesti', 'Kõik kategooriad', 'Riiklik kontroll', 'bg-blue-800 text-white')">
+          <div class="logo-glyph bg-blue-800 text-white shadow-xs">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">TRANSPORDIAMET</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Akrediteeritud õppekavad</span>
+          </div>
+        </div>
+
+        <!-- PARTNER 2: Liikluskasvatus.ee -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Liikluskasvatus', 'Ennetus & liiklusohutuse programm', 'Eesti Liiklusohutus', 'Üleriigiline', 'B-kategooria ohutus', 'Ametlik partner', 'bg-emerald-700 text-white')">
+          <div class="logo-glyph bg-emerald-700 text-white shadow-xs">
+            LK
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">LIIKLUSKASVATUS</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Liiklusohutuse partner</span>
+          </div>
+        </div>
+
+        <!-- PARTNER 3: Swedbank 0% Järelmaks -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Swedbank Järelmaks', 'Õpi kohe, maksa osamaksetena 0% intressiga', '0% intress', 'Kõik pangakaardid', 'Kursify finantspartner', 'Turvaline makselahendus', 'bg-amber-600 text-white')">
+          <div class="logo-glyph bg-amber-600 text-white shadow-xs">
+            %
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">0% JÄRELMAKS</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Intressivaba osamakse</span>
+          </div>
+        </div>
+
+        <!-- PARTNER 4: SEB Liising & Õppemaks -->
+        <div class="glass-logo-item" onclick="openSchoolModal('SEB Partnerlus', 'Paindlikud kuumaksed alates 29 €/kuus', 'Kiire kinnitus', 'Eesti pangalingid', 'B- ja A-kursused', 'Paindlik maksegraafik', 'bg-green-600 text-white')">
+          <div class="logo-glyph bg-green-600 text-white shadow-xs">
+            SEB
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">PAINDLIK MAKSE</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Alates 29 € / kuus</span>
+          </div>
+        </div>
+
+        <!-- PARTNER 5: Teooria.ee Integratsioon -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Teooria.ee', 'Täielik integratsioon ametlike liiklustestidega', '100% ametlikud testid', 'Veebis & äpis', 'A, B, C, CE, D', 'Eksamiks ettevalmistus', 'bg-purple-600 text-white')">
+          <div class="logo-glyph bg-purple-600 text-white shadow-xs">
+            T.ee
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">TEOORIA.EE</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Ametlikud liiklustestid</span>
+          </div>
+        </div>
+
+        <!-- PARTNER 6: Autokoolide Liit -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Eesti Autokoolide Liit', 'Kvaliteedistandard ja instruktorite atesteerimine', 'Kvaliteedimärgis', 'Eesti', 'Sõiduõpetajate eetikakoodeks', 'Garanteeritud tase', 'bg-blue-900 text-white')">
+          <div class="logo-glyph bg-blue-900 text-white shadow-xs">
+            EAL
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">AUTOKOOLIDE LIIT</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Kvaliteedistandard</span>
+          </div>
+        </div>
+
+        <!-- DUPLICATE ROW 2 FOR SEAMLESS LOOP -->
+        <!-- PARTNER 1 -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Transpordiamet Partner', 'Ametlikult akrediteeritud õppekavad', 'Riiklik standard', 'Kogu Eesti', 'Kõik kategooriad', 'Riiklik kontroll', 'bg-blue-800 text-white')">
+          <div class="logo-glyph bg-blue-800 text-white shadow-xs">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">TRANSPORDIAMET</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Akrediteeritud õppekavad</span>
+          </div>
+        </div>
+
+        <!-- PARTNER 2 -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Liikluskasvatus', 'Ennetus & liiklusohutuse programm', 'Eesti Liiklusohutus', 'Üleriigiline', 'B-kategooria ohutus', 'Ametlik partner', 'bg-emerald-700 text-white')">
+          <div class="logo-glyph bg-emerald-700 text-white shadow-xs">
+            LK
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">LIIKLUSKASVATUS</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Liiklusohutuse partner</span>
+          </div>
+        </div>
+
+        <!-- PARTNER 3 -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Swedbank Järelmaks', 'Õpi kohe, maksa osamaksetena 0% intressiga', '0% intress', 'Kõik pangakaardid', 'Kursify finantspartner', 'Turvaline makselahendus', 'bg-amber-600 text-white')">
+          <div class="logo-glyph bg-amber-600 text-white shadow-xs">
+            %
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">0% JÄRELMAKS</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Intressivaba osamakse</span>
+          </div>
+        </div>
+
+        <!-- PARTNER 4 -->
+        <div class="glass-logo-item" onclick="openSchoolModal('SEB Partnerlus', 'Paindlikud kuumaksed alates 29 €/kuus', 'Kiire kinnitus', 'Eesti pangalingid', 'B- ja A-kursused', 'Paindlik maksegraafik', 'bg-green-600 text-white')">
+          <div class="logo-glyph bg-green-600 text-white shadow-xs">
+            SEB
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">PAINDLIK MAKSE</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Alates 29 € / kuus</span>
+          </div>
+        </div>
+
+        <!-- PARTNER 5 -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Teooria.ee', 'Täielik integratsioon ametlike liiklustestidega', '100% ametlikud testid', 'Veebis & äpis', 'A, B, C, CE, D', 'Eksamiks ettevalmistus', 'bg-purple-600 text-white')">
+          <div class="logo-glyph bg-purple-600 text-white shadow-xs">
+            T.ee
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">TEOORIA.EE</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Ametlikud liiklustestid</span>
+          </div>
+        </div>
+
+        <!-- PARTNER 6 -->
+        <div class="glass-logo-item" onclick="openSchoolModal('Eesti Autokoolide Liit', 'Kvaliteedistandard ja instruktorite atesteerimine', 'Kvaliteedimärgis', 'Eesti', 'Sõiduõpetajate eetikakoodeks', 'Garanteeritud tase', 'bg-blue-900 text-white')">
+          <div class="logo-glyph bg-blue-900 text-white shadow-xs">
+            EAL
+          </div>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-ink-900 dark:text-white leading-tight">AUTOKOOLIDE LIIT</span>
+            <span class="block text-[10px] text-slate-500 dark:text-slate-400">Kvaliteedistandard</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BOTTOM SOCIAL PROOF STRIP -->
+    <div class="relative z-10 w-full mt-7 pt-6 border-t border-slate-200/80 dark:border-white/10 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+      <span class="text-accent-600 dark:text-blue-400 flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg>
+        KÕIK KOOLID TRANSPORDIAMETI LITSENTSIGA
+      </span>
+      <span class="text-slate-300 dark:text-white/20 hidden sm:inline">•</span>
+      <span class="text-emerald-600 dark:text-emerald-400">TALLINN • TARTU • PÄRNU • NARVA</span>
+      <span class="text-slate-300 dark:text-white/20 hidden sm:inline">•</span>
+      <span class="text-slate-600 dark:text-slate-300">KLIKKA AUTOKOOLIL DETAILIDE VAATAMISEKS</span>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- ==========================================================================
+     INTERACTIVE SCHOOL DETAIL MODAL
+     ========================================================================== -->
+<div id="schoolModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+  <div class="modal-backdrop fixed inset-0" onclick="closeSchoolModal()"></div>
+  <div class="relative z-10 w-full max-w-md rounded-3xl bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-white/15 p-6 sm:p-8 shadow-2xl backdrop-blur-xl transition-all">
+    <div class="flex items-start justify-between pb-4 border-b border-slate-100 dark:border-white/10">
+      <div class="flex items-center gap-3">
+        <div id="modalLogoGlyph" class="w-12 h-12 rounded-2xl flex items-center justify-center font-black text-lg shadow-md">
+          A
+        </div>
+        <div>
+          <h3 id="modalSchoolName" class="text-base font-bold text-ink-900 dark:text-white">Autosõit OÜ</h3>
+          <p id="modalSchoolDesc" class="text-xs text-slate-500 dark:text-slate-400">Eesti suurim autokool</p>
+        </div>
+      </div>
+      <button onclick="closeSchoolModal()" class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors">✕</button>
+    </div>
+
+    <!-- Detailed specs -->
+    <div class="mt-5 space-y-3 text-xs">
+      <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10">
+        <span class="text-slate-500 dark:text-slate-400">Õpilaste hinnang:</span>
+        <span id="modalRating" class="font-bold text-amber-500">4.9 ★★★★★</span>
+      </div>
+      <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10">
+        <span class="text-slate-500 dark:text-slate-400">Asukohad / Linnad:</span>
+        <span id="modalCities" class="font-semibold text-ink-900 dark:text-white">Tallinn, Tartu, Pärnu</span>
+      </div>
+      <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10">
+        <span class="text-slate-500 dark:text-slate-400">Kategooriad:</span>
+        <span id="modalCategories" class="font-semibold text-accent-600 dark:text-blue-400">B, A, C, D</span>
+      </div>
+      <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10">
+        <span class="text-slate-500 dark:text-slate-400">Õpetatud juhte:</span>
+        <span id="modalStudents" class="font-semibold text-emerald-600 dark:text-emerald-400">1240+ õpilast</span>
+      </div>
+    </div>
+
+    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-white/10 flex items-center gap-3">
+      <button onclick="closeSchoolModal()" class="flex-1 py-3 px-4 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs tracking-wider uppercase shadow-md shadow-blue-500/25 transition-all text-center">
+        Vaata vabu aegu ja hindu →
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Theme Toggle logic matching instructor-hero.html, faq.html & final-cta.html
+  const themeToggle = document.getElementById('theme-toggle');
+  const themeIcon = document.getElementById('theme-icon');
+  const themeLabel = document.getElementById('theme-label');
+  const html = document.documentElement;
+
+  function updateThemeUI(isDark) {
+    if (isDark) {
+      html.classList.add('dark');
+      html.classList.remove('light');
+      if (themeIcon) themeIcon.textContent = '☼';
+      if (themeLabel) themeLabel.textContent = 'Light';
+    } else {
+      html.classList.remove('dark');
+      html.classList.add('light');
+      if (themeIcon) themeIcon.textContent = '☾';
+      if (themeLabel) themeLabel.textContent = 'Dark';
+    }
+  }
+
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    updateThemeUI(true);
+  } else {
+    updateThemeUI(false);
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const isDark = html.classList.contains('dark');
+      const newTheme = !isDark;
+      updateThemeUI(newTheme);
+      localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+    });
+  }
+
+  // School detail modal
+  function openSchoolModal(name, desc, rating, cities, categories, students, glyphClass) {
+    document.getElementById('modalSchoolName').textContent = name;
+    document.getElementById('modalSchoolDesc').textContent = desc;
+    document.getElementById('modalRating').textContent = rating.includes('★') ? rating : rating + ' ★';
+    document.getElementById('modalCities').textContent = cities;
+    document.getElementById('modalCategories').textContent = categories;
+    document.getElementById('modalStudents').textContent = students;
+
+    const glyphEl = document.getElementById('modalLogoGlyph');
+    glyphEl.className = 'w-12 h-12 rounded-2xl flex items-center justify-center font-black text-base shadow-md ' + glyphClass;
+    glyphEl.textContent = name.substring(0, 2).trim();
+
+    const modal = document.getElementById('schoolModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  function closeSchoolModal() {
+    const modal = document.getElementById('schoolModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+</script>
+
+</body>
+</html>
