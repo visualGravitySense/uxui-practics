@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="et" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Probleem paistab erinev, põhjus on sageli sama — Kursify Autokoolid</title>
+<meta name="description" content="Õpilase, lapsevanema ja sõiduõpetaja vaade juhilubade omandamise kitsaskohtadele Eestis.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            blue: '#1668E3',      // Kursify brand blue
+            navy: '#0D1B2A',      // Kursify dark navy / primary text
+            bg: '#F1F6FD',        // Kursify light bg
+            orange: '#F5931E',    // Kursify CTA orange
+          }
+        },
+        fontFamily: {
+          sans: ['Manrope', 'sans-serif'],
+          serif: ['Playfair Display', 'Georgia', 'serif'],
+        }
+      }
+    }
+  }
+</script>
+<style>
+  /* Base font configuration */
+  body {
+    font-family: 'Manrope', sans-serif;
+  }
+
+  /* ==========================================================================
+     SEAMLESS AMBIENT BACKGROUND (Zero Blur Clipping, Zero Tile Seams)
+     ========================================================================== */
+  .ambient-scene {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 0.35s ease;
+  }
+
+  .light .ambient-scene,
+  :root:not(.dark) .ambient-scene {
+    background: 
+      radial-gradient(ellipse 850px 550px at 50% -10%, rgba(22, 104, 227, 0.18), transparent 75%),
+      radial-gradient(circle 650px at 15% 35%, rgba(22, 104, 227, 0.12), transparent 70%),
+      radial-gradient(circle 650px at 85% 45%, rgba(22, 104, 227, 0.14), transparent 70%),
+      radial-gradient(ellipse 900px 450px at 50% 105%, rgba(22, 104, 227, 0.1), transparent 75%);
+  }
+
+  .dark .ambient-scene {
+    background: 
+      radial-gradient(ellipse 950px 600px at 50% -10%, rgba(22, 104, 227, 0.38), transparent 75%),
+      radial-gradient(circle 700px at 15% 40%, rgba(22, 104, 227, 0.22), transparent 75%),
+      radial-gradient(circle 700px at 85% 50%, rgba(22, 104, 227, 0.24), transparent 75%),
+      radial-gradient(ellipse 1000px 500px at 50% 105%, rgba(22, 104, 227, 0.2), transparent 80%);
+  }
+
+  /* ==========================================================================
+     PHASE 1 FROSTED GLASSMORPHISM (100% Consistent with FAQ & Cases)
+     ========================================================================== */
+  .problem-glass-card {
+    position: relative;
+    border-radius: 28px;
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    transition: transform 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .light .problem-glass-card,
+  :root:not(.dark) .problem-glass-card {
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.92);
+    box-shadow: 
+      0 20px 50px -12px rgba(22, 104, 227, 0.08),
+      0 4px 20px -2px rgba(13, 27, 42, 0.03),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95),
+      inset 0 -1px 1px 0 rgba(0, 0, 0, 0.02);
+  }
+  .light .problem-glass-card:hover {
+    background: rgba(255, 255, 255, 0.88);
+    border-color: rgba(22, 104, 227, 0.35);
+    box-shadow: 
+      0 24px 60px -10px rgba(22, 104, 227, 0.16),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 1);
+  }
+
+  .dark .problem-glass-card {
+    background: rgba(13, 27, 42, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 
+      0 22px 60px -10px rgba(0, 0, 0, 0.6),
+      0 0 28px rgba(22, 104, 227, 0.15),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3);
+  }
+  .dark .problem-glass-card:hover {
+    background: rgba(17, 34, 54, 0.8);
+    border-color: rgba(22, 104, 227, 0.5);
+    box-shadow: 
+      0 24px 65px -10px rgba(0, 0, 0, 0.7),
+      0 0 35px rgba(22, 104, 227, 0.3),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.28);
+  }
+
+  /* 3D Visual Stage Container (Matches user reference card design) */
+  .visual-3d-stage {
+    position: relative;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .light .visual-3d-stage {
+    background: linear-gradient(180deg, rgba(241, 246, 253, 0.95) 0%, rgba(255, 255, 255, 0.8) 100%);
+    border: 1px solid rgba(22, 104, 227, 0.1);
+    box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.9), 0 8px 24px -6px rgba(22, 104, 227, 0.08);
+  }
+  .dark .visual-3d-stage {
+    background: linear-gradient(180deg, rgba(22, 40, 65, 0.6) 0%, rgba(13, 27, 42, 0.8) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.1), 0 10px 30px -8px rgba(0, 0, 0, 0.5);
+  }
+  .problem-glass-card:hover .visual-3d-stage img {
+    transform: scale(1.05);
+  }
+
+  /* Number Badge */
+  .badge-role-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    transition: all 0.2s ease;
+  }
+  .light .badge-role-number {
+    background: #FFFFFF;
+    border: 1.5px solid rgba(22, 104, 227, 0.35);
+    color: #1668E3;
+    box-shadow: 0 3px 8px rgba(22, 104, 227, 0.12), 0 1px 3px rgba(13, 27, 42, 0.06);
+  }
+  .dark .badge-role-number {
+    background: #0D1B2A;
+    border: 1.5px solid #3B82F6;
+    color: #FFFFFF;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7), 0 0 14px rgba(59, 130, 246, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  }
+
+  /* Top Pill Badge */
+  .badge-glass-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .light .badge-glass-pill {
+    background: rgba(241, 246, 253, 0.9);
+    border: 1px solid rgba(22, 104, 227, 0.25);
+    color: #1668E3;
+    box-shadow: 0 4px 14px -2px rgba(22, 104, 227, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  }
+  .dark .badge-glass-pill {
+    background: rgba(22, 104, 227, 0.2);
+    border: 1px solid rgba(22, 104, 227, 0.4);
+    color: #93c5fd;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  }
+
+  /* Theme Toggle Button */
+  .theme-toggle-btn {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 50;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 700;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .light .theme-toggle-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(203, 213, 225, 0.8);
+    color: #0D1B2A;
+    box-shadow: 0 4px 16px -2px rgba(13, 27, 42, 0.08);
+  }
+  .dark .theme-toggle-btn {
+    background: rgba(13, 27, 42, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #F1F6FD;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.5);
+  }
+</style>
+</head>
+<body class="min-h-screen bg-[#F1F6FD] dark:bg-[#070b16] text-[#0D1B2A] dark:text-white antialiased transition-colors duration-250 relative selection:bg-[#1668E3]/20 flex flex-col justify-center py-12 sm:py-20 font-sans overflow-x-hidden">
+
+  <!-- Ambient Light Scene (Seamless, no DOM orbs, no clipping seams) -->
+  <div class="ambient-scene"></div>
+
+  <!-- Theme Toggle Floating Button -->
+  <button onclick="toggleTheme()" class="theme-toggle-btn" id="themeToggleBtn">
+    <span class="w-2 h-2 rounded-full bg-[#1668E3]"></span>
+    <span id="themeToggleText">Dark</span>
+  </button>
+
+  <!-- Main Section Container -->
+  <main class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Header: Badge, Heading, Subtitle -->
+    <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+      
+      <!-- Top Pill Badge -->
+      <div class="inline-flex items-center justify-center mb-5">
+        <span class="badge-glass-pill">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#1668E3]"></span>
+          <span>TUNNED END ÄRA?</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-[#1668E3]"></span>
+        </span>
+      </div>
+
+      <!-- Main Headline strictly with Kursify #0D1B2A and brand blue #1668E3 italic accent -->
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#0D1B2A] dark:text-white mb-4 leading-[1.18]">
+        Probleem paistab erinev,<br>
+        <span class="font-serif italic font-normal text-[#1668E3] dark:text-[#60a5fa]">põhjus on sageli sama</span>
+      </h2>
+
+      <!-- Subtitle tailored for Kursify driving school marketplace -->
+      <p class="text-sm sm:text-base text-[#0D1B2A]/75 dark:text-slate-300 font-medium leading-relaxed max-w-2xl mx-auto">
+        Õpilane, lapsevanem, instruktor — juhilubade omandamine on kõigile osapooltele sageli stressirohke, kuid selle taga on samad läbipaistmatuse, usalduse ja korralduse kitsaskohad.
+      </p>
+    </div>
+
+    <!-- 3 Role Perspectives Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-7 items-stretch">
+
+      <!-- =====================================================================
+           CARD 01: ÕPILASE VAADE (Learner Driver / Student)
+           ===================================================================== -->
+      <div class="problem-glass-card p-6 sm:p-7 flex flex-col justify-between">
+        <div>
+          <!-- Visual Stage Header: Unsplash Image 1 (Volkswagen Beetle) -->
+          <div class="visual-3d-stage w-full h-44 mb-6">
+            <img 
+              src="https://images.unsplash.com/photo-1772550328927-30555d34c0df?auto=format&fit=crop&w=800&q=80" 
+              alt="Õpilase vaade — Volkswagen Beetle" 
+              loading="lazy"
+              referrerpolicy="no-referrer"
+              class="w-full h-full object-cover transition-transform duration-500 ease-out"
+            />
+            <!-- Role Number Overlay -->
+            <div class="absolute top-3 right-3 z-10">
+              <span class="badge-role-number">01</span>
+            </div>
+          </div>
+
+          <!-- Card Header Info -->
+          <div class="mb-5 pb-3 border-b border-slate-200/60 dark:border-white/10">
+            <h3 class="text-xl font-bold text-[#0D1B2A] dark:text-white tracking-tight">
+              Õpilase vaade
+            </h3>
+            <span class="text-xs font-semibold text-[#1668E3] dark:text-[#93c5fd]">
+              Alustav juht & B-kategooria
+            </span>
+          </div>
+
+          <!-- Bullet Points List (Strict Kursify colors: dots #1668E3, text #0D1B2A) -->
+          <ul class="space-y-3.5 text-xs sm:text-[13px] leading-relaxed text-[#0D1B2A] dark:text-slate-200 font-medium">
+            
+            <li class="flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-[#1668E3] mt-1.5 shrink-0"></span>
+              <span>Hirm rooli ees ja ebakindlus — keegi ei selgita rahulikult</span>
+            </li>
+
+            <li class="flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-[#1668E3] mt-1.5 shrink-0"></span>
+              <span>Õpetaja karjub, närvitseb või tegeleb sõidutunnis oma telefoniga</span>
+            </li>
+
+            <li class="flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-[#1668E3] mt-1.5 shrink-0"></span>
+              <span>Sõidutundide ajad venivad kuudesse — vabu aegu lihtsalt ei ole</span>
+            </li>
+
+            <!-- Escalation 1 -->
+            <li class="flex items-start gap-2.5 text-[#0D1B2A] dark:text-blue-200 font-semibold pt-1 border-t border-slate-200/50 dark:border-white/10">
+              <span class="text-[#1668E3] font-bold text-sm leading-none shrink-0 mt-0.5">→</span>
+              <span>ja kooli sõidueksam kukub korduvalt läbi ilma arusaadava põhjenduseta..</span>
+            </li>
+
+            <!-- Escalation 2 -->
+            <li class="flex items-start gap-2.5 text-[#0D1B2A] dark:text-white font-bold">
+              <span class="text-[#1668E3] font-bold text-sm leading-none shrink-0 mt-0.5">→</span>
+              <span>lõputud kalli hinnaga lisatunnid, kadunud motivatsioon ja paaniline eksamihirm</span>
+            </li>
+
+          </ul>
+        </div>
+
+        <!-- Micro Bottom Anchor -->
+        <div class="pt-5 mt-6 border-t border-slate-200/50 dark:border-white/10 flex items-center justify-between text-[11px] text-[#0D1B2A]/60 dark:text-slate-400">
+          <span class="flex items-center gap-1.5 font-medium">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#1668E3]"></span>
+            Tagajärg: hirm rooli ees & veniv õpe
+          </span>
+          <span class="font-bold text-[#1668E3] dark:text-[#93c5fd]">Kursify lahendus</span>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           CARD 02: LAPSEVANEMA VAADE (Parent / Payer)
+           ===================================================================== -->
+      <div class="problem-glass-card p-6 sm:p-7 flex flex-col justify-between">
+        <div>
+          <!-- Visual Stage Header: Unsplash Image 2 (Perekond / Family) -->
+          <div class="visual-3d-stage w-full h-44 mb-6">
+            <img 
+              src="https://plus.unsplash.com/premium_photo-1661437948152-281bc13c0490?auto=format&fit=crop&w=800&q=80" 
+              alt="Lapsevanema vaade — Perekond ja tütar" 
+              loading="lazy"
+              referrerpolicy="no-referrer"
+              class="w-full h-full object-cover transition-transform duration-500 ease-out"
+            />
+            <!-- Role Number Overlay -->
+            <div class="absolute top-3 right-3 z-10">
+              <span class="badge-role-number">02</span>
+            </div>
+          </div>
+
+          <!-- Card Header Info -->
+          <div class="mb-5 pb-3 border-b border-slate-200/60 dark:border-white/10">
+            <h3 class="text-xl font-bold text-[#0D1B2A] dark:text-white tracking-tight">
+              Lapsevanema vaade
+            </h3>
+            <span class="text-xs font-semibold text-[#1668E3] dark:text-[#93c5fd]">
+              Rahastaja & toetav osapool
+            </span>
+          </div>
+
+          <!-- Bullet Points List -->
+          <ul class="space-y-3.5 text-xs sm:text-[13px] leading-relaxed text-[#0D1B2A] dark:text-slate-200 font-medium">
+            
+            <li class="flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-[#1668E3] mt-1.5 shrink-0"></span>
+              <span>Alguses reklaamiti 800 €, tegelik kulu kasvab märkamatult 1800 € peale</span>
+            </li>
+
+            <li class="flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-[#1668E3] mt-1.5 shrink-0"></span>
+              <span>Puudub igasugune ülevaade, kas laps reaalselt areneb või "kärsatab aega"</span>
+            </li>
+
+            <li class="flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-[#1668E3] mt-1.5 shrink-0"></span>
+              <span>Valisime esimese kooli kodu lähedal — hiljem selgus madal läbivusprotsent</span>
+            </li>
+
+            <!-- Escalation 1 -->
+            <li class="flex items-start gap-2.5 text-[#0D1B2A] dark:text-blue-200 font-semibold pt-1 border-t border-slate-200/50 dark:border-white/10">
+              <span class="text-[#1668E3] font-bold text-sm leading-none shrink-0 mt-0.5">→</span>
+              <span>lisanduvad varjatud tasud: autokasutus eksamil, kordusteooria, paberitöö..</span>
+            </li>
+
+            <!-- Escalation 2 -->
+            <li class="flex items-start gap-2.5 text-[#0D1B2A] dark:text-white font-bold">
+              <span class="text-[#1668E3] font-bold text-sm leading-none shrink-0 mt-0.5">→</span>
+              <span>eelarve ületatud kahekordselt, noor on stressis ja lube pole ikka käes</span>
+            </li>
+
+          </ul>
+        </div>
+
+        <!-- Micro Bottom Anchor -->
+        <div class="pt-5 mt-6 border-t border-slate-200/50 dark:border-white/10 flex items-center justify-between text-[11px] text-[#0D1B2A]/60 dark:text-slate-400">
+          <span class="flex items-center gap-1.5 font-medium">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#1668E3]"></span>
+            Tagajärg: topeltkulu & kontrolli puudumine
+          </span>
+          <span class="font-bold text-[#1668E3] dark:text-[#93c5fd]">Kursify lahendus</span>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           CARD 03: ÕPETAJA VAADE (Instructor / Teacher)
+           ===================================================================== -->
+      <div class="problem-glass-card p-6 sm:p-7 flex flex-col justify-between">
+        <div>
+          <!-- Visual Stage Header: Unsplash Image 3 (Õpetaja / Teacher) -->
+          <div class="visual-3d-stage w-full h-44 mb-6">
+            <img 
+              src="https://plus.unsplash.com/premium_photo-1663040197283-fae88b360dad?auto=format&fit=crop&w=800&q=80" 
+              alt="Õpetaja vaade — Koolitaja ja õppurid" 
+              loading="lazy"
+              referrerpolicy="no-referrer"
+              class="w-full h-full object-cover transition-transform duration-500 ease-out"
+            />
+            <!-- Role Number Overlay -->
+            <div class="absolute top-3 right-3 z-10">
+              <span class="badge-role-number">03</span>
+            </div>
+          </div>
+
+          <!-- Card Header Info -->
+          <div class="mb-5 pb-3 border-b border-slate-200/60 dark:border-white/10">
+            <h3 class="text-xl font-bold text-[#0D1B2A] dark:text-white tracking-tight">
+              Õpetaja vaade
+            </h3>
+            <span class="text-xs font-semibold text-[#1668E3] dark:text-[#93c5fd]">
+              Instruktor & professionaalne sõiduõpetaja
+            </span>
+          </div>
+
+          <!-- Bullet Points List -->
+          <ul class="space-y-3.5 text-xs sm:text-[13px] leading-relaxed text-[#0D1B2A] dark:text-slate-200 font-medium">
+            
+            <li class="flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-[#1668E3] mt-1.5 shrink-0"></span>
+              <span>Õpilased tühistavad sõidutunni 2 tundi enne — tekivad tühjad tasuta augud</span>
+            </li>
+
+            <li class="flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-[#1668E3] mt-1.5 shrink-0"></span>
+              <span>Ebaühtlane sissetulek: kord 12-tunnised tööpäevad roolis, kord nädal vaikust</span>
+            </li>
+
+            <li class="flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-[#1668E3] mt-1.5 shrink-0"></span>
+              <span>Traditsiooniline autokool võtab lõviosa vahendustasust, vastutus jääb õpetajale</span>
+            </li>
+
+            <!-- Escalation 1 -->
+            <li class="flex items-start gap-2.5 text-[#0D1B2A] dark:text-blue-200 font-semibold pt-1 border-t border-slate-200/50 dark:border-white/10">
+              <span class="text-[#1668E3] font-bold text-sm leading-none shrink-0 mt-0.5">→</span>
+              <span>ja motivatsioon langeb. Pidev ajapuudus ei lase õpilasele rahulikult pühenduda..</span>
+            </li>
+
+            <!-- Escalation 2 -->
+            <li class="flex items-start gap-2.5 text-[#0D1B2A] dark:text-white font-bold">
+              <span class="text-[#1668E3] font-bold text-sm leading-none shrink-0 mt-0.5">→</span>
+              <span>läbipõlemine roolis, rahulolematud õppurid ja madalam eksamistatistika</span>
+            </li>
+
+          </ul>
+        </div>
+
+        <!-- Micro Bottom Anchor -->
+        <div class="pt-5 mt-6 border-t border-slate-200/50 dark:border-white/10 flex items-center justify-between text-[11px] text-[#0D1B2A]/60 dark:text-slate-400">
+          <span class="flex items-center gap-1.5 font-medium">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#1668E3]"></span>
+            Tagajärg: instruktori läbipõlemine & tühjad tunnid
+          </span>
+          <span class="font-bold text-[#1668E3] dark:text-[#93c5fd]">Kursify lahendus</span>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Theme Script -->
+  <script>
+    function updateThemeUI() {
+      const isDark = document.documentElement.classList.contains('dark');
+      const text = document.getElementById('themeToggleText');
+      if (text) text.textContent = isDark ? 'Light' : 'Dark';
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.contains('dark');
+      if (isDark) {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.remove('light');
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+      updateThemeUI();
+    }
+
+    // Init Theme from LocalStorage or system
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.remove('light');
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    }
+    updateThemeUI();
+  </script>
+</body>
+</html>

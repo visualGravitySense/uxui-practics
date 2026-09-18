@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="et" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kiirtest: Milline sõiduõpetaja sulle sobib? — Kursify</title>
+<meta name="description" content="Leia endale sobivaim autokool, sõiduõpetaja ja õppetempo 60 sekundiga.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            blue: '#1668E3',      // Kursify brand blue
+            blueHover: '#1254BA',
+            navy: '#0D1B2A',      // Primary dark text
+            bg: '#F1F6FD',        // Ambient background
+            orange: '#F5931E',    // Accent gold
+          }
+        },
+        fontFamily: {
+          sans: ['Manrope', 'sans-serif'],
+          serif: ['Playfair Display', 'Georgia', 'serif'],
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body {
+    font-family: 'Manrope', sans-serif;
+  }
+
+  /* ==========================================================================
+     AMBIENT SCENE
+     ========================================================================== */
+  .ambient-scene {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .light .ambient-scene,
+  :root:not(.dark) .ambient-scene {
+    background: 
+      radial-gradient(ellipse 850px 550px at 50% -10%, rgba(22, 104, 227, 0.18), transparent 75%),
+      radial-gradient(circle 650px at 15% 35%, rgba(22, 104, 227, 0.12), transparent 70%),
+      radial-gradient(circle 650px at 85% 45%, rgba(22, 104, 227, 0.14), transparent 70%),
+      radial-gradient(ellipse 900px 450px at 50% 105%, rgba(22, 104, 227, 0.1), transparent 75%);
+  }
+  .dark .ambient-scene {
+    background: 
+      radial-gradient(ellipse 950px 600px at 50% -10%, rgba(22, 104, 227, 0.38), transparent 75%),
+      radial-gradient(circle 700px at 15% 40%, rgba(22, 104, 227, 0.22), transparent 75%),
+      radial-gradient(circle 700px at 85% 50%, rgba(22, 104, 227, 0.24), transparent 75%),
+      radial-gradient(ellipse 1000px 500px at 50% 105%, rgba(22, 104, 227, 0.2), transparent 80%);
+  }
+
+  /* ==========================================================================
+     MASTER SPLIT CONTAINER (Unified Glass Shell like the Dribbble Reference)
+     ========================================================================== */
+  .master-quiz-frame {
+    position: relative;
+    border-radius: 32px;
+    overflow: hidden;
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    transition: all 0.3s ease;
+  }
+  .light .master-quiz-frame,
+  :root:not(.dark) .master-quiz-frame {
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    box-shadow: 
+      0 25px 65px -15px rgba(22, 104, 227, 0.14),
+      0 6px 24px -2px rgba(13, 27, 42, 0.04),
+      inset 0 2px 3px 0 rgba(255, 255, 255, 1);
+  }
+  .dark .master-quiz-frame {
+    background: rgba(13, 27, 42, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 
+      0 30px 75px -15px rgba(0, 0, 0, 0.75),
+      0 0 35px rgba(22, 104, 227, 0.18),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.18);
+  }
+
+  /* ==========================================================================
+     LEFT HERO COVER: Abstract Geometric Road Curvature Pattern
+     (Direct translation of the balloon radial geometric texture from reference)
+     ========================================================================== */
+  .cover-panel {
+    position: relative;
+    overflow: hidden;
+  }
+  .light .cover-panel {
+    background: linear-gradient(145deg, #0f2444 0%, #163660 50%, #0d1b2a 100%);
+    color: #ffffff;
+  }
+  .dark .cover-panel {
+    background: linear-gradient(145deg, #07111e 0%, #0c1d35 50%, #060c15 100%);
+    color: #ffffff;
+  }
+
+  /* Road Trajectory Geometric SVG Curves */
+  .road-pattern-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.38;
+    mix-blend-mode: screen;
+  }
+
+  /* Ambient Glass Glow inside cover */
+  .cover-ambient-glow {
+    position: absolute;
+    width: 380px;
+    height: 380px;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(22, 104, 227, 0.6) 0%, rgba(59, 130, 246, 0.2) 50%, transparent 70%);
+    filter: blur(50px);
+    top: -80px;
+    left: -80px;
+    pointer-events: none;
+  }
+
+  /* Floating pill badge inside cover */
+  .cover-chip {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Option item glass styling */
+  .quiz-option {
+    position: relative;
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+  }
+  .light .quiz-option {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 2px 6px rgba(13, 27, 42, 0.02);
+  }
+  .light .quiz-option:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: rgba(22, 104, 227, 0.45);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px -4px rgba(22, 104, 227, 0.12);
+  }
+  .dark .quiz-option {
+    background: rgba(17, 34, 54, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .dark .quiz-option:hover {
+    background: rgba(22, 44, 70, 0.85);
+    border-color: rgba(96, 165, 250, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.5), 0 0 16px rgba(22, 104, 227, 0.2);
+  }
+
+  /* Selected Option State */
+  .quiz-option.selected {
+    border-color: #1668E3 !important;
+    background: rgba(22, 104, 227, 0.08) !important;
+    box-shadow: 0 0 0 1.5px #1668E3, 0 8px 22px -4px rgba(22, 104, 227, 0.18) !important;
+  }
+  .dark .quiz-option.selected {
+    border-color: #60A5FA !important;
+    background: rgba(37, 99, 235, 0.20) !important;
+    box-shadow: 0 0 0 1.5px #60A5FA, 0 0 20px rgba(37, 99, 235, 0.35) !important;
+  }
+
+  /* ==========================================================================
+     SAPPHIRE GLASS BUTTON
+     ========================================================================== */
+  .btn-glass-primary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    padding: 14px 30px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    cursor: pointer;
+    text-decoration: none;
+    user-select: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  }
+  .light .btn-glass-primary,
+  :root:not(.dark) .btn-glass-primary {
+    background: rgba(37, 99, 235, 0.90);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    color: #ffffff;
+    box-shadow: 
+      0 10px 28px -4px rgba(37, 99, 235, 0.38),
+      0 2px 6px rgba(13, 27, 42, 0.08),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.7);
+  }
+  .light .btn-glass-primary:hover,
+  :root:not(.dark) .btn-glass-primary:hover {
+    background: rgba(29, 78, 216, 0.96);
+    border-color: rgba(255, 255, 255, 0.7);
+    transform: translateY(-2px);
+    box-shadow: 
+      0 14px 34px -4px rgba(37, 99, 235, 0.48),
+      inset 0 1px 2px rgba(255, 255, 255, 0.85);
+  }
+  .dark .btn-glass-primary {
+    background: rgba(37, 99, 235, 0.35);
+    border: 1px solid rgba(96, 165, 250, 0.4);
+    color: #ffffff;
+    box-shadow: 
+      0 10px 30px -4px rgba(0, 0, 0, 0.55),
+      0 0 18px rgba(37, 99, 235, 0.3),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.3);
+  }
+  .dark .btn-glass-primary:hover {
+    background: rgba(37, 99, 235, 0.50);
+    border-color: rgba(147, 197, 253, 0.65);
+    transform: translateY(-2px);
+    box-shadow: 
+      0 14px 36px -4px rgba(0, 0, 0, 0.65),
+      0 0 26px rgba(37, 99, 235, 0.45),
+      inset 0 1px 2px rgba(255, 255, 255, 0.45);
+  }
+
+  /* Ghost Secondary Glass Button */
+  .btn-glass-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 13px 26px;
+    backdrop-filter: blur(12px);
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .light .btn-glass-secondary {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(203, 213, 225, 0.9);
+    color: #0D1B2A;
+  }
+  .light .btn-glass-secondary:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: #1668E3;
+    color: #1668E3;
+  }
+  .dark .btn-glass-secondary {
+    background: rgba(17, 34, 54, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #F1F6FD;
+  }
+  .dark .btn-glass-secondary:hover {
+    background: rgba(22, 44, 70, 0.9);
+    border-color: rgba(96, 165, 250, 0.4);
+  }
+
+  /* Top Right Floating Theme Toggle */
+  .theme-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 50;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 700;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .light .theme-toggle-btn,
+  :root:not(.dark) .theme-toggle-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(203, 213, 225, 0.8);
+    color: #0D1B2A;
+    box-shadow: 0 4px 16px -2px rgba(13, 27, 42, 0.08);
+  }
+  .dark .theme-toggle-btn {
+    background: rgba(13, 27, 42, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #F1F6FD;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Custom Sub-card Diagnosis & Advice styles */
+  .result-subcard-diagnosis {
+    border-radius: 18px;
+    padding: 18px;
+    background: rgba(254, 243, 199, 0.5);
+    border: 1px solid rgba(245, 158, 11, 0.28);
+  }
+  .dark .result-subcard-diagnosis {
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+  }
+
+  .result-subcard-recommendation {
+    border-radius: 18px;
+    padding: 18px;
+    background: rgba(224, 242, 254, 0.6);
+    border: 1px solid rgba(22, 104, 227, 0.25);
+  }
+  .dark .result-subcard-recommendation {
+    background: rgba(22, 104, 227, 0.14);
+    border: 1px solid rgba(96, 165, 250, 0.26);
+  }
+
+  /* Glass Modal Container */
+  .modal-glass {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    box-shadow: 0 25px 60px -15px rgba(22, 104, 227, 0.22), 0 10px 25px -5px rgba(13, 27, 42, 0.08);
+  }
+  .dark .modal-glass {
+    background: rgba(13, 27, 42, 0.94);
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.8), 0 0 35px rgba(22, 104, 227, 0.25);
+  }
+</style>
+</head>
+
+<body class="bg-brand-bg dark:bg-[#070D18] text-brand-navy dark:text-slate-100 min-h-screen relative antialiased flex flex-col justify-center selection:bg-brand-blue selection:text-white py-10 sm:py-16 px-4 sm:px-6 lg:px-8">
+
+<!-- Ambient Background Glow Canvas -->
+<div class="ambient-scene"></div>
+
+<!-- Top-Right Discreet Theme Toggle -->
+<button onclick="toggleTheme()" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Lülita heledat ja tumedat režiimi">
+  <span class="w-2 h-2 rounded-full bg-[#1668E3]"></span>
+  <span id="themeToggleText">Dark</span>
+</button>
+
+<!-- =========================================================================
+     MASTER UNIFIED SPLIT QUIZ TERMINAL (Single cohesive frame)
+     ========================================================================= -->
+<section class="relative z-10 max-w-6xl mx-auto w-full">
+  
+  <div class="master-quiz-frame grid grid-cols-1 lg:grid-cols-12 min-h-[560px]">
+    
+    <!-- ===================================================================
+         LEFT COVER PANEL (Abstract Geometric Road Trajectory & Deep Depth)
+         Harmoniously integrates anchor title, playfair subtitle & data
+         =================================================================== -->
+    <div class="cover-panel lg:col-span-5 p-8 sm:p-10 flex flex-col justify-between relative">
+      
+      <!-- Subtle Ambient Glow -->
+      <div class="cover-ambient-glow"></div>
+
+      <!-- Geometric SVG Road Curvature Texture (Concentric road turns / radar mesh) -->
+      <svg class="road-pattern-overlay" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Concentric road curvature rings with motion dashed lines -->
+        <circle cx="100" cy="500" r="180" stroke="rgba(96, 165, 250, 0.4)" stroke-width="1.5" />
+        <circle cx="100" cy="500" r="260" stroke="rgba(96, 165, 250, 0.3)" stroke-width="1.5" stroke-dasharray="6 8" />
+        <circle cx="100" cy="500" r="340" stroke="rgba(96, 165, 250, 0.25)" stroke-width="2" />
+        <circle cx="100" cy="500" r="420" stroke="rgba(96, 165, 250, 0.2)" stroke-width="1.5" stroke-dasharray="10 12" />
+        <circle cx="100" cy="500" r="500" stroke="rgba(96, 165, 250, 0.15)" stroke-width="1.5" />
+        
+        <!-- Cross-hair Gyro Horizon Coordinates -->
+        <line x1="100" y1="50" x2="100" y2="550" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1" />
+        <line x1="-50" y1="500" x2="550" y2="500" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1" />
+        
+        <!-- Turning Arc Curve Accent in Brand Sapphire -->
+        <path d="M-20 400 C 150 400, 350 300, 480 50" stroke="rgba(59, 130, 246, 0.65)" stroke-width="3.5" stroke-linecap="round" />
+        <circle cx="350" cy="300" r="6" fill="#60A5FA" />
+      </svg>
+
+      <!-- Content Layer inside the cover -->
+      <div class="relative z-10">
+        <!-- Top Tech Badge -->
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full cover-chip text-white text-xs font-bold tracking-wider uppercase mb-8">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>NUTIKAS SOBIVUSALGORITM</span>
+        </div>
+
+        <!-- Main Question Anchor Title -->
+        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white leading-[1.14]">
+          Kus sina ja su juhiload hetkel olete?
+        </h2>
+
+        <!-- Playfair Serif Subtitle -->
+        <p class="font-serif italic text-xl sm:text-2xl text-blue-300 mt-3 font-normal">
+          Kolm küsimust. Personaalne soovitus.
+        </p>
+
+        <!-- Descriptive Body -->
+        <p class="mt-5 text-slate-300 text-sm sm:text-[15px] leading-relaxed max-w-sm">
+          Vasta ausalt — näitame, milline õpetaja tüüp, käigukast ja õppetempo sobib just sinu iseloomule, et läbida riiklik eksam esimese korraga.
+        </p>
+      </div>
+
+      <!-- Bottom Status Widgets Layer (Directly integrated into cover) -->
+      <div class="relative z-10 mt-10 pt-6 border-t border-white/15 space-y-3">
+        <div class="flex items-center justify-between text-xs text-slate-300">
+          <span class="flex items-center gap-2">
+            <span class="text-emerald-400 font-bold">✓</span> Eksamitulemuse täpsus
+          </span>
+          <span class="font-bold text-white px-2 py-0.5 rounded bg-blue-500/20 border border-blue-400/30">98.4% MATCH</span>
+        </div>
+
+        <div class="flex items-center justify-between text-xs text-slate-300">
+          <span class="flex items-center gap-2">
+            <span class="text-emerald-400 font-bold">✓</span> Sel kuul testitud õpilasi
+          </span>
+          <span class="font-bold text-white">1,420+ tulemust</span>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================================
+         RIGHT INTERACTIVE PANEL: 3 Dynamic Screens (Clean, spacious, glass)
+         =================================================================== -->
+    <div class="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-between bg-white/70 dark:bg-slate-900/60 backdrop-blur-md">
+      
+      <!-- =================================================================
+           SCREEN 1: START SCREEN (Screenshot 1: KIIRTEST + ALUSTA)
+           ================================================================= -->
+      <div id="quizScreen1" class="flex flex-col justify-between h-full py-2">
+        <div>
+          <!-- Pill Badge: • KIIRTEST • -->
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-200/80 dark:border-blue-900/60 bg-blue-50/90 dark:bg-blue-950/50 text-brand-blue dark:text-blue-400 text-xs font-bold tracking-wider uppercase mb-5">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse"></span>
+            <span>KIIRTEST</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-blue"></span>
+          </div>
+
+          <!-- Start Headline: Küsimused, vastused ja soovitus -->
+          <h3 class="text-2xl sm:text-3xl font-extrabold text-brand-navy dark:text-white tracking-tight leading-snug">
+            Küsimused, vastused ja soovitus
+          </h3>
+
+          <p class="mt-4 text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
+            Vaid 3 lühikest küsimust aitavad tuvastada sinu peamised sõiduhirmud või ootused. Tulemuseks saad selge plaani ja nimekirja õpetajatest, kelle käe all tunned end roolis kindlalt.
+          </p>
+
+          <!-- Feature Pills -->
+          <div class="mt-6 flex flex-wrap gap-2.5 text-xs font-semibold text-slate-600 dark:text-slate-400">
+            <span class="px-3 py-1.5 rounded-lg bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/50 dark:border-slate-700/50">⏱ Võtab aega 60 sekundit</span>
+            <span class="px-3 py-1.5 rounded-lg bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/50 dark:border-slate-700/50">🎯 Ei vaja registreerimist</span>
+            <span class="px-3 py-1.5 rounded-lg bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/50 dark:border-slate-700/50">✨ Tasuta personaalne soovitus</span>
+          </div>
+
+          <!-- Social Proof Avatars Strip -->
+          <div class="mt-8 flex items-center gap-3 pt-5 border-t border-slate-100 dark:border-slate-800">
+            <div class="flex -space-x-2 overflow-hidden">
+              <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&h=80&q=80" alt="Karin T." referrerpolicy="no-referrer">
+              <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&h=80&q=80" alt="Mihkel R." referrerpolicy="no-referrer">
+              <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&h=80&q=80" alt="Jürgen K." referrerpolicy="no-referrer">
+            </div>
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+              <strong class="font-bold text-brand-navy dark:text-white">3,400+ õpilast</strong> juba leidnud oma instruktori
+            </span>
+          </div>
+        </div>
+
+        <!-- Start Action Button (Screenshot: ALUSTA) -->
+        <div class="mt-8 pt-4">
+          <button onclick="startQuiz()" class="btn-glass-primary">
+            <span class="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[9px] leading-none">▶</span>
+            <span>ALUSTA TESTI</span>
+          </button>
+        </div>
+      </div>
+
+
+      <!-- =================================================================
+           SCREEN 2: QUESTION SCREEN (Screenshot 2: Progress + 4 Options)
+           ================================================================= -->
+      <div id="quizScreen2" class="hidden flex flex-col justify-between h-full">
+        <div>
+          <!-- Progress Bar Header (Screenshot: SAMM 1 / 3, 33%) -->
+          <div class="flex items-center justify-between text-xs font-extrabold tracking-wider text-slate-500 dark:text-slate-400 uppercase mb-2">
+            <span id="quizStepLabel">SAMM 1 / 3</span>
+            <span id="quizPercentLabel" class="text-brand-blue dark:text-blue-400">33%</span>
+          </div>
+
+          <!-- Visual Progress Bar Line -->
+          <div class="w-full h-1.5 bg-slate-200/70 dark:bg-slate-800 rounded-full overflow-hidden mb-6">
+            <div id="quizProgressBar" class="h-full bg-brand-blue rounded-full transition-all duration-300 ease-out" style="width: 33%;"></div>
+          </div>
+
+          <!-- Question Heading -->
+          <h3 id="quizQuestionTitle" class="text-xl sm:text-2xl font-extrabold text-brand-navy dark:text-white tracking-tight leading-snug mb-5">
+            Milline on sinu senine kogemus autojuhtimisega?
+          </h3>
+
+          <!-- 4 Clickable Scenario Options -->
+          <div id="quizOptionsContainer" class="space-y-3">
+            <!-- Dynamically populated options -->
+          </div>
+        </div>
+
+        <!-- Bottom Utility: Reset link (Screenshot: Alusta algusest) -->
+        <div class="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs">
+          <button onclick="restartQuiz()" class="text-slate-600 hover:text-brand-navy dark:text-slate-400 dark:hover:text-white font-semibold transition cursor-pointer">
+            ← Alusta algusest
+          </button>
+          <span class="text-slate-500 dark:text-slate-500 text-[11px]">Klõpsa vastusel, et liikuda edasi</span>
+        </div>
+      </div>
+
+
+      <!-- =================================================================
+           SCREEN 3: RESULT SCREEN (Screenshot 3: TULEMUS + DIAGNOOS + SOOVITUS + 2 CTAs)
+           ================================================================= -->
+      <div id="quizScreen3" class="hidden flex flex-col justify-between h-full py-2">
+        <div>
+          <!-- Header Badges (Screenshot: TULEMUS · VALMIS) -->
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-2.5 py-1 rounded-md text-[11px] font-extrabold uppercase tracking-wider bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/50">
+              TULEMUS
+            </span>
+            <span class="text-xs font-extrabold tracking-wider text-slate-600 dark:text-slate-400 uppercase">
+              VALMIS
+            </span>
+          </div>
+
+          <!-- Diagnosis Title -->
+          <h3 id="resultTitle" class="text-xl sm:text-2xl font-extrabold text-brand-navy dark:text-white tracking-tight leading-snug mb-5">
+            Sinu profiil: Rahulik ja toetust vajav alustaja
+          </h3>
+
+          <!-- 2 Stacked Sub-cards (Screenshot: DIAGNOOS & SOOVITUS) -->
+          <div class="space-y-3.5">
+            
+            <!-- Subcard 1: DIAGNOOS (Soft Warm Tinted Glass) -->
+            <div class="result-subcard-diagnosis">
+              <span class="block text-[10px] font-extrabold tracking-widest uppercase text-amber-800 dark:text-amber-400 mb-1.5">
+                DIAGNOOS JA HETKESEIS
+              </span>
+              <p id="resultDiagnosisText" class="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-normal">
+                Kõige suurem pidur on hirm tiheda liikluse ja vigade ees. Tavalises autokoolis, kus instruktor võib häält tõsta, tekitab see lisapinget. Sa vajad keskkonda, kus vigade tegemine on loomulik õppeprotsessi osa.
+              </p>
+            </div>
+
+            <!-- Subcard 2: SOOVITUS (Soft Blue Tinted Glass) -->
+            <div class="result-subcard-recommendation">
+              <span class="block text-[10px] font-extrabold tracking-widest uppercase text-brand-blue dark:text-blue-400 mb-1.5">
+                KURSIFY SOOVITUS JA JÄRGMINE SAMM
+              </span>
+              <p id="resultRecommendationText" class="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-normal">
+                Alusta automaatkäigukastiga ja vali õpetaja, kelle tagasisides tuuakse esile erakordset kannatlikkust. 2 tundi nädalas ilma kiirustamiseta tagab enesekindluse juba 4. sõidutunniks.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Bottom Action Buttons (Screenshot: TEE UUESTI + VAATA PROGRAMMI) -->
+        <div class="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-3 justify-end">
+          <!-- Secondary Ghost Button: TEE UUESTI -->
+          <button onclick="restartQuiz()" class="btn-glass-secondary w-full sm:w-auto">
+            TEE UUESTI
+          </button>
+
+          <!-- Primary Sapphire Glass Button: VAATA SULLE SOBIVAID ÕPETAJAID -->
+          <button onclick="openInstructorModal()" class="btn-glass-primary w-full sm:w-auto">
+            <span>VAATA SOBIVAID ÕPETAJAID</span>
+            <span class="text-sm font-bold">→</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ==========================================================================
+     INTERACTIVE GLASS MODAL (Identical to reviews.html modal-glass)
+     ========================================================================== -->
+<div id="quizResultModal" class="fixed inset-0 z-50 hidden bg-[#0D1B2A]/60 dark:bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+  <div class="modal-glass w-full max-w-xl rounded-3xl p-6 sm:p-8 shadow-2xl">
+    
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between border-b border-slate-200/60 dark:border-slate-800 pb-4 mb-5">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-brand-blue animate-pulse"></span>
+          <h4 class="text-lg sm:text-xl font-bold text-brand-navy dark:text-white">Sinu profiilile sobivad õpetajad</h4>
+        </div>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Filtreeritud kiirtesti tulemuste ja Transpordiameti eksamistatistika alusel</p>
+      </div>
+      <button onclick="closeInstructorModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-brand-navy dark:hover:text-white flex items-center justify-center font-bold text-sm transition cursor-pointer" aria-label="Sulge aken">✕</button>
+    </div>
+
+    <!-- Recommended Instructors Stream with Real Portraits & Frosted Glass -->
+    <div class="space-y-3.5 text-sm">
+      
+      <!-- Instructor 1: Mihkel R. -->
+      <div class="p-4 rounded-2xl bg-white/70 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between gap-3 shadow-xs hover:border-brand-blue/40 transition">
+        <div class="flex items-center gap-3.5">
+          <!-- Portrait with Verified Badge -->
+          <div class="relative w-12 h-12 rounded-full shrink-0">
+            <img 
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80" 
+              alt="Mihkel R." 
+              class="w-full h-full object-cover rounded-full"
+              referrerpolicy="no-referrer"
+            />
+            <span class="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-900 flex items-center justify-center text-white text-[9px] font-black">✓</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-brand-navy dark:text-white text-sm">Mihkel R.</span>
+              <span class="text-brand-orange text-xs font-bold">★ 5.0</span>
+              <span class="text-[11px] text-slate-400">(48)</span>
+            </div>
+            <p class="text-xs text-brand-blue dark:text-blue-400 font-semibold mt-0.5">Autosõit OÜ • Tallinn</p>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Toyota Corolla (Automaat) • Spetsialist: algajad ja hirmust ülesaamine</p>
+          </div>
+        </div>
+        <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wider bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 shrink-0">
+          99% MATCH
+        </span>
+      </div>
+
+      <!-- Instructor 2: Aleksei V. -->
+      <div class="p-4 rounded-2xl bg-white/70 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between gap-3 shadow-xs hover:border-brand-blue/40 transition">
+        <div class="flex items-center gap-3.5">
+          <!-- Portrait with Verified Badge -->
+          <div class="relative w-12 h-12 rounded-full shrink-0">
+            <img 
+              src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&h=120&q=80" 
+              alt="Aleksei V." 
+              class="w-full h-full object-cover rounded-full"
+              referrerpolicy="no-referrer"
+            />
+            <span class="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-900 flex items-center justify-center text-white text-[9px] font-black">✓</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-brand-navy dark:text-white text-sm">Aleksei V.</span>
+              <span class="text-brand-orange text-xs font-bold">★ 4.9</span>
+              <span class="text-[11px] text-slate-400">(62)</span>
+            </div>
+            <p class="text-xs text-brand-blue dark:text-blue-400 font-semibold mt-0.5">Vasara Autokool • Tartu</p>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Škoda Octavia (Manuaal) • Spetsialist: riiklikud eksamimarsruudid</p>
+          </div>
+        </div>
+        <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wider bg-blue-100 dark:bg-blue-950 text-brand-blue dark:text-blue-400 shrink-0">
+          96% MATCH
+        </span>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer with Clean Sapphire Glass Button -->
+    <div class="mt-7 pt-4 border-t border-slate-200/60 dark:border-slate-800 flex items-center justify-between">
+      <span class="text-xs text-slate-500 dark:text-slate-400">Vabad ajad saadaval sel nädalal</span>
+      <button onclick="closeInstructorModal()" class="btn-glass-primary text-xs py-3 px-6">
+        <span>SULGE JA VAATA KATALOOGI</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // =========================================================================
+  // QUIZ DATA & DYNAMIC BRANCHING ENGINE
+  // =========================================================================
+  const quizQuestions = [
+    {
+      title: "Milline on sinu senine kogemus autojuhtimisega?",
+      options: [
+        { id: 1, text: "Täiesti null — pole kunagi rooli taga istunud ja tunnen kerget ärevust.", score: 1 },
+        { id: 2, text: "Olen proovinud platsil või maal sõita, aga linnaliiklus hirmutab.", score: 2 },
+        { id: 3, text: "Käisin kunagi autokoolis, aga jäi pooleli (või kukkusin eksamil läbi).", score: 3 },
+        { id: 4, text: "Oskan juba sõita, vajan lihtsalt kiiret lihvimist ja riikliku eksami sooritamist.", score: 4 }
+      ]
+    },
+    {
+      title: "Mis tekitab sinus rooli taga kõige rohkem ebakindlust?",
+      options: [
+        { id: 1, text: "Kardan, et instruktor tõstab häält või muutub kärsituks, kui teen vea.", score: 1 },
+        { id: 2, text: "Käiguvahetus, väljasuretamine ja kallakult paigaltvõtt (siduri kontroll).", score: 2 },
+        { id: 3, text: "Keerulised ringristmikud, reavahetused ja Tallinna/Tartu tipptund.", score: 3 },
+        { id: 4, text: "Transpordiameti riikliku sõidueksami range hindamine ja ootamatud nõuded.", score: 4 }
+      ]
+    },
+    {
+      title: "Millise ajagraafikuga soovid juhiloani jõuda?",
+      options: [
+        { id: 1, text: "Rahulikus tempos (1-2 korda nädalas), peamine on tunda end roolis turvaliselt.", score: 1 },
+        { id: 2, text: "Tavapärases tempos (2-3 kuud), ühildades seda kooli või täiskohaga tööga.", score: 2 },
+        { id: 3, text: "Võimalikult kiiresti (4-6 nädalat intensiivõpet), load on eluliselt vajalikud.", score: 3 },
+        { id: 4, text: "Vajan vaid paari sihipärast tundi enne juba broneeritud eksamipäeva.", score: 4 }
+      ]
+    }
+  ];
+
+  let currentStep = 0;
+  let totalScore = 0;
+  let userAnswers = [];
+
+  function startQuiz() {
+    currentStep = 0;
+    totalScore = 0;
+    userAnswers = [];
+    document.getElementById('quizScreen1').classList.add('hidden');
+    document.getElementById('quizScreen2').classList.remove('hidden');
+    document.getElementById('quizScreen3').classList.add('hidden');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const q = quizQuestions[currentStep];
+    const stepNum = currentStep + 1;
+    const totalSteps = quizQuestions.length;
+    const percent = Math.round((stepNum / totalSteps) * 100);
+
+    document.getElementById('quizStepLabel').textContent = `SAMM ${stepNum} / ${totalSteps}`;
+    document.getElementById('quizPercentLabel').textContent = `${percent}%`;
+    document.getElementById('quizProgressBar').style.width = `${percent}%`;
+    document.getElementById('quizQuestionTitle').textContent = q.title;
+
+    const container = document.getElementById('quizOptionsContainer');
+    container.innerHTML = '';
+
+    q.options.forEach((opt, index) => {
+      const optDiv = document.createElement('div');
+      optDiv.className = 'quiz-option p-4 flex items-start gap-3.5';
+      optDiv.onclick = () => selectOption(opt.score);
+
+      optDiv.innerHTML = `
+        <span class="w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-950/80 text-brand-blue dark:text-blue-400 flex items-center justify-center font-extrabold text-xs shrink-0 mt-0.5">
+          ${index + 1}
+        </span>
+        <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
+          ${opt.text}
+        </p>
+      `;
+      container.appendChild(optDiv);
+    });
+  }
+
+  function selectOption(score) {
+    totalScore += score;
+    userAnswers.push(score);
+
+    if (currentStep < quizQuestions.length - 1) {
+      currentStep++;
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  }
+
+  function showResults() {
+    document.getElementById('quizScreen2').classList.add('hidden');
+    document.getElementById('quizScreen3').classList.remove('hidden');
+
+    const titleEl = document.getElementById('resultTitle');
+    const diagEl = document.getElementById('resultDiagnosisText');
+    const recEl = document.getElementById('resultRecommendationText');
+
+    // Dynamic branching logic based on total score (Range: 3 to 12)
+    if (totalScore <= 5) {
+      titleEl.textContent = "Sinu profiil: Rahulik ja toetust vajav alustaja";
+      diagEl.textContent = "Kõige suurem takistus on hirm tiheda liikluse ja vigade ees. Tavalises autokoolis, kus instruktor võib häält tõsta, tekitab see lisapinget. Sa vajad rahulikku keskkonda, kus vigade tegemine on loomulik õppeprotsessi osa.";
+      recEl.textContent = "Soovitame alustada automaatkäigukastiga ning valida õpetaja, kelle tagasisides kiidetakse kannatlikkust ja huumorimeelt. 2 tundi nädalas ilma kiirustamiseta tagab täieliku enesekindluse.";
+    } else if (totalScore <= 8) {
+      titleEl.textContent = "Sinu profiil: Eesmärgipärane süsteemne õppija";
+      diagEl.textContent = "Sul on elementaarsed teadmised olemas, kuid ebakindlust tekitavad spetsiifilised olukorrad (manöövrid, tipptund, parkimine). Vajad instruktorit, kes ei sõidaks lihtsalt ringi, vaid treeniks sihipäraselt sinu nõrku kohti.";
+      recEl.textContent = "B-kategooria manuaal või automaat 2-3 korda nädalas. Vali õpetaja, kes kasutab Kursify reaalajas sõidupäevikut, et näeksid iga tunni lõpus täpseid veaparandusi.";
+    } else {
+      titleEl.textContent = "Sinu profiil: Transpordiameti eksami viimistleja";
+      diagEl.textContent = "Sõiduoskus on sul põhimõtteliselt käes, kuid vajad täpset ülevaadet Transpordiameti eksaminaatorite rangetest nõuetest (peeglivaatlused, ringristmiku trajektoorid, ökonoomne sõit).";
+      recEl.textContent = "Ära võta pikki kalleid pakette! Piisab 3-5 sihtotstarbelisest sõidutunnist instruktoriga, kes on spetsialiseerunud just riiklike eksamimarsruutide simuleerimisele.";
+    }
+  }
+
+  function restartQuiz() {
+    startQuiz();
+  }
+
+  function openInstructorModal() {
+    document.getElementById('quizResultModal').classList.remove('hidden');
+  }
+
+  function closeInstructorModal() {
+    document.getElementById('quizResultModal').classList.add('hidden');
+  }
+
+  // Theme Toggle (Light / Dark)
+  function toggleTheme() {
+    const isDark = document.documentElement.classList.toggle('dark');
+    document.documentElement.classList.toggle('light', !isDark);
+    const textSpan = document.getElementById('themeToggleText');
+    if (textSpan) {
+      textSpan.textContent = isDark ? 'Light' : 'Dark';
+    }
+    localStorage.setItem('kursify-theme', isDark ? 'dark' : 'light');
+  }
+
+  // Load stored theme on load
+  (function() {
+    const saved = localStorage.getItem('kursify-theme');
+    const isDark = saved === 'dark';
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    }
+    const textSpan = document.getElementById('themeToggleText');
+    if (textSpan) {
+      textSpan.textContent = isDark ? 'Light' : 'Dark';
+    }
+  })();
+</script>
+
+</body>
+</html>

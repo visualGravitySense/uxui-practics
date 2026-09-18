@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="et" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kes sind õpetab? — Kursify Sõidumentor</title>
+<meta name="description" content="Tutvu oma tulevase sõidumentoriga: rahulik suhtlus, kaasaegne auto, 0% karjumist ja 100% toetus.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            blue: '#1668E3',      // Kursify sapphire blue
+            navy: '#0D1B2A',      // Primary dark slate
+            bg: '#F1F6FD',        // Light ambient base
+            orange: '#F5931E',
+          }
+        },
+        fontFamily: {
+          sans: ['Manrope', 'sans-serif'],
+          serif: ['Playfair Display', 'Georgia', 'serif'],
+        }
+      }
+    }
+  }
+</script>
+<style>
+  /* ==========================================================================
+     GLOBAL ZERO-SHIFT ARCHITECTURE
+     ========================================================================== */
+  html {
+    overflow-y: scroll; /* Permanently reserve scrollbar track to eliminate any jumping */
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: 'Manrope', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  /* ==========================================================================
+     SEAMLESS AMBIENT BACKGROUND
+     ========================================================================== */
+  .ambient-scene {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 0.35s ease;
+  }
+  .light .ambient-scene,
+  :root:not(.dark) .ambient-scene {
+    background: 
+      radial-gradient(ellipse 850px 550px at 50% -10%, rgba(22, 104, 227, 0.18), transparent 75%),
+      radial-gradient(circle 650px at 15% 35%, rgba(22, 104, 227, 0.12), transparent 70%),
+      radial-gradient(circle 650px at 85% 45%, rgba(22, 104, 227, 0.14), transparent 70%),
+      radial-gradient(ellipse 900px 450px at 50% 105%, rgba(22, 104, 227, 0.1), transparent 75%);
+  }
+  .dark .ambient-scene {
+    background: 
+      radial-gradient(ellipse 950px 600px at 50% -10%, rgba(22, 104, 227, 0.38), transparent 75%),
+      radial-gradient(circle 700px at 15% 40%, rgba(22, 104, 227, 0.22), transparent 75%),
+      radial-gradient(circle 700px at 85% 50%, rgba(22, 104, 227, 0.24), transparent 75%),
+      radial-gradient(ellipse 1000px 500px at 50% 105%, rgba(22, 104, 227, 0.2), transparent 80%);
+  }
+
+  /* ==========================================================================
+     DELICATE, VISIBLE GLASS CARD (High contrast against page, doesn't blend in)
+     ========================================================================== */
+  .glass-card {
+    position: relative;
+    border-radius: 32px;
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    box-sizing: border-box;
+    transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .light .glass-card,
+  :root:not(.dark) .glass-card {
+    /* Delicate, luminous soft gradient background so the card pops distinctly off the #F1F6FD page */
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.96) 0%, rgba(246, 250, 255, 0.94) 50%, rgba(240, 246, 255, 0.96) 100%);
+    border: 1.5px solid rgba(22, 104, 227, 0.16);
+    box-shadow: 
+      0 24px 64px -12px rgba(22, 104, 227, 0.14),
+      0 8px 24px -4px rgba(13, 27, 42, 0.05),
+      inset 0 2px 3px rgba(255, 255, 255, 1),
+      inset 0 -1px 2px rgba(22, 104, 227, 0.04);
+  }
+  .dark .glass-card {
+    background: linear-gradient(145deg, rgba(17, 34, 54, 0.88) 0%, rgba(13, 27, 42, 0.92) 100%);
+    border: 1.5px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 
+      0 28px 70px -12px rgba(0, 0, 0, 0.75),
+      0 0 35px rgba(22, 104, 227, 0.2),
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.2);
+  }
+
+  /* ==========================================================================
+     2x2 BENTO VALUE TILES (Replaces the cramped 3-column row)
+     ========================================================================== */
+  .bento-benefit-card {
+    position: relative;
+    border-radius: 20px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .light .bento-benefit-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(219, 234, 254, 0.9);
+    box-shadow: 0 4px 14px -3px rgba(22, 104, 227, 0.06);
+  }
+  .light .bento-benefit-card:hover {
+    background: #ffffff;
+    border-color: rgba(22, 104, 227, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -4px rgba(22, 104, 227, 0.14);
+  }
+  .dark .bento-benefit-card {
+    background: rgba(19, 39, 62, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 14px -3px rgba(0, 0, 0, 0.4);
+  }
+  .dark .bento-benefit-card:hover {
+    background: rgba(26, 52, 82, 0.98);
+    border-color: rgba(96, 165, 250, 0.45);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px -4px rgba(0, 0, 0, 0.6);
+  }
+
+  /* 3D Emoji Icon Wrapper inside Bento Cards */
+  .bento-icon-box {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+  .light .bento-icon-box {
+    background: linear-gradient(135deg, rgba(238, 245, 255, 0.95), rgba(224, 238, 255, 0.8));
+    border: 1px solid rgba(22, 104, 227, 0.15);
+  }
+  .dark .bento-icon-box {
+    background: linear-gradient(135deg, rgba(25, 46, 73, 0.9), rgba(16, 32, 51, 0.95));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .bento-benefit-card:hover .bento-icon-box {
+    transform: scale(1.08);
+  }
+
+  /* 3D Emoji Icon Image */
+  .emoji-3d-img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12));
+  }
+
+  /* Inline 3D Emoji (Aaply-Style) */
+  .inline-3d-emoji {
+    display: inline-block;
+    vertical-align: -3px;
+    margin: 0 3px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12));
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .inline-3d-emoji:hover {
+    transform: scale(1.2) rotate(6deg);
+  }
+
+  /* Pill Badge: • KES SIND ÕPETAB • */
+  .glass-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 6px 18px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    user-select: none;
+    background: rgba(37, 99, 235, 0.08);
+    border: 1.5px solid rgba(37, 99, 235, 0.25);
+    color: #1668E3;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.06), inset 0 1px 1.5px rgba(255, 255, 255, 0.9);
+  }
+  .dark .glass-pill {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1.5px solid rgba(255, 255, 255, 0.16);
+    color: #93c5fd;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  }
+
+  /* ==========================================================================
+     SINGLE, PROMINENT SAPPHIRE CTA BUTTON (Replaces the cramped dual buttons)
+     ========================================================================== */
+  .btn-sapphire-single {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    padding: 16px 36px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    cursor: pointer;
+    text-decoration: none;
+    user-select: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  }
+  .light .btn-sapphire-single,
+  :root:not(.dark) .btn-sapphire-single {
+    background: linear-gradient(135deg, #1668E3 0%, #0F52BA 100%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    color: #ffffff;
+    box-shadow: 
+      0 12px 28px -4px rgba(22, 104, 227, 0.42),
+      0 3px 8px rgba(13, 27, 42, 0.08),
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.7);
+  }
+  .light .btn-sapphire-single:hover {
+    background: linear-gradient(135deg, #1254BA 0%, #0C4196 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+      0 16px 36px -4px rgba(22, 104, 227, 0.52),
+      inset 0 1.5px 2.5px rgba(255, 255, 255, 0.9);
+  }
+  .dark .btn-sapphire-single {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.5) 0%, rgba(22, 104, 227, 0.65) 100%);
+    border: 1px solid rgba(147, 197, 253, 0.5);
+    color: #ffffff;
+    box-shadow: 
+      0 12px 32px -4px rgba(0, 0, 0, 0.6),
+      0 0 20px rgba(37, 99, 235, 0.35),
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.4);
+  }
+  .dark .btn-sapphire-single:hover {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.7) 0%, rgba(22, 104, 227, 0.85) 100%);
+    border-color: rgba(191, 219, 254, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 
+      0 16px 38px -4px rgba(0, 0, 0, 0.7),
+      0 0 28px rgba(37, 99, 235, 0.55),
+      inset 0 1.5px 2.5px rgba(255, 255, 255, 0.6);
+  }
+
+  /* Theme Toggle Button */
+  .theme-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 50;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 700;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .light .theme-toggle-btn,
+  :root:not(.dark) .theme-toggle-btn {
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(203, 213, 225, 0.8);
+    color: #0D1B2A;
+    box-shadow: 0 4px 16px -2px rgba(13, 27, 42, 0.08);
+  }
+  .dark .theme-toggle-btn {
+    background: rgba(13, 27, 42, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #F1F6FD;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Modal container */
+  .modal-glass {
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    border: 1.5px solid rgba(22, 104, 227, 0.18);
+    box-shadow: 0 25px 60px -15px rgba(22, 104, 227, 0.22);
+  }
+  .dark .modal-glass {
+    background: rgba(13, 27, 42, 0.96);
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    border: 1.5px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.85), 0 0 35px rgba(22, 104, 227, 0.25);
+  }
+</style>
+</head>
+
+<body class="bg-brand-bg dark:bg-[#070b16] text-brand-navy dark:text-slate-100 antialiased selection:bg-brand-blue selection:text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
+
+<!-- Ambient Background Glow Canvas -->
+<div class="ambient-scene"></div>
+
+<!-- Top-Right Theme Toggle -->
+<button onclick="toggleTheme()" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Lülita heledat ja tumedat režiimi">
+  <span class="w-2 h-2 rounded-full bg-[#1668E3]"></span>
+  <span id="themeToggleText">Dark</span>
+</button>
+
+<!-- =========================================================================
+     INSTRUCTOR SECTION: Balanced, Scandinavian, Gen-Z Engaged & Aaply-Style Emojis
+     ========================================================================= -->
+<section class="relative z-10 max-w-5xl mx-auto w-full">
+
+  <div class="glass-card p-6 sm:p-9 lg:p-11">
+    
+    <!-- Grid: Left photo column (340px) + Right fluid narrative column (1fr) -->
+    <div class="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-8 lg:gap-11 items-stretch">
+      
+      <!-- ===================================================================
+           LEFT COLUMN: Authentic Young Scandinavian Mentor + Sleek Floating Auto Card
+           =================================================================== -->
+      <div class="flex flex-col h-full justify-between">
+        <div class="relative w-full h-full min-h-[420px] lg:min-h-[470px] rounded-2xl overflow-hidden shadow-lg group">
+          
+          <!-- Authentic Scandinavian / Nordic Mentor (Blond, kind, welcoming, youthful) -->
+          <img 
+            src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80" 
+            alt="Mihkel Raudsepp — Kursify sõidumentor" 
+            class="w-full h-full object-cover object-center transform group-hover:scale-103 transition-transform duration-500 ease-out"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+          />
+
+          <!-- Ambient Bottom Shadow Gradient for Text Contrast -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none"></div>
+
+          <!-- Top-Left Single Clean Verified Tag -->
+          <div class="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 dark:bg-slate-900/90 backdrop-blur-md text-slate-900 dark:text-white text-xs font-bold shadow-md border border-white/80 dark:border-slate-700">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Kinnitatud mentor</span>
+          </div>
+
+          <!-- Top-Right Rating Badge -->
+          <div class="absolute top-4 right-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-extrabold border border-white/20">
+            <img src="https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Star/3D/star_3d.png" alt="Star" class="w-4 h-4 object-contain inline-3d-emoji" />
+            <span>5.0</span>
+            <span class="text-slate-300 text-[11px] font-normal">(184 noort)</span>
+          </div>
+
+          <!-- Bottom Sleek Frosted Glass Vehicle Card (Redesigned: Clean, Apple-style layout, no clunky stacked text) -->
+          <div class="absolute bottom-4 left-4 right-4 p-3.5 rounded-2xl bg-slate-950/80 dark:bg-slate-900/90 backdrop-blur-xl text-white shadow-xl border border-white/20">
+            <div class="flex items-center justify-between gap-3">
+              
+              <!-- Left: Car Details with 3D Icon -->
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0 border border-white/15">
+                  <img src="https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Automobile/3D/automobile_3d.png" alt="Car" class="w-6 h-6 object-contain inline-3d-emoji" />
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-white tracking-tight">Toyota Corolla Hybrid</div>
+                  <div class="text-[11px] text-slate-300 font-medium">Uus 2023 mudel • Automaat</div>
+                </div>
+              </div>
+
+              <!-- Right: Live Availability Pulse & Areas -->
+              <div class="flex flex-col items-end text-right">
+                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/25 border border-emerald-400/40 text-emerald-300 text-[10px] font-extrabold tracking-wide">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  Vabad ajad olemas
+                </span>
+                <span class="text-[10px] text-slate-300 font-semibold mt-1">📍 Mustamäe & Kesklinn</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- ===================================================================
+           RIGHT COLUMN: Aaply-Style Engaging Text with 3D Emojis + 2x2 Bento Grid + Single CTA
+           =================================================================== -->
+      <div class="flex flex-col justify-between space-y-6">
+        
+        <!-- Header & Core Narrative with Aaply-Style 3D Emojis -->
+        <div>
+          
+          <!-- Pill Badge: • KES SIND ÕPETAB • -->
+          <div class="mb-3">
+            <div class="glass-pill">
+              <span class="w-1.5 h-1.5 rounded-full bg-brand-blue"></span>
+              <span>KES SIND ÕPETAB</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-brand-blue"></span>
+            </div>
+          </div>
+
+          <!-- Instructor Name with 3D Waving Hand -->
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-navy dark:text-white tracking-tight leading-tight flex items-center flex-wrap gap-2">
+            <span>Mihkel Raudsepp</span>
+            <img src="https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Waving%20hand/Default/3D/waving_hand_3d_default.png" alt="Wave" class="inline-3d-emoji w-8 h-8 sm:w-9 sm:h-9" />
+          </h2>
+
+          <!-- Subheading with Sparkles -->
+          <p class="text-brand-blue dark:text-blue-400 text-base sm:text-lg font-bold mt-1.5 flex items-center flex-wrap gap-1">
+            <span>Õpi sõitma ilma paanika ja närveldamiseta</span>
+            <img src="https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" class="inline-3d-emoji w-5 h-5" />
+          </p>
+
+          <!-- Expanded, Youthful, Engaging Narrative with Aaply-style inlined 3D Emojis -->
+          <div class="text-slate-600 dark:text-slate-300 text-sm sm:text-[15px] leading-relaxed mt-4 space-y-3 font-normal">
+            <p>
+              Sõidutund Kursify's ei ole loeng ega koolieksam, vaid pingevaba harjutamine omas tempos 
+              <img src="https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Shield/3D/shield_3d.png" alt="Shield" class="inline-3d-emoji w-5 h-5" />. 
+              Mihkel mõistab suurepäraselt, et esimesed korrad liikluses võivad jalad värisema panna — seetõttu võtame aega täpselt nii palju, kui sina vajad, et hirm kaoks ja roolis tekiks kindlustunne.
+            </p>
+            <p>
+              Keegi ei hakka sinu peale häält tõstma ega ohkama, kui mootor ristmikul välja sureb või käiguvahetus ei õnnestu 
+              <img src="https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Victory%20hand/Default/3D/victory_hand_3d_default.png" alt="Victory" class="inline-3d-emoji w-5 h-5" />. 
+              Analüüsime olukordi rahulikult läbi naeratuse 
+              <img src="https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Smiling%20face%20with%20sunglasses/3D/smiling_face_with_sunglasses_3d.png" alt="Cool" class="inline-3d-emoji w-5 h-5" />, 
+              autos mängib sinu Spotify playlist 
+              <img src="https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Headphone/3D/headphone_3d.png" alt="Music" class="inline-3d-emoji w-5 h-5" /> 
+              ja pärast igat sõitu näed nutiäpis selget ülevaadet oma arengust 
+              <img src="https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Mobile%20phone/3D/mobile_phone_3d.png" alt="Phone" class="inline-3d-emoji w-5 h-5" />.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- =================================================================
+             2x2 BENTO VALUE GRID (Replaces the cramped 3-column row)
+             ================================================================= -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          
+          <!-- Bento 1: 0% Stressi -->
+          <div class="bento-benefit-card">
+            <div class="bento-icon-box">
+              <img src="https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Shield/3D/shield_3d.png" alt="Peace" class="emoji-3d-img" />
+            </div>
+            <div>
+              <div class="text-xs font-black text-brand-navy dark:text-white">0% stressi ja karjumist</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-tight mt-0.5">Rahulik tempo, vigadest õpime naeratusega</div>
+            </div>
+          </div>
+
+          <!-- Bento 2: 94% Pass Rate -->
+          <div class="bento-benefit-card">
+            <div class="bento-icon-box">
+              <img src="https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Bullseye/3D/bullseye_3d.png" alt="Target" class="emoji-3d-img" />
+            </div>
+            <div>
+              <div class="text-xs font-black text-brand-navy dark:text-white">94% eksami läbivus</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-tight mt-0.5">Õpilased sooritavad riikliku eksami 1. katsega</div>
+            </div>
+          </div>
+
+          <!-- Bento 3: Sinu Spotify -->
+          <div class="bento-benefit-card">
+            <div class="bento-icon-box">
+              <img src="https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Headphone/3D/headphone_3d.png" alt="Music" class="emoji-3d-img" />
+            </div>
+            <div>
+              <div class="text-xs font-black text-brand-navy dark:text-white">Sinu Spotify muusika</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-tight mt-0.5">Ühenda bluetoothiga ja sõida heas meeleolus</div>
+            </div>
+          </div>
+
+          <!-- Bento 4: Tuleme järele -->
+          <div class="bento-benefit-card">
+            <div class="bento-icon-box">
+              <img src="https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Round%20pushpin/3D/round_pushpin_3d.png" alt="Pin" class="emoji-3d-img" />
+            </div>
+            <div>
+              <div class="text-xs font-black text-brand-navy dark:text-white">Tuleme sulle järele</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-tight mt-0.5">Alustame sõitu sinu kooli või kodu juurest</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- =================================================================
+             FOOTER: Single Spacious CTA Button + Anchored Price & Klapi-Garantii
+             ================================================================= -->
+        <div class="pt-5 border-t border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-5">
+          
+          <!-- Price & Risk-Reversal Guarantee -->
+          <div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-3xl font-black text-brand-navy dark:text-white">45 €</span>
+              <span class="text-xs text-slate-500 dark:text-slate-400 font-semibold">/ proovisõit (45 min)</span>
+            </div>
+            <div class="text-[12px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5 mt-1">
+              <span>✓ Kursify Klapi-garantii:</span>
+              <span class="text-slate-500 dark:text-slate-400 font-normal">kui stiil ei sobi, tagastame 100% raha või vahetame mentori tasuta.</span>
+            </div>
+          </div>
+
+          <!-- Single Comfortable Sapphire Button (No crammed second button) -->
+          <div class="flex-shrink-0">
+            <button onclick="openBookingModal()" class="btn-sapphire-single w-full sm:w-auto">
+              <span>BRONEERI PROOVISÕIT</span>
+              <span class="text-base font-bold">→</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ==========================================================================
+     MODAL: Booking & Free Swap Guarantee
+     ========================================================================== -->
+<div id="bookingModal" class="fixed inset-0 z-50 hidden bg-[#0D1B2A]/60 dark:bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+  <div class="modal-glass w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl">
+    
+    <div class="flex items-center justify-between border-b border-slate-200/60 dark:border-slate-800 pb-4 mb-5">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-brand-blue animate-pulse"></span>
+          <h4 class="text-lg font-bold text-brand-navy dark:text-white">Proovisõit Mihkliga</h4>
+        </div>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">45 minutit pingevaba sõitu + oskuste tagasiside</p>
+      </div>
+      <button onclick="closeBookingModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-brand-navy dark:hover:text-white flex items-center justify-center font-bold text-sm transition cursor-pointer" aria-label="Sulge">✕</button>
+    </div>
+
+    <div class="space-y-4 text-xs text-slate-600 dark:text-slate-300">
+      <div class="p-4 rounded-2xl bg-blue-50/90 dark:bg-blue-950/40 border border-blue-200/70 dark:border-blue-900/60 flex items-start gap-3">
+        <img src="https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Shield/3D/shield_3d.png" alt="Shield" class="w-6 h-6 object-contain flex-shrink-0" />
+        <div>
+          <strong class="font-bold text-brand-navy dark:text-white block text-sm">100% Riskivaba proovisõit:</strong>
+          Sina ei pea ostma tervet kursust. Proovi ühte tundi, tutvu Mihkli ja autoga. Kui stiil ei sobi, vahetame mentori või tagastame raha.
+        </div>
+      </div>
+
+      <div class="space-y-2 pt-1">
+        <label class="block font-bold text-brand-navy dark:text-white">Vali alguspunkt:</label>
+        <div class="grid grid-cols-2 gap-2">
+          <button class="p-3 rounded-xl border border-brand-blue bg-blue-50/60 dark:bg-blue-900/30 text-brand-blue dark:text-blue-300 font-bold text-center transition">
+            Tallinn: Mustamäe
+          </button>
+          <button class="p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-800/60 font-semibold text-center hover:border-brand-blue transition">
+            Tallinn: Kristiine / Kesklinn
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 pt-4 border-t border-slate-200/60 dark:border-slate-800 flex items-center justify-between">
+      <div>
+        <span class="text-xs text-slate-400 block">Kestus 45 min</span>
+        <span class="text-base font-extrabold text-brand-navy dark:text-white">45 €</span>
+      </div>
+      <button onclick="closeBookingModal()" class="btn-sapphire-single text-xs py-3.5 px-6">
+        <span>KINNITA JA VALI AEG</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function openBookingModal() {
+    document.getElementById('bookingModal').classList.remove('hidden');
+  }
+  function closeBookingModal() {
+    document.getElementById('bookingModal').classList.add('hidden');
+  }
+
+  // Dimensionally stable theme toggle
+  function toggleTheme() {
+    const isCurrentlyDark = document.documentElement.classList.contains('dark');
+    const newIsDark = !isCurrentlyDark;
+    
+    if (newIsDark) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    }
+
+    const textSpan = document.getElementById('themeToggleText');
+    if (textSpan) {
+      textSpan.textContent = newIsDark ? 'Light' : 'Dark';
+    }
+    try {
+      localStorage.setItem('kursify-theme', newIsDark ? 'dark' : 'light');
+    } catch(e) {}
+  }
+
+  // Load theme on startup
+  (function() {
+    let saved = null;
+    try {
+      saved = localStorage.getItem('kursify-theme');
+    } catch(e) {}
+    
+    const isDark = saved === 'dark';
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    }
+    const textSpan = document.getElementById('themeToggleText');
+    if (textSpan) {
+      textSpan.textContent = isDark ? 'Light' : 'Dark';
+    }
+  })();
+</script>
+
+</body>
+</html>

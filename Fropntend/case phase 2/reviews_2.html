@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="et" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Õpilaste tagasisided ja kogemuslood — Kursify</title>
+<meta name="description" content="Vaata, mida räägivad teised õppurid: ausad tagasisided, videolood ja kogemused juhilubade saamisel Kursify mentoritega.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,500;1,600;1,700&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            blue: '#1668E3',      // Kursify sapphire blue
+            navy: '#0D1B2A',      // Kursify primary dark slate
+            bg: '#F1F6FD',        // Kursify ambient light
+            orange: '#F5931E',
+          }
+        },
+        fontFamily: {
+          sans: ['Manrope', 'sans-serif'],
+          serif: ['Playfair Display', 'Georgia', 'serif'],
+        }
+      }
+    }
+  }
+</script>
+<style>
+  /* ==========================================================================
+     GLOBAL ZERO-SHIFT ARCHITECTURE & KURSIFY TYPOGRAPHY (Manrope & Playfair)
+     ========================================================================== */
+  html {
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: 'Manrope', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* ==========================================================================
+     AMBIENT BACKGROUND (Exact match to Hero, Feature-cards & Instructor)
+     ========================================================================== */
+  .ambient-scene {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 0.35s ease;
+  }
+  .light .ambient-scene,
+  :root:not(.dark) .ambient-scene {
+    background: 
+      radial-gradient(ellipse 950px 550px at 50% -10%, rgba(22, 104, 227, 0.16), transparent 75%),
+      radial-gradient(circle 650px at 10% 40%, rgba(22, 104, 227, 0.11), transparent 70%),
+      radial-gradient(circle 650px at 90% 50%, rgba(22, 104, 227, 0.13), transparent 70%),
+      radial-gradient(ellipse 900px 450px at 50% 105%, rgba(22, 104, 227, 0.1), transparent 75%);
+  }
+  .dark .ambient-scene {
+    background: 
+      radial-gradient(ellipse 950px 600px at 50% -10%, rgba(22, 104, 227, 0.36), transparent 75%),
+      radial-gradient(circle 700px at 15% 40%, rgba(22, 104, 227, 0.22), transparent 75%),
+      radial-gradient(circle 700px at 85% 50%, rgba(22, 104, 227, 0.24), transparent 75%),
+      radial-gradient(ellipse 1000px 500px at 50% 105%, rgba(22, 104, 227, 0.2), transparent 80%);
+  }
+
+  /* ==========================================================================
+     SEAMLESS MARQUEE SCROLLER (Exact infinite loop with 0 blank space)
+     ========================================================================== */
+  .marquee-viewport {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 24px 0 32px 0;
+    /* Clean gradient edge masks that softly fade on left & right */
+    mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+  }
+
+  .marquee-track {
+    display: flex;
+    align-items: stretch;
+    gap: 24px;
+    width: max-content;
+    animation: marquee-infinite 62s linear infinite;
+    will-change: transform;
+  }
+
+  /* Pause marquee when hovered or programmatically toggled */
+  .marquee-track.is-paused,
+  .marquee-viewport:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee-infinite {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* ==========================================================================
+     CARD 1: TEXT TESTIMONIAL (High-end frosted Kursify Glass)
+     ========================================================================== */
+  .testimonial-text-card {
+    width: 340px;
+    min-height: 450px;
+    border-radius: 28px;
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-shrink: 0;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-sizing: border-box;
+    cursor: default;
+    user-select: none;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+  }
+
+  .light .testimonial-text-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1.5px solid rgba(226, 232, 240, 0.95);
+    box-shadow: 
+      0 16px 36px -10px rgba(22, 104, 227, 0.08),
+      0 4px 16px -2px rgba(13, 27, 42, 0.03),
+      inset 0 1.5px 2px rgba(255, 255, 255, 1);
+  }
+  .light .testimonial-text-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(22, 104, 227, 0.35);
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 
+      0 24px 48px -10px rgba(22, 104, 227, 0.16),
+      0 8px 24px -4px rgba(13, 27, 42, 0.06);
+  }
+
+  .dark .testimonial-text-card {
+    background: rgba(15, 25, 44, 0.86);
+    border: 1.5px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 
+      0 20px 48px -10px rgba(0, 0, 0, 0.65),
+      0 0 24px rgba(22, 104, 227, 0.12),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.16);
+  }
+  .dark .testimonial-text-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(96, 165, 250, 0.45);
+    background: rgba(20, 35, 62, 0.96);
+    box-shadow: 
+      0 26px 56px -10px rgba(0, 0, 0, 0.8),
+      0 0 30px rgba(22, 104, 227, 0.25);
+  }
+
+  /* ==========================================================================
+     CARD 2: VIDEO / PHOTO TESTIMONIAL (Fixed shadow glitch & clean borders)
+     We removed the dark harsh drop-shadow and use overflow-hidden inside,
+     with natural card-level box-shadow identical in physics to the text card.
+     ========================================================================== */
+  .testimonial-video-card {
+    width: 340px;
+    min-height: 450px;
+    border-radius: 28px;
+    position: relative;
+    overflow: hidden; /* Clips image and corners completely cleanly */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 26px 28px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+  }
+
+  /* Light mode video card: soft elegant shadow without harsh black lines */
+  .light .testimonial-video-card {
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 
+      0 16px 36px -10px rgba(22, 104, 227, 0.12),
+      0 6px 18px -2px rgba(13, 27, 42, 0.08);
+  }
+  .light .testimonial-video-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 
+      0 24px 48px -10px rgba(22, 104, 227, 0.22),
+      0 8px 24px -4px rgba(13, 27, 42, 0.12);
+  }
+
+  /* Dark mode video card */
+  .dark .testimonial-video-card {
+    border: 1.5px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 
+      0 20px 48px -10px rgba(0, 0, 0, 0.6),
+      0 0 24px rgba(22, 104, 227, 0.12);
+  }
+  .dark .testimonial-video-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(96, 165, 250, 0.5);
+    box-shadow: 
+      0 26px 56px -10px rgba(0, 0, 0, 0.8),
+      0 0 32px rgba(22, 104, 227, 0.3);
+  }
+
+  /* Full background photo with smooth zoom */
+  .video-card-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 0;
+  }
+  .testimonial-video-card:hover .video-card-bg {
+    transform: scale(1.05);
+  }
+
+  /* Smooth cinematic dark overlay */
+  .video-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(13, 27, 42, 0.94) 0%, rgba(13, 27, 42, 0.4) 45%, rgba(0, 0, 0, 0.18) 75%, rgba(0, 0, 0, 0.35) 100%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Play Button */
+  .video-play-btn {
+    position: relative;
+    width: 58px;
+    height: 58px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.28);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1.5px solid rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.2s ease;
+  }
+  .testimonial-video-card:hover .video-play-btn {
+    transform: scale(1.12);
+    background: rgba(255, 255, 255, 0.45);
+  }
+
+  /* Kursify Signature style (Authentic, elegant serif italic - no amateur handwritten font) */
+  .kursify-name-serif {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+
+  /* Controls pill / Button */
+  .ctrl-glass-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 9999px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .light .ctrl-glass-btn {
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(203, 213, 225, 0.9);
+    color: #0D1B2A;
+    box-shadow: 0 4px 12px rgba(22, 104, 227, 0.06);
+  }
+  .light .ctrl-glass-btn:hover {
+    background: #ffffff;
+    border-color: #1668E3;
+    color: #1668E3;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(22, 104, 227, 0.16);
+  }
+  .dark .ctrl-glass-btn {
+    background: rgba(17, 34, 54, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #F1F6FD;
+  }
+  .dark .ctrl-glass-btn:hover {
+    background: rgba(26, 52, 82, 0.98);
+    border-color: rgba(96, 165, 250, 0.5);
+    color: #93c5fd;
+    transform: translateY(-1px);
+  }
+
+  /* Theme toggle */
+  .theme-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 50;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 700;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .light .theme-toggle-btn,
+  :root:not(.dark) .theme-toggle-btn {
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(203, 213, 225, 0.8);
+    color: #0D1B2A;
+    box-shadow: 0 4px 16px -2px rgba(13, 27, 42, 0.08);
+  }
+  .dark .theme-toggle-btn {
+    background: rgba(13, 27, 42, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #F1F6FD;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Modal */
+  .modal-glass {
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    border: 1.5px solid rgba(22, 104, 227, 0.18);
+    box-shadow: 0 25px 60px -15px rgba(22, 104, 227, 0.22);
+  }
+  .dark .modal-glass {
+    background: rgba(13, 27, 42, 0.96);
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    border: 1.5px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.85), 0 0 35px rgba(22, 104, 227, 0.25);
+  }
+</style>
+</head>
+
+<body class="bg-brand-bg dark:bg-[#070b16] text-brand-navy dark:text-slate-100 antialiased selection:bg-brand-blue selection:text-white py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
+
+<!-- Ambient Background Glow Canvas -->
+<div class="ambient-scene"></div>
+
+<!-- Top-Right Theme Toggle -->
+<button onclick="toggleTheme()" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Lülita heledat ja tumedat režiimi">
+  <span class="w-2 h-2 rounded-full bg-[#1668E3]"></span>
+  <span id="themeToggleText">Dark</span>
+</button>
+
+<!-- =========================================================================
+     MAIN SECTION: TESTIMONIAL MARQUEE (Kursify Design System)
+     ========================================================================= -->
+<section class="relative z-10 max-w-7xl mx-auto w-full">
+
+  <!-- =======================================================================
+       HEADER: TESTIMONIALS + Display Headline in Kursify's Manrope & Playfair
+       ======================================================================= -->
+  <div class="px-4 sm:px-8 mb-10 sm:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+    
+    <div>
+      <!-- Eyebrow label: TESTIMONIALS -->
+      <div class="text-xs sm:text-sm font-extrabold tracking-[0.2em] text-brand-blue dark:text-blue-400 uppercase mb-3">
+        TESTIMONIALS
+      </div>
+
+      <!-- Main Headline in Kursify Style -->
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-navy dark:text-white tracking-tight leading-[1.14]">
+        Ära usu ainult meie sõnu!<br>
+        <span class="text-brand-blue dark:text-blue-400 font-bold">Kuula otse meie <span class="kursify-name-serif font-medium">õpilastelt</span>.</span>
+      </h2>
+    </div>
+
+    <!-- Marquee Navigation / Controls (Pause/Play & Manual Scroll Buttons) -->
+    <div class="flex items-center gap-3">
+      <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 hidden sm:inline-block mr-1">
+        <span>Vii kursor kaardile, et lugeda</span>
+      </div>
+      
+      <!-- Pause / Resume Toggle Button -->
+      <button onclick="toggleMarqueePause()" id="pauseBtn" class="ctrl-glass-btn" title="Peata / Jätka liikumist" aria-label="Peata liikumine">
+        <svg id="pauseIcon" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
+        <svg id="playIcon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+
+      <!-- Scroll Prev -->
+      <button onclick="scrollMarquee(-360)" class="ctrl-glass-btn" title="Eelmine" aria-label="Eelmine kaart">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+
+      <!-- Scroll Next -->
+      <button onclick="scrollMarquee(360)" class="ctrl-glass-btn" title="Järgmine" aria-label="Järgmine kaart">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- =======================================================================
+       MARQUEE VIEWPORT (Continuous, Smooth Loop with Gradient Fade Masks)
+       ======================================================================= -->
+  <div class="marquee-viewport" id="marqueeViewport">
+    <div class="marquee-track" id="marqueeTrack">
+      
+      <!-- ===================================================================
+           PRIMARY SET (6 Unique Cards: Text & Video formats)
+           =================================================================== -->
+
+      <!-- CARD 1 (TEXT): Jürgen Kallas -->
+      <div class="testimonial-text-card">
+        <div>
+          <div class="w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-brand-blue to-cyan-400 shadow-sm mb-6">
+            <img 
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80" 
+              alt="Jürgen Kallas" 
+              class="w-full h-full object-cover rounded-full"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
+          </div>
+
+          <p class="text-slate-700 dark:text-slate-200 text-sm sm:text-[15px] leading-relaxed font-normal">
+            "Tulin Kursifysse pärast seda, kui olin vanas autokoolis 2 korda Transpordiameti eksamil läbi kukkunud. Instruktor karjus pidevalt ja ma kaotasin eneseusu. Mihkliga tegime 4 tundi, analüüsisime rahulikult kõik ringid ja tegin riikliku eksami 0 veaga!"
+          </p>
+        </div>
+
+        <div class="pt-6 border-t border-slate-200/70 dark:border-slate-800/80">
+          <div class="kursify-name-serif text-2xl font-bold text-brand-navy dark:text-white leading-none">
+            Jürgen Kallas
+          </div>
+          <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2">
+            Tartu Ülikool • B-kategooria (19a)
+          </div>
+        </div>
+      </div>
+
+
+      <!-- CARD 2 (VIDEO/PHOTO): Laura Kask -->
+      <div class="testimonial-video-card" onclick="openStudentStory('Laura Kask', 'Tallinna Reaalkool • Eksam 1. katsega (18a)', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80', 'Enne sõidutunde kartsin tihedat tipptunni liiklust Liivalaia tänaval. Mihkel õpetas ette vaatama ja mitte paanikasse sattuma. Sooritasin Transpordiameti eksami esimese katsega!')">
+        <img 
+          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" 
+          alt="Laura Kask" 
+          class="video-card-bg"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+        />
+        <div class="video-card-overlay"></div>
+
+        <div class="relative z-10">
+          <div class="w-11 h-11 rounded-full p-0.5 bg-white/40 backdrop-blur-md shadow-md">
+            <img 
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&h=150&q=80" 
+              alt="Laura Kask Avatar" 
+              class="w-full h-full object-cover rounded-full border border-white/80"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
+          </div>
+        </div>
+
+        <div class="relative z-10 flex items-center justify-center my-auto">
+          <div class="video-play-btn">
+            <svg class="w-6 h-6 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+
+        <div class="relative z-10 pt-4">
+          <div class="kursify-name-serif text-2xl font-bold text-white leading-none drop-shadow-sm">
+            Laura Kask
+          </div>
+          <div class="text-xs font-semibold text-slate-200/90 mt-2 drop-shadow-sm">
+            Tallinna Reaalkool • Eksam 1. katsega (18a)
+          </div>
+        </div>
+      </div>
+
+
+      <!-- CARD 3 (TEXT): Rasmus Tamm -->
+      <div class="testimonial-text-card">
+        <div>
+          <div class="w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-brand-blue to-amber-400 shadow-sm mb-6">
+            <img 
+              src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&h=150&q=80" 
+              alt="Rasmus Tamm" 
+              class="w-full h-full object-cover rounded-full"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
+          </div>
+
+          <p class="text-slate-700 dark:text-slate-200 text-sm sm:text-[15px] leading-relaxed font-normal">
+            "Kursify tegi sõidutundide broneerimise nii mugavaks. Vali äpist mentor, vaba aeg ja koht, kus peale võetakse. Ei mingit ebamugavat helistamist ega palumist. Auto oli tuttuus hübriid ja sõidu ajal mängis minu Spotify playlist!"
+          </p>
+        </div>
+
+        <div class="pt-6 border-t border-slate-200/70 dark:border-slate-800/80">
+          <div class="kursify-name-serif text-2xl font-bold text-brand-navy dark:text-white leading-none">
+            Rasmus Tamm
+          </div>
+          <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2">
+            Tallinna Tehnikagümnaasium (18a)
+          </div>
+        </div>
+      </div>
+
+
+      <!-- CARD 4 (VIDEO/PHOTO): Eliise Mets -->
+      <div class="testimonial-video-card" onclick="openStudentStory('Eliise Mets', 'Tartu Ülikool • Sõidab nüüd vabalt (20a)', 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80', 'Mul oli rooli ees tõeline paanika, sest kooliajal oli instruktoril kombeks roolist rabada. Kursifys sain aru, et sõitmine võib tegelikult olla täiesti rahulik ja nauditav tegevus. Nüüd sõidan üksi igapäevaselt!')">
+        <img 
+          src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80" 
+          alt="Eliise Mets" 
+          class="video-card-bg"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+        />
+        <div class="video-card-overlay"></div>
+
+        <div class="relative z-10">
+          <div class="w-11 h-11 rounded-full p-0.5 bg-white/40 backdrop-blur-md shadow-md">
+            <img 
+              src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&h=150&q=80" 
+              alt="Eliise Mets Avatar" 
+              class="w-full h-full object-cover rounded-full border border-white/80"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
+          </div>
+        </div>
+
+        <div class="relative z-10 flex items-center justify-center my-auto">
+          <div class="video-play-btn">
+            <svg class="w-6 h-6 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+
+        <div class="relative z-10 pt-4">
+          <div class="kursify-name-serif text-2xl font-bold text-white leading-none drop-shadow-sm">
+            Eliise Mets
+          </div>
+          <div class="text-xs font-semibold text-slate-200/90 mt-2 drop-shadow-sm">
+            Tartu Ülikool • Sõidab nüüd vabalt (20a)
+          </div>
+        </div>
+      </div>
+
+
+      <!-- CARD 5 (TEXT): Markkus Lõhmus -->
+      <div class="testimonial-text-card">
+        <div>
+          <div class="w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-brand-blue to-emerald-400 shadow-sm mb-6">
+            <img 
+              src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=150&h=150&q=80" 
+              alt="Markkus Lõhmus" 
+              class="w-full h-full object-cover rounded-full"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
+          </div>
+
+          <p class="text-slate-700 dark:text-slate-200 text-sm sm:text-[15px] leading-relaxed font-normal">
+            "Kõige suurem pluss on see, et instruktor ei loe autos moraali. Kui mootor foori taga välja suri, võtsime rahulikult ja proovisime uuesti. 0% stressi, reaalne sõidukindlus ja load käes kõigest 2 kuuga!"
+          </p>
+        </div>
+
+        <div class="pt-6 border-t border-slate-200/70 dark:border-slate-800/80">
+          <div class="kursify-name-serif text-2xl font-bold text-brand-navy dark:text-white leading-none">
+            Markkus Lõhmus
+          </div>
+          <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2">
+            Mustamäe Gümnaasium (18a)
+          </div>
+        </div>
+      </div>
+
+
+      <!-- CARD 6 (TEXT): Grete Voolaid -->
+      <div class="testimonial-text-card">
+        <div>
+          <div class="w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-brand-blue to-purple-400 shadow-sm mb-6">
+            <img 
+              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&h=150&q=80" 
+              alt="Grete Voolaid" 
+              class="w-full h-full object-cover rounded-full"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
+          </div>
+
+          <p class="text-slate-700 dark:text-slate-200 text-sm sm:text-[15px] leading-relaxed font-normal">
+            "Kartsin tohutult keerulisi ringristmikke ja parkimist autode vahele. Mentor joonistas iga manöövri tahvlil rahulikult samm-sammult lahti enne, kui rooli istusime. Soovitan Kursifyt kõigile oma klassikaaslastele!"
+          </p>
+        </div>
+
+        <div class="pt-6 border-t border-slate-200/70 dark:border-slate-800/80">
+          <div class="kursify-name-serif text-2xl font-bold text-brand-navy dark:text-white leading-none">
+            Grete Voolaid
+          </div>
+          <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2">
+            Gustav Adolfi Gümnaasium (19a)
+          </div>
+        </div>
+      </div>
+
+
+
+      <!-- ===================================================================
+           DUPLICATE SET (Identical 6 cards for mathematical 100% infinite loop)
+           =================================================================== -->
+
+      <!-- CARD 1 DUPLICATE -->
+      <div class="testimonial-text-card" aria-hidden="true">
+        <div>
+          <div class="w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-brand-blue to-cyan-400 shadow-sm mb-6">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80" alt="Jürgen Kallas" class="w-full h-full object-cover rounded-full" loading="lazy" referrerpolicy="no-referrer" />
+          </div>
+          <p class="text-slate-700 dark:text-slate-200 text-sm sm:text-[15px] leading-relaxed font-normal">
+            "Tulin Kursifysse pärast seda, kui olin vanas autokoolis 2 korda Transpordiameti eksamil läbi kukkunud. Instruktor karjus pidevalt ja ma kaotasin eneseusu. Mihkliga tegime 4 tundi, analüüsisime rahulikult kõik ringid ja tegin riikliku eksami 0 veaga!"
+          </p>
+        </div>
+        <div class="pt-6 border-t border-slate-200/70 dark:border-slate-800/80">
+          <div class="kursify-name-serif text-2xl font-bold text-brand-navy dark:text-white leading-none">Jürgen Kallas</div>
+          <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2">Tartu Ülikool • B-kategooria (19a)</div>
+        </div>
+      </div>
+
+      <!-- CARD 2 DUPLICATE -->
+      <div class="testimonial-video-card" onclick="openStudentStory('Laura Kask', 'Tallinna Reaalkool • Eksam 1. katsega (18a)', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80', 'Enne sõidutunde kartsin tihedat tipptunni liiklust Liivalaia tänaval. Mihkel õpetas ette vaatama ja mitte paanikasse sattuma. Sooritasin Transpordiameti eksami esimese katsega!')" aria-hidden="true">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" alt="Laura Kask" class="video-card-bg" loading="lazy" referrerpolicy="no-referrer" />
+        <div class="video-card-overlay"></div>
+        <div class="relative z-10">
+          <div class="w-11 h-11 rounded-full p-0.5 bg-white/40 backdrop-blur-md shadow-md">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&h=150&q=80" alt="Laura Kask Avatar" class="w-full h-full object-cover rounded-full border border-white/80" loading="lazy" referrerpolicy="no-referrer" />
+          </div>
+        </div>
+        <div class="relative z-10 flex items-center justify-center my-auto">
+          <div class="video-play-btn">
+            <svg class="w-6 h-6 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="relative z-10 pt-4">
+          <div class="kursify-name-serif text-2xl font-bold text-white leading-none drop-shadow-sm">Laura Kask</div>
+          <div class="text-xs font-semibold text-slate-200/90 mt-2 drop-shadow-sm">Tallinna Reaalkool • Eksam 1. katsega (18a)</div>
+        </div>
+      </div>
+
+      <!-- CARD 3 DUPLICATE -->
+      <div class="testimonial-text-card" aria-hidden="true">
+        <div>
+          <div class="w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-brand-blue to-amber-400 shadow-sm mb-6">
+            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&h=150&q=80" alt="Rasmus Tamm" class="w-full h-full object-cover rounded-full" loading="lazy" referrerpolicy="no-referrer" />
+          </div>
+          <p class="text-slate-700 dark:text-slate-200 text-sm sm:text-[15px] leading-relaxed font-normal">
+            "Kursify tegi sõidutundide broneerimise nii mugavaks. Vali äpist mentor, vaba aeg ja koht, kus peale võetakse. Ei mingit ebamugavat helistamist ega palumist. Auto oli tuttuus hübriid ja sõidu ajal mängis minu Spotify playlist!"
+          </p>
+        </div>
+        <div class="pt-6 border-t border-slate-200/70 dark:border-slate-800/80">
+          <div class="kursify-name-serif text-2xl font-bold text-brand-navy dark:text-white leading-none">Rasmus Tamm</div>
+          <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2">Tallinna Tehnikagümnaasium (18a)</div>
+        </div>
+      </div>
+
+      <!-- CARD 4 DUPLICATE -->
+      <div class="testimonial-video-card" onclick="openStudentStory('Eliise Mets', 'Tartu Ülikool • Sõidab nüüd vabalt (20a)', 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80', 'Mul oli rooli ees tõeline paanika, sest kooliajal oli instruktoril kombeks roolist rabada. Kursifys sain aru, et sõitmine võib tegelikult olla täiesti rahulik ja nauditav tegevus. Nüüd sõidan üksi igapäevaselt!')" aria-hidden="true">
+        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80" alt="Eliise Mets" class="video-card-bg" loading="lazy" referrerpolicy="no-referrer" />
+        <div class="video-card-overlay"></div>
+        <div class="relative z-10">
+          <div class="w-11 h-11 rounded-full p-0.5 bg-white/40 backdrop-blur-md shadow-md">
+            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&h=150&q=80" alt="Eliise Mets Avatar" class="w-full h-full object-cover rounded-full border border-white/80" loading="lazy" referrerpolicy="no-referrer" />
+          </div>
+        </div>
+        <div class="relative z-10 flex items-center justify-center my-auto">
+          <div class="video-play-btn">
+            <svg class="w-6 h-6 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="relative z-10 pt-4">
+          <div class="kursify-name-serif text-2xl font-bold text-white leading-none drop-shadow-sm">Eliise Mets</div>
+          <div class="text-xs font-semibold text-slate-200/90 mt-2 drop-shadow-sm">Tartu Ülikool • Sõidab nüüd vabalt (20a)</div>
+        </div>
+      </div>
+
+      <!-- CARD 5 DUPLICATE -->
+      <div class="testimonial-text-card" aria-hidden="true">
+        <div>
+          <div class="w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-brand-blue to-emerald-400 shadow-sm mb-6">
+            <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=150&h=150&q=80" alt="Markkus Lõhmus" class="w-full h-full object-cover rounded-full" loading="lazy" referrerpolicy="no-referrer" />
+          </div>
+          <p class="text-slate-700 dark:text-slate-200 text-sm sm:text-[15px] leading-relaxed font-normal">
+            "Kõige suurem pluss on see, et instruktor ei loe autos moraali. Kui mootor foori taga välja suri, võtsime rahulikult ja proovisime uuesti. 0% stressi, reaalne sõidukindlus ja load käes kõigest 2 kuuga!"
+          </p>
+        </div>
+        <div class="pt-6 border-t border-slate-200/70 dark:border-slate-800/80">
+          <div class="kursify-name-serif text-2xl font-bold text-brand-navy dark:text-white leading-none">Markkus Lõhmus</div>
+          <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2">Mustamäe Gümnaasium (18a)</div>
+        </div>
+      </div>
+
+      <!-- CARD 6 DUPLICATE -->
+      <div class="testimonial-text-card" aria-hidden="true">
+        <div>
+          <div class="w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-brand-blue to-purple-400 shadow-sm mb-6">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&h=150&q=80" alt="Grete Voolaid" class="w-full h-full object-cover rounded-full" loading="lazy" referrerpolicy="no-referrer" />
+          </div>
+          <p class="text-slate-700 dark:text-slate-200 text-sm sm:text-[15px] leading-relaxed font-normal">
+            "Kartsin tohutult keerulisi ringristmikke ja parkimist autode vahele. Mentor joonistas iga manöövri tahvlil rahulikult samm-sammult lahti enne, kui rooli istusime. Soovitan Kursifyt kõigile oma klassikaaslastele!"
+          </p>
+        </div>
+        <div class="pt-6 border-t border-slate-200/70 dark:border-slate-800/80">
+          <div class="kursify-name-serif text-2xl font-bold text-brand-navy dark:text-white leading-none">Grete Voolaid</div>
+          <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2">Gustav Adolfi Gümnaasium (19a)</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Trust Stats Bar -->
+  <div class="mt-8 pt-8 border-t border-slate-200/70 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-4 px-4 sm:px-8 text-xs text-slate-500 dark:text-slate-400 font-semibold">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+      <span>180+ reaalset õpilaslugu üle Eesti</span>
+    </div>
+    <div class="flex items-center gap-6">
+      <span>Keskmine hinnang: <strong class="text-brand-navy dark:text-white font-bold">4.96 / 5.0</strong></span>
+      <span>94% sooritab riikliku eksami 1. katsega</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- ==========================================================================
+     VIDEO STORY MODAL: Interactive Preview on Click
+     ========================================================================== -->
+<div id="videoModal" class="fixed inset-0 z-50 hidden bg-[#0D1B2A]/70 dark:bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+  <div class="modal-glass w-full max-w-xl rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+    
+    <!-- Modal Close Button -->
+    <button onclick="closeStudentStory()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-brand-navy dark:hover:text-white flex items-center justify-center font-bold text-sm transition cursor-pointer" aria-label="Sulge">✕</button>
+
+    <div class="flex items-center gap-4 border-b border-slate-200/70 dark:border-slate-800 pb-4 mb-5">
+      <img id="modalAvatar" src="" alt="Student Avatar" class="w-14 h-14 rounded-full object-cover border-2 border-brand-blue shadow-md" />
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <h4 id="modalName" class="text-lg font-bold text-brand-navy dark:text-white">Õppuri Lugu</h4>
+        </div>
+        <p id="modalRole" class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5"></p>
+      </div>
+    </div>
+
+    <!-- Video Player Simulation with Authentic Playable Feel -->
+    <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-slate-900 mb-5 shadow-lg group">
+      <img id="modalVideoPoster" src="" alt="Video Poster" class="w-full h-full object-cover opacity-80" />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-between p-4 pointer-events-none">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] font-bold self-start">
+          <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+          VIDEOKOGEMUS
+        </span>
+        <div class="flex items-center justify-between text-white text-xs font-semibold">
+          <span>Kursify Sõidupäevik</span>
+          <span>1:42</span>
+        </div>
+      </div>
+      <!-- Center Interactive Play Icon -->
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div class="w-14 h-14 rounded-full bg-white/25 backdrop-blur-md border border-white/60 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+          <svg class="w-6 h-6 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-4 rounded-2xl bg-blue-50/90 dark:bg-blue-950/40 border border-blue-200/70 dark:border-blue-900/60 mb-5">
+      <div class="text-xs text-slate-700 dark:text-slate-200 italic leading-relaxed" id="modalQuote"></div>
+    </div>
+
+    <div class="flex items-center justify-between">
+      <span class="text-xs text-slate-500 dark:text-slate-400 font-semibold">Soovid samamoodi stressivabalt lube?</span>
+      <button onclick="closeStudentStory()" class="px-5 py-2.5 rounded-full bg-brand-blue hover:bg-blue-700 text-white text-xs font-bold transition shadow-md">
+        VALI OMA SÕIDUMENTOR →
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Robust continuous dynamic loop without blank gaps
+  const marqueeViewport = document.getElementById('marqueeViewport');
+  const marqueeTrack = document.getElementById('marqueeTrack');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const pauseIcon = document.getElementById('pauseIcon');
+  const playIcon = document.getElementById('playIcon');
+
+  let isPaused = false;
+  let scrollPos = 0;
+  const speed = 0.65; // Smooth 60fps scrolling speed in pixels per frame
+  let animationFrameId = null;
+
+  function ensureInfiniteTrack() {
+    // Clone children to ensure track is at least 3x the viewport width
+    const minWidth = (window.innerWidth || 1400) * 2.5;
+    while (marqueeTrack.scrollWidth < minWidth) {
+      const children = Array.from(marqueeTrack.children);
+      children.forEach(child => {
+        const clone = child.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        marqueeTrack.appendChild(clone);
+      });
+    }
+  }
+
+  // Ensure ample content on load and resize
+  ensureInfiniteTrack();
+  window.addEventListener('resize', () => {
+    ensureInfiniteTrack();
+  });
+
+  // Smooth JS loop or CSS animation sync:
+  // Using pure CSS animation translateX(-50%) with width: max-content:
+  // Since we have an exact duplicated set (12 cards total, width > 4400px), 
+  // translateX(0) to translateX(-50%) creates a seamless mathematically infinite marquee.
+
+  function toggleMarqueePause() {
+    isPaused = !isPaused;
+    if (isPaused) {
+      marqueeTrack.classList.add('is-paused');
+      pauseIcon.classList.add('hidden');
+      playIcon.classList.remove('hidden');
+      pauseBtn.setAttribute('title', 'Jätka liikumist');
+    } else {
+      marqueeTrack.classList.remove('is-paused');
+      pauseIcon.classList.remove('hidden');
+      playIcon.classList.add('hidden');
+      pauseBtn.setAttribute('title', 'Peata liikumine');
+    }
+  }
+
+  function scrollMarquee(offset) {
+    marqueeViewport.scrollBy({ left: offset, behavior: 'smooth' });
+  }
+
+  // Student Story Modal
+  function openStudentStory(name, role, avatarUrl, quote) {
+    document.getElementById('modalName').textContent = name;
+    document.getElementById('modalRole').textContent = role;
+    document.getElementById('modalAvatar').src = avatarUrl;
+    document.getElementById('modalVideoPoster').src = avatarUrl;
+    document.getElementById('modalQuote').textContent = `"${quote}"`;
+    document.getElementById('videoModal').classList.remove('hidden');
+  }
+
+  function closeStudentStory() {
+    document.getElementById('videoModal').classList.add('hidden');
+  }
+
+  // Theme Toggle
+  function toggleTheme() {
+    const isCurrentlyDark = document.documentElement.classList.contains('dark');
+    const newIsDark = !isCurrentlyDark;
+    
+    if (newIsDark) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    }
+
+    const textSpan = document.getElementById('themeToggleText');
+    if (textSpan) {
+      textSpan.textContent = newIsDark ? 'Light' : 'Dark';
+    }
+    try {
+      localStorage.setItem('kursify-theme', newIsDark ? 'dark' : 'light');
+    } catch(e) {}
+  }
+
+  // Init theme
+  (function() {
+    let saved = null;
+    try {
+      saved = localStorage.getItem('kursify-theme');
+    } catch(e) {}
+    
+    const isDark = saved === 'dark';
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    }
+    const textSpan = document.getElementById('themeToggleText');
+    if (textSpan) {
+      textSpan.textContent = isDark ? 'Light' : 'Dark';
+    }
+  })();
+</script>
+
+</body>
+</html>

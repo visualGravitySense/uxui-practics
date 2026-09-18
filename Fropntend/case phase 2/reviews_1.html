@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="et" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mida meie õpilased arvavad — Kursify</title>
+<meta name="description" content="Reaalsed tagasisided ja edulood Kursify autokooli ja sõiduõpetajate platvormilt.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            blue: '#1668E3',      // Kursify brand blue
+            blueHover: '#1254BA',
+            navy: '#0D1B2A',      // Primary dark text
+            bg: '#F1F6FD',        // Ambient background
+            orange: '#F5931E',    // Accent star gold
+          }
+        },
+        fontFamily: {
+          sans: ['Manrope', 'sans-serif'],
+          serif: ['Playfair Display', 'Georgia', 'serif'],
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body {
+    font-family: 'Manrope', sans-serif;
+  }
+
+  /* ==========================================================================
+     SEAMLESS AMBIENT BACKGROUND (Exact formula matching instructor-hero & perspectives)
+     ========================================================================== */
+  .ambient-scene {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .light .ambient-scene,
+  :root:not(.dark) .ambient-scene {
+    background: 
+      radial-gradient(ellipse 850px 550px at 50% -10%, rgba(22, 104, 227, 0.18), transparent 75%),
+      radial-gradient(circle 650px at 15% 35%, rgba(22, 104, 227, 0.12), transparent 70%),
+      radial-gradient(circle 650px at 85% 45%, rgba(22, 104, 227, 0.14), transparent 70%),
+      radial-gradient(ellipse 900px 450px at 50% 105%, rgba(22, 104, 227, 0.1), transparent 75%);
+  }
+  .dark .ambient-scene {
+    background: 
+      radial-gradient(ellipse 950px 600px at 50% -10%, rgba(22, 104, 227, 0.38), transparent 75%),
+      radial-gradient(circle 700px at 15% 40%, rgba(22, 104, 227, 0.22), transparent 75%),
+      radial-gradient(circle 700px at 85% 50%, rgba(22, 104, 227, 0.24), transparent 75%),
+      radial-gradient(ellipse 1000px 500px at 50% 105%, rgba(22, 104, 227, 0.2), transparent 80%);
+  }
+
+  /* ==========================================================================
+     KURSIFY FROSTED GLASSMORPHISM (100% Consistent with Perspective & Hero Cards)
+     ========================================================================== */
+  .review-glass-card {
+    position: relative;
+    border-radius: 28px;
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    transition: transform 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .light .review-glass-card,
+  :root:not(.dark) .review-glass-card {
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.92);
+    box-shadow: 
+      0 20px 50px -12px rgba(22, 104, 227, 0.08),
+      0 4px 20px -2px rgba(13, 27, 42, 0.03),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95),
+      inset 0 -1px 1px 0 rgba(0, 0, 0, 0.02);
+  }
+  .light .review-glass-card:hover {
+    background: rgba(255, 255, 255, 0.90);
+    border-color: rgba(22, 104, 227, 0.35);
+    transform: translateY(-4px);
+    box-shadow: 
+      0 24px 60px -10px rgba(22, 104, 227, 0.16),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 1);
+  }
+
+  .dark .review-glass-card {
+    background: rgba(13, 27, 42, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 
+      0 22px 60px -10px rgba(0, 0, 0, 0.6),
+      0 0 28px rgba(22, 104, 227, 0.15),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3);
+  }
+  .dark .review-glass-card:hover {
+    background: rgba(17, 34, 54, 0.82);
+    border-color: rgba(22, 104, 227, 0.5);
+    transform: translateY(-4px);
+    box-shadow: 
+      0 24px 65px -10px rgba(0, 0, 0, 0.7),
+      0 0 35px rgba(22, 104, 227, 0.3),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.28);
+  }
+
+  /* ==========================================================================
+     SAPPHIRE GLASS BUTTON (Exact 1:1 Implementation from instructor-hero.html)
+     ========================================================================== */
+  .btn-glass-primary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    padding: 16px 36px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    cursor: pointer;
+    text-decoration: none;
+    user-select: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  }
+  .light .btn-glass-primary,
+  :root:not(.dark) .btn-glass-primary {
+    background: rgba(37, 99, 235, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    color: #ffffff;
+    box-shadow: 
+      0 10px 28px -4px rgba(37, 99, 235, 0.38),
+      0 2px 6px rgba(13, 27, 42, 0.08),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.7);
+  }
+  .light .btn-glass-primary:hover,
+  :root:not(.dark) .btn-glass-primary:hover {
+    background: rgba(29, 78, 216, 0.95);
+    border-color: rgba(255, 255, 255, 0.7);
+    transform: translateY(-2px);
+    box-shadow: 
+      0 14px 34px -4px rgba(37, 99, 235, 0.48),
+      inset 0 1px 2px rgba(255, 255, 255, 0.85);
+  }
+  .dark .btn-glass-primary {
+    background: rgba(37, 99, 235, 0.32);
+    border: 1px solid rgba(96, 165, 250, 0.4);
+    color: #ffffff;
+    box-shadow: 
+      0 10px 30px -4px rgba(0, 0, 0, 0.55),
+      0 0 18px rgba(37, 99, 235, 0.3),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.3);
+  }
+  .dark .btn-glass-primary:hover {
+    background: rgba(37, 99, 235, 0.48);
+    border-color: rgba(147, 197, 253, 0.65);
+    transform: translateY(-2px);
+    box-shadow: 
+      0 14px 36px -4px rgba(0, 0, 0, 0.65),
+      0 0 26px rgba(37, 99, 235, 0.45),
+      inset 0 1px 2px rgba(255, 255, 255, 0.45);
+  }
+  .btn-glass-primary:active {
+    transform: translateY(0);
+  }
+
+  /* Chat bubble icon inside glass button with subtle frosted inner ring */
+  .btn-glass-icon-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    font-size: 11px;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  }
+
+  /* Floating Avatar Ring atop upper border */
+  .floating-avatar {
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+  }
+
+  /* Transformation Pill Tag */
+  .tag-pill {
+    letter-spacing: 0.05em;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  /* Top Right Floating Theme Toggle (Identical to instructor-hero & perspectives) */
+  .theme-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 50;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 700;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .light .theme-toggle-btn,
+  :root:not(.dark) .theme-toggle-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(203, 213, 225, 0.8);
+    color: #0D1B2A;
+    box-shadow: 0 4px 16px -2px rgba(13, 27, 42, 0.08);
+  }
+  .dark .theme-toggle-btn {
+    background: rgba(13, 27, 42, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #F1F6FD;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Glass Modal Container */
+  .modal-glass {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 25px 60px -15px rgba(22, 104, 227, 0.2), 0 10px 25px -5px rgba(13, 27, 42, 0.1);
+  }
+  .dark .modal-glass {
+    background: rgba(13, 27, 42, 0.94);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.8), 0 0 35px rgba(22, 104, 227, 0.2);
+  }
+</style>
+</head>
+
+<body class="bg-brand-bg dark:bg-[#070D18] text-brand-navy dark:text-slate-100 min-h-screen relative antialiased flex flex-col justify-center selection:bg-brand-blue selection:text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
+
+<!-- Ambient Background Glow Canvas -->
+<div class="ambient-scene"></div>
+
+<!-- Top-Right Discreet Theme Toggle (Identical to instructor-hero.html) -->
+<button onclick="toggleTheme()" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Lülita heledat ja tumedat režiimi">
+  <span class="w-2 h-2 rounded-full bg-[#1668E3]"></span>
+  <span id="themeToggleText">Dark</span>
+</button>
+
+<!-- Pure Focused Reviews Block -->
+<section class="relative z-10 max-w-6xl mx-auto w-full">
+  
+  <!-- Block Header: Badge & Title matching the exact screenshot structure -->
+  <div class="text-center max-w-2xl mx-auto mb-16 sm:mb-20">
+    
+    <!-- Top Badge (Screenshot: • MIDA OSALEJAD ARVAVAD • -> Kursify: • MIDA MEIE ÕPILASED ARVAVAD •) -->
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-blue-200/80 dark:border-blue-900/60 bg-blue-50/90 dark:bg-blue-950/40 text-brand-blue dark:text-blue-400 text-xs font-bold tracking-wider uppercase mb-5">
+      <span class="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse"></span>
+      <span>MIDA MEIE ÕPILASED ARVAVAD</span>
+      <span class="w-1.5 h-1.5 rounded-full bg-brand-blue"></span>
+    </div>
+
+    <!-- Main Headline (Screenshot: Kuidas olen aidanud -> Kursify Value Headline) -->
+    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-brand-navy dark:text-white leading-[1.15]">
+      Kuidas oleme aidanud juhiloani jõuda
+    </h2>
+  </div>
+
+  <!-- 3 Cards in a Row (Grid matching screenshot layout) -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-6">
+
+    <!-- =====================================================================
+         CARD 1: KARIN T.
+         ===================================================================== -->
+    <div class="review-glass-card p-7 sm:p-8 pt-10 sm:pt-11 flex flex-col justify-between">
+      
+      <!-- Floating Avatar atop card border (Portraits in frosted ring) -->
+      <div class="floating-avatar">
+        <div class="relative w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-brand-blue to-cyan-400 shadow-md">
+          <img 
+            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80" 
+            alt="Karin T." 
+            class="w-full h-full object-cover rounded-full"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+          />
+          <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-900 flex items-center justify-center text-white text-[10px] font-black shadow-xs">✓</span>
+        </div>
+      </div>
+
+      <!-- Card Content -->
+      <div>
+        <!-- Star Rating -->
+        <div class="flex items-center gap-1 text-brand-orange text-sm mb-3">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          <span class="ml-1.5 text-xs font-bold text-slate-700 dark:text-slate-300">5.0</span>
+        </div>
+
+        <!-- Opening Quote Mark -->
+        <div class="text-3xl font-serif text-slate-300 dark:text-slate-600 leading-none mb-2 select-none">“</div>
+
+        <!-- Review Text (Italicized text from screenshot) -->
+        <p class="text-slate-700 dark:text-slate-200 italic leading-relaxed text-sm sm:text-[15px]">
+          „Nii rahulikku ja toetavat õhkkonda ei ole ma varem üheski autokoolis kogenud. Enne Kursifyt olin rooli taga krampis ja kartsin igat ristmikku...“
+        </p>
+
+        <!-- Hidden Expandable Text -->
+        <div id="extraText1" class="hidden text-slate-600 dark:text-slate-300 italic leading-relaxed text-sm sm:text-[15px] mt-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+          „...Minu eelmine instruktor teises koolis tõstis häält. Kursifys leidsin Mihkli — 4 tunniga rääkisime lahti kõik hirmud ja Transpordiameti eksam sai tehtud esimese korraga!“
+        </div>
+
+        <!-- Loe edasi button -->
+        <button 
+          type="button" 
+          onclick="toggleReadMore(1)" 
+          id="btnToggle1"
+          class="mt-3 text-xs font-bold text-brand-blue dark:text-blue-400 hover:text-brand-blueHover inline-flex items-center gap-1 hover:underline transition"
+        >
+          <span>Loe edasi</span>
+          <svg class="w-3.5 h-3.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+
+        <!-- Closing Quote Mark -->
+        <div class="text-right text-3xl font-serif text-slate-300 dark:text-slate-600 leading-none mt-1 select-none">”</div>
+      </div>
+
+      <!-- Card Footer: Author + Transformation Tag -->
+      <div class="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800/90">
+        <div class="mb-4">
+          <h3 class="text-xs font-bold tracking-wider text-brand-navy dark:text-white uppercase">
+            — KARIN T.
+          </h3>
+          <p class="text-[11px] font-medium text-slate-500 dark:text-slate-400 mt-0.5 tracking-wide uppercase">
+            Tallinn • B-kategooria • Õpetaja Mihkel R.
+          </p>
+        </div>
+
+        <!-- Transformation Tag (Screenshot: REAKTIIVNE — ENNETAV) -->
+        <div class="inline-block px-3 py-1.5 rounded-lg bg-blue-50/80 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900/50 text-brand-blue dark:text-blue-300 tag-pill">
+          KARTIS ROOLI — SÕIDAB VABALT
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =====================================================================
+         CARD 2: JÜRGEN K.
+         ===================================================================== -->
+    <div class="review-glass-card p-7 sm:p-8 pt-10 sm:pt-11 flex flex-col justify-between">
+      
+      <!-- Floating Avatar atop card border -->
+      <div class="floating-avatar">
+        <div class="relative w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-brand-blue to-indigo-500 shadow-md">
+          <img 
+            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&h=200&q=80" 
+            alt="Jürgen K." 
+            class="w-full h-full object-cover rounded-full"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+          />
+          <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-900 flex items-center justify-center text-white text-[10px] font-black shadow-xs">✓</span>
+        </div>
+      </div>
+
+      <!-- Card Content -->
+      <div>
+        <!-- Star Rating -->
+        <div class="flex items-center gap-1 text-brand-orange text-sm mb-3">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          <span class="ml-1.5 text-xs font-bold text-slate-700 dark:text-slate-300">5.0</span>
+        </div>
+
+        <!-- Opening Quote Mark -->
+        <div class="text-3xl font-serif text-slate-300 dark:text-slate-600 leading-none mb-2 select-none">“</div>
+
+        <!-- Review Text -->
+        <p class="text-slate-700 dark:text-slate-200 italic leading-relaxed text-sm sm:text-[15px]">
+          „Enne Kursify kaudu uue instruktori valimist olin tavakoolis kukkunud 2 korda Transpordiameti eksamil läbi ja kaotanud usu...“
+        </p>
+
+        <!-- Hidden Expandable Text -->
+        <div id="extraText2" class="hidden text-slate-600 dark:text-slate-300 italic leading-relaxed text-sm sm:text-[15px] mt-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+          „...Platvormi kaudu broneerisin 4 tundi Alekseiga. Ta analüüsis täpselt minu eksimusi Tartu keerulistel ringidel. 2 nädalat hiljem oli eksam sooritatud 0 veaga!“
+        </div>
+
+        <!-- Loe edasi button -->
+        <button 
+          type="button" 
+          onclick="toggleReadMore(2)" 
+          id="btnToggle2"
+          class="mt-3 text-xs font-bold text-brand-blue dark:text-blue-400 hover:text-brand-blueHover inline-flex items-center gap-1 hover:underline transition"
+        >
+          <span>Loe edasi</span>
+          <svg class="w-3.5 h-3.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+
+        <!-- Closing Quote Mark -->
+        <div class="text-right text-3xl font-serif text-slate-300 dark:text-slate-600 leading-none mt-1 select-none">”</div>
+      </div>
+
+      <!-- Card Footer: Author + Transformation Tag -->
+      <div class="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800/90">
+        <div class="mb-4">
+          <h3 class="text-xs font-bold tracking-wider text-brand-navy dark:text-white uppercase">
+            — JÜRGEN K.
+          </h3>
+          <p class="text-[11px] font-medium text-slate-500 dark:text-slate-400 mt-0.5 tracking-wide uppercase">
+            Tartu • B-kategooria • Õpetaja Aleksei V.
+          </p>
+        </div>
+
+        <!-- Transformation Tag (Screenshot: ISIKUST SÕLTUV — SÜSTEEM) -->
+        <div class="inline-block px-3 py-1.5 rounded-lg bg-blue-50/80 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900/50 text-brand-blue dark:text-blue-300 tag-pill">
+          2 EBAÕNNESTUMIST — 1. KORRAGA KÄES
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =====================================================================
+         CARD 3: ERKI L.
+         ===================================================================== -->
+    <div class="review-glass-card p-7 sm:p-8 pt-10 sm:pt-11 flex flex-col justify-between">
+      
+      <!-- Floating Avatar atop card border -->
+      <div class="floating-avatar">
+        <div class="relative w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-brand-blue to-amber-400 shadow-md">
+          <img 
+            src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&h=200&q=80" 
+            alt="Erki L." 
+            class="w-full h-full object-cover rounded-full"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+          />
+          <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-900 flex items-center justify-center text-white text-[10px] font-black shadow-xs">✓</span>
+        </div>
+      </div>
+
+      <!-- Card Content -->
+      <div>
+        <!-- Star Rating -->
+        <div class="flex items-center gap-1 text-brand-orange text-sm mb-3">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          <span class="ml-1.5 text-xs font-bold text-slate-700 dark:text-slate-300">5.0</span>
+        </div>
+
+        <!-- Opening Quote Mark -->
+        <div class="text-3xl font-serif text-slate-300 dark:text-slate-600 leading-none mb-2 select-none">“</div>
+
+        <!-- Review Text -->
+        <p class="text-slate-700 dark:text-slate-200 italic leading-relaxed text-sm sm:text-[15px]">
+          „Sain juurde tohutul hulgal kindlust, et tütre autokooli kulud ei kasva kontrollimatult. Läbipaistvus oli mulle peamine...“
+        </p>
+
+        <!-- Hidden Expandable Text -->
+        <div id="extraText3" class="hidden text-slate-600 dark:text-slate-300 italic leading-relaxed text-sm sm:text-[15px] mt-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+          „...Kursifys oli algusest peale selge tunnihind ja reaalajas sõidupäevik. Tütar sooritas eksami ettenähtud tundidega ilma ühegi varjatud lisatasuta.“
+        </div>
+
+        <!-- Loe edasi button -->
+        <button 
+          type="button" 
+          onclick="toggleReadMore(3)" 
+          id="btnToggle3"
+          class="mt-3 text-xs font-bold text-brand-blue dark:text-blue-400 hover:text-brand-blueHover inline-flex items-center gap-1 hover:underline transition"
+        >
+          <span>Loe edasi</span>
+          <svg class="w-3.5 h-3.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+
+        <!-- Closing Quote Mark -->
+        <div class="text-right text-3xl font-serif text-slate-300 dark:text-slate-600 leading-none mt-1 select-none">”</div>
+      </div>
+
+      <!-- Card Footer: Author + Transformation Tag -->
+      <div class="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800/90">
+        <div class="mb-4">
+          <h3 class="text-xs font-bold tracking-wider text-brand-navy dark:text-white uppercase">
+            — ERKI L.
+          </h3>
+          <p class="text-[11px] font-medium text-slate-500 dark:text-slate-400 mt-0.5 tracking-wide uppercase">
+            Pärnu • Lapsevanem • Autosõit OÜ
+          </p>
+        </div>
+
+        <!-- Transformation Tag (Screenshot: MÕÕTMATA — MÕÕDETUD) -->
+        <div class="inline-block px-3 py-1.5 rounded-lg bg-blue-50/80 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900/50 text-brand-blue dark:text-blue-300 tag-pill">
+          ETTEARVAMATU KULU — EELARVE KONTROLLI ALL
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom CTA Button (Clean Sapphire Glass Button without emoji) -->
+  <div class="mt-14 sm:mt-16 text-center">
+    <button 
+      onclick="openAllReviewsModal()"
+      class="btn-glass-primary"
+      aria-label="Ava kõik kinnitatud arvustused"
+    >
+      <span>LOE KOGU TAGASISIDET</span>
+    </button>
+  </div>
+
+</section>
+
+<!-- Interactive Glass Modal: Opened by "LOE KOGU TAGASISIDET" -->
+<div id="allReviewsModal" class="fixed inset-0 z-50 hidden bg-[#0D1B2A]/60 dark:bg-black/75 backdrop-blur-md flex items-center justify-center p-4 transition-opacity">
+  <div class="modal-glass w-full max-w-2xl rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[85vh] overflow-y-auto">
+    
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between border-b border-slate-200/60 dark:border-slate-800 pb-4 mb-6">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-brand-blue"></span>
+          <h3 class="text-xl font-bold text-brand-navy dark:text-white">Kinnitatud tagasiside (142 arvustust)</h3>
+        </div>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Õpilased ja lapsevanemad, kes sooritasid Transpordiameti eksami Kursify kaudu</p>
+      </div>
+      <button onclick="closeAllReviewsModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-brand-navy dark:hover:text-white flex items-center justify-center font-bold text-sm transition cursor-pointer">✕</button>
+    </div>
+
+    <!-- Filter chips -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-brand-blue text-white shadow-sm">Kõik linnad (142)</button>
+      <button class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Tallinn (84)</button>
+      <button class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Tartu (38)</button>
+      <button class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Pärnu (20)</button>
+    </div>
+
+    <!-- Reviews Stream inside modal -->
+    <div class="space-y-3.5 text-sm">
+      <div class="p-4 rounded-2xl bg-white/60 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-800">
+        <div class="flex items-center justify-between text-xs mb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-brand-navy dark:text-white">Marko S.</span>
+            <span class="text-[11px] text-slate-400">Tallinn • B-kat</span>
+          </div>
+          <span class="text-brand-orange font-bold text-xs">★★★★★ 5.0</span>
+        </div>
+        <p class="text-slate-600 dark:text-slate-300 italic text-xs sm:text-sm leading-relaxed">„Instruktori vahetus käis 1 klikiga pärast esimest ebamugavat tundi teises koolis. Teine õpetaja oli super rahulik ja load olid käes 5 nädalaga!“</p>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-white/60 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-800">
+        <div class="flex items-center justify-between text-xs mb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-brand-navy dark:text-white">Liina P.</span>
+            <span class="text-[11px] text-slate-400">Tartu • B-kat automaat</span>
+          </div>
+          <span class="text-brand-orange font-bold text-xs">★★★★★ 5.0</span>
+        </div>
+        <p class="text-slate-600 dark:text-slate-300 italic text-xs sm:text-sm leading-relaxed">„Väga mugav kalender äpis. Ei pidanud kordagi helistama ega messengeris kellaaegu klapitama. Nägin kohe vabu aegu ja broneerisin otse.“</p>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-white/60 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-800">
+        <div class="flex items-center justify-between text-xs mb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-brand-navy dark:text-white">Kristiina M.</span>
+            <span class="text-[11px] text-slate-400">Lapsevanem • Tallinn</span>
+          </div>
+          <span class="text-brand-orange font-bold text-xs">★★★★★ 5.0</span>
+        </div>
+        <p class="text-slate-600 dark:text-slate-300 italic text-xs sm:text-sm leading-relaxed">„Makse läks arvele, iga tunni järel tuli raport telefonile. Teadsin täpselt, mille eest maksan, mitte ei kuulnud autoaknast suvalisi summasid.“</p>
+      </div>
+    </div>
+
+    <!-- Modal Footer Close Button -->
+    <div class="mt-6 pt-4 border-t border-slate-200/60 dark:border-slate-800 text-center">
+      <button onclick="closeAllReviewsModal()" class="px-6 py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs uppercase tracking-wider hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer">
+        Sulge aken
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Read more / Show less toggle
+  function toggleReadMore(cardNum) {
+    const extra = document.getElementById('extraText' + cardNum);
+    const btn = document.getElementById('btnToggle' + cardNum);
+    if (!extra || !btn) return;
+
+    const isHidden = extra.classList.contains('hidden');
+    if (isHidden) {
+      extra.classList.remove('hidden');
+      btn.innerHTML = '<span>Näita vähem</span><svg class="w-3.5 h-3.5 rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>';
+    } else {
+      extra.classList.add('hidden');
+      btn.innerHTML = '<span>Loe edasi</span><svg class="w-3.5 h-3.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>';
+    }
+  }
+
+  // Theme Toggle (Light / Dark) matching other pages exactly
+  function toggleTheme() {
+    const isDark = document.documentElement.classList.toggle('dark');
+    document.documentElement.classList.toggle('light', !isDark);
+    const textSpan = document.getElementById('themeToggleText');
+    if (textSpan) {
+      textSpan.textContent = isDark ? 'Light' : 'Dark';
+    }
+    localStorage.setItem('kursify-theme', isDark ? 'dark' : 'light');
+  }
+
+  // Load stored theme on load
+  (function() {
+    const saved = localStorage.getItem('kursify-theme');
+    const isDark = saved === 'dark';
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    }
+    const textSpan = document.getElementById('themeToggleText');
+    if (textSpan) {
+      textSpan.textContent = isDark ? 'Light' : 'Dark';
+    }
+  })();
+
+  // Modal interactions
+  function openAllReviewsModal() {
+    document.getElementById('allReviewsModal').classList.remove('hidden');
+  }
+  function closeAllReviewsModal() {
+    document.getElementById('allReviewsModal').classList.add('hidden');
+  }
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAllReviewsModal();
+  });
+</script>
+
+</body>
+</html>

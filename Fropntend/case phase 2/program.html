@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="et" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>9-päevane teekond juhilubadeni — Kursify Õppekava</title>
+<meta name="description" content="Selge, samm-sammuline 9-päevane arenguprogramm: esimesest pedaalivajutusest kindla ja stressivaba Transpordiameti eksamini.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,500;1,600;1,700&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            blue: '#1668E3',      // Kursify sapphire blue
+            navy: '#0D1B2A',      // Kursify primary dark slate
+            bg: '#F1F6FD',        // Kursify ambient light
+            orange: '#F5931E',
+          }
+        },
+        fontFamily: {
+          sans: ['Manrope', 'sans-serif'],
+          serif: ['Playfair Display', 'Georgia', 'serif'],
+        }
+      }
+    }
+  }
+</script>
+<style>
+  /* ==========================================================================
+     ZERO-JUMP FIXED LAYOUT & GLASSMORPHISM DESIGN SYSTEM (instructor-hero.html)
+     ========================================================================== */
+  html {
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: 'Manrope', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* ==========================================================================
+     BACKGROUND AMBIENT ORBS (Exact Glassmorphism from instructor-hero.html)
+     ========================================================================== */
+  .ambient-scene {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(85px);
+    opacity: 0.75;
+  }
+  .orb-1 {
+    width: 620px;
+    height: 620px;
+    top: -120px;
+    left: 6%;
+    background: radial-gradient(circle, rgba(147, 197, 253, 0.75) 0%, rgba(191, 219, 254, 0.35) 55%, transparent 75%);
+  }
+  .orb-2 {
+    width: 540px;
+    height: 540px;
+    top: 25%;
+    right: -80px;
+    background: radial-gradient(circle, rgba(165, 180, 252, 0.65) 0%, rgba(199, 210, 254, 0.3) 60%, transparent 80%);
+  }
+  .orb-3 {
+    width: 500px;
+    height: 500px;
+    bottom: -60px;
+    left: 38%;
+    background: radial-gradient(circle, rgba(125, 211, 252, 0.6) 0%, rgba(224, 231, 255, 0.35) 60%, transparent 80%);
+  }
+
+  /* Dark mode orbs */
+  .dark .orb-1 {
+    opacity: 0.45;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.55) 0%, rgba(30, 64, 175, 0.25) 60%, transparent 80%);
+  }
+  .dark .orb-2 {
+    opacity: 0.38;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.45) 0%, rgba(30, 27, 75, 0.2) 60%, transparent 80%);
+  }
+  .dark .orb-3 {
+    opacity: 0.35;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.45) 0%, rgba(15, 23, 42, 0.2) 60%, transparent 80%);
+  }
+
+  /* ==========================================================================
+     TOP PILL BADGE ("• ETAPP-ETAPILT TEEKOND •")
+     ========================================================================== */
+  .glass-pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 7px 22px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    user-select: none;
+    box-sizing: border-box;
+    overflow: hidden;
+    isolation: isolate;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.22);
+    color: #1d4ed8;
+    box-shadow: 
+      0 2px 8px rgba(37, 99, 235, 0.06),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.9);
+    transition: all 0.2s ease;
+  }
+  .dark .glass-pill {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #93c5fd;
+    box-shadow: 
+      0 2px 10px rgba(0, 0, 0, 0.35),
+      inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  }
+
+  /* ==========================================================================
+     GLASS BUTTONS (Sapphire Glass Primary & Frosted Ghost Secondary)
+     100% Matching instructor-hero.html
+     ========================================================================== */
+  .glass-btn-primary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    padding: 15px 32px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    cursor: pointer;
+    text-decoration: none;
+    user-select: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+  }
+  .light .glass-btn-primary,
+  :root:not(.dark) .glass-btn-primary {
+    background: rgba(37, 99, 235, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    color: #ffffff;
+    box-shadow: 
+      0 8px 24px -4px rgba(37, 99, 235, 0.35),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.7);
+  }
+  .light .glass-btn-primary:hover,
+  :root:not(.dark) .glass-btn-primary:hover {
+    background: rgba(29, 78, 216, 0.95);
+    border-color: rgba(255, 255, 255, 0.65);
+    box-shadow: 
+      0 10px 28px -4px rgba(37, 99, 235, 0.45),
+      inset 0 1px 2px rgba(255, 255, 255, 0.85);
+  }
+  .dark .glass-btn-primary {
+    background: rgba(37, 99, 235, 0.32);
+    border: 1px solid rgba(96, 165, 250, 0.4);
+    color: #ffffff;
+    box-shadow: 
+      0 8px 26px -4px rgba(0, 0, 0, 0.5),
+      0 0 16px rgba(37, 99, 235, 0.25),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.3);
+  }
+  .dark .glass-btn-primary:hover {
+    background: rgba(37, 99, 235, 0.46);
+    border-color: rgba(147, 197, 253, 0.6);
+    box-shadow: 
+      0 10px 30px -4px rgba(0, 0, 0, 0.6),
+      0 0 22px rgba(37, 99, 235, 0.35),
+      inset 0 1px 2px rgba(255, 255, 255, 0.45);
+  }
+
+  /* Ghost Glass Secondary Button: Transparent frosted glass matching instructor-hero */
+  .glass-btn-ghost {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 15px 30px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    cursor: pointer;
+    text-decoration: none;
+    user-select: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+  }
+  .light .glass-btn-ghost,
+  :root:not(.dark) .glass-btn-ghost {
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    color: #1e293b;
+    box-shadow: 
+      0 4px 16px rgba(31, 38, 135, 0.05),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.95);
+  }
+  .light .glass-btn-ghost:hover,
+  :root:not(.dark) .glass-btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.82);
+    border-color: rgba(37, 99, 235, 0.35);
+    color: #1d4ed8;
+    box-shadow: 
+      0 6px 20px rgba(37, 99, 235, 0.1),
+      inset 0 1px 2px rgba(255, 255, 255, 1);
+  }
+  .dark .glass-btn-ghost {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #f1f5f9;
+    box-shadow: 
+      0 4px 16px rgba(0, 0, 0, 0.3),
+      inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  }
+  .dark .glass-btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(96, 165, 250, 0.45);
+    color: #93c5fd;
+  }
+
+  /* ==========================================================================
+     IN-CARD RIGID NAVIGATION BUTTONS (Strict 160px Fixed Dimensions & Glass)
+     ========================================================================== */
+  .nav-btn-prev,
+  .nav-btn-next {
+    width: 160px;
+    min-width: 160px;
+    max-width: 160px;
+    height: 44px;
+    min-height: 44px;
+    max-height: 44px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    user-select: none;
+    cursor: pointer;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+  }
+  .nav-btn-prev:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* ==========================================================================
+     ZERO-JUMP STEPPER BUTTONS (Fixed Geometry 78px x 76px)
+     ========================================================================== */
+  .day-step-btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    padding: 4px 2px;
+    outline: none;
+    width: 78px;
+    min-width: 78px;
+    max-width: 78px;
+    height: 76px;
+    box-sizing: border-box;
+    transform: none !important;
+    flex-shrink: 0;
+  }
+
+  /* Stepper Circle: Rigid 44px Fixed Circle */
+  .day-step-circle {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 800;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-sizing: border-box;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Inactive Glass Step Circle */
+  .light .day-step-circle {
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(203, 213, 225, 0.7);
+    color: #475569;
+    box-shadow: 
+      0 4px 12px rgba(13, 27, 42, 0.04),
+      inset 0 1px 1px rgba(255, 255, 255, 0.85);
+  }
+  .light .day-step-btn:hover .day-step-circle {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: #1668E3;
+    color: #1668E3;
+    box-shadow: 
+      0 6px 16px rgba(22, 104, 227, 0.18),
+      inset 0 1px 2px rgba(255, 255, 255, 1);
+  }
+
+  .dark .day-step-circle {
+    background: rgba(17, 34, 54, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #94a3b8;
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.3),
+      inset 0 1px 1px rgba(255, 255, 255, 0.12);
+  }
+  .dark .day-step-btn:hover .day-step-circle {
+    background: rgba(26, 52, 82, 0.85);
+    border-color: #60a5fa;
+    color: #ffffff;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+  }
+
+  /* Active Sapphire Step Circle: High-End Frosted Glass Glow */
+  .day-step-btn.is-active .day-step-circle {
+    background: rgba(37, 99, 235, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.75) !important;
+    color: #ffffff !important;
+    box-shadow: 
+      0 8px 24px -2px rgba(22, 104, 227, 0.5),
+      0 0 16px rgba(22, 104, 227, 0.35),
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.75) !important;
+  }
+  .dark .day-step-btn.is-active .day-step-circle {
+    background: rgba(37, 99, 235, 0.55) !important;
+    border: 1px solid rgba(147, 197, 253, 0.6) !important;
+    box-shadow: 
+      0 10px 28px -2px rgba(37, 99, 235, 0.65),
+      0 0 24px rgba(37, 99, 235, 0.5),
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.45) !important;
+  }
+
+  /* Label under circle */
+  .day-step-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    line-height: 1.2;
+    transition: color 0.2s ease;
+  }
+  .light .day-step-label { color: #64748b; }
+  .dark .day-step-label { color: #94a3b8; }
+  .day-step-btn.is-active .day-step-label {
+    color: #1668E3 !important;
+  }
+  .dark .day-step-btn.is-active .day-step-label {
+    color: #93c5fd !important;
+  }
+
+  /* Dot under active step */
+  .day-step-dot-wrap {
+    height: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .day-step-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: #1668E3;
+    opacity: 0;
+    box-shadow: 0 0 8px rgba(22, 104, 227, 0.8);
+    transition: opacity 0.2s ease;
+  }
+  .day-step-btn.is-active .day-step-dot {
+    opacity: 1;
+  }
+  .dark .day-step-dot {
+    background: #60a5fa;
+    box-shadow: 0 0 8px rgba(96, 165, 250, 0.8);
+  }
+
+  /* Stepper Progress Bar */
+  .stepper-progress-bar {
+    height: 5px;
+    border-radius: 9999px;
+    overflow: hidden;
+    position: relative;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .light .stepper-progress-bar {
+    background: rgba(203, 213, 225, 0.5);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  .dark .stepper-progress-bar {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+  .stepper-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1668E3, #38bdf8);
+    border-radius: 9999px;
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 0 10px rgba(22, 104, 227, 0.5);
+  }
+
+  /* ==========================================================================
+     ULTRA-PREMIUM FROSTED GLASS CONTENT CARD (Zero Width & Height Shifts)
+     ========================================================================== */
+  .program-content-card {
+    position: relative;
+    border-radius: 32px;
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    box-sizing: border-box;
+    width: 100%;
+    /* Strict min-height so content transitions never alter card geometry */
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .light .program-content-card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.85) 0%, rgba(246, 250, 255, 0.76) 50%, rgba(240, 246, 255, 0.88) 100%);
+    border: 1.5px solid rgba(255, 255, 255, 0.88);
+    box-shadow: 
+      0 24px 64px -12px rgba(22, 104, 227, 0.14),
+      0 8px 24px -4px rgba(13, 27, 42, 0.05),
+      inset 0 2px 3px rgba(255, 255, 255, 1),
+      inset 0 -1px 2px rgba(22, 104, 227, 0.04);
+  }
+  .dark .program-content-card {
+    background: linear-gradient(145deg, rgba(17, 34, 54, 0.82) 0%, rgba(13, 27, 42, 0.88) 100%);
+    border: 1.5px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 
+      0 28px 70px -12px rgba(0, 0, 0, 0.8),
+      0 0 35px rgba(22, 104, 227, 0.22),
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.2);
+  }
+
+  /* Inner Focus Pod: Pure Frosted Glass */
+  .program-focus-pod {
+    border-radius: 20px;
+    padding: 14px 20px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+  .light .program-focus-pod {
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(219, 234, 254, 0.85);
+    box-shadow: 
+      0 4px 14px rgba(22, 104, 227, 0.04),
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.95);
+  }
+  .dark .program-focus-pod {
+    background: rgba(19, 39, 62, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 
+      0 4px 14px rgba(0, 0, 0, 0.25),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.18);
+  }
+
+  /* Smooth Opacity Transition Container */
+  .smooth-stage {
+    opacity: 1;
+    transition: opacity 0.14s ease-in-out;
+  }
+  .smooth-stage.is-transitioning {
+    opacity: 0.15;
+  }
+
+  /* Top Right Theme Toggle */
+  .theme-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 50;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 700;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .light .theme-toggle-btn {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(203, 213, 225, 0.8);
+    color: #0D1B2A;
+    box-shadow: 0 4px 16px -2px rgba(13, 27, 42, 0.08), inset 0 1px 1.5px rgba(255, 255, 255, 0.9);
+  }
+  .dark .theme-toggle-btn {
+    background: rgba(13, 27, 42, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #F1F6FD;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  }
+
+  /* Modals with Glass Backdrops */
+  .modal-glass {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(32px) saturate(200%);
+    -webkit-backdrop-filter: blur(32px) saturate(200%);
+    border: 1.5px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 25px 60px -15px rgba(22, 104, 227, 0.25), inset 0 2px 2px rgba(255, 255, 255, 1);
+  }
+  .dark .modal-glass {
+    background: rgba(13, 27, 42, 0.92);
+    backdrop-filter: blur(32px) saturate(200%);
+    -webkit-backdrop-filter: blur(32px) saturate(200%);
+    border: 1.5px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.85), 0 0 35px rgba(22, 104, 227, 0.3);
+  }
+</style>
+</head>
+
+<body class="bg-brand-bg dark:bg-[#070b16] text-brand-navy dark:text-slate-100 antialiased selection:bg-brand-blue selection:text-white py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
+
+<!-- Ambient Background Orbs Canvas (Exact Glassmorphism Background from instructor-hero.html) -->
+<div class="ambient-scene">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- Top-Right Theme Toggle -->
+<button onclick="toggleTheme()" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Lülita heledat ja tumedat režiimi">
+  <span class="w-2 h-2 rounded-full bg-[#1668E3]"></span>
+  <span id="themeToggleText">Dark</span>
+</button>
+
+<!-- =========================================================================
+     MAIN SECTION: 9-PÄEVANE ARENGUPROGRAMM (Kursify Design System)
+     ========================================================================= -->
+<section class="relative z-10 max-w-5xl mx-auto w-full">
+
+  <!-- =======================================================================
+       HEADER: Pill Badge + Main Headline + Transformation Subtitle
+       ======================================================================= -->
+  <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
+    
+    <!-- Pill: • ETAPP-ETAPILT TEEKOND • -->
+    <div class="mb-4">
+      <div class="glass-pill">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-blue"></span>
+        <span>ETAPP-ETAPILT TEEKOND</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-blue"></span>
+      </div>
+    </div>
+
+    <!-- Main Title -->
+    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-navy dark:text-white tracking-tight leading-tight">
+      9-päevane arenguprogramm
+    </h2>
+
+    <!-- Transformation Subtitle in Kursify Playfair Display Italic -->
+    <p class="font-serif italic text-base sm:text-lg lg:text-xl text-brand-blue dark:text-blue-400 mt-2 font-medium">
+      algaja õppur <span class="font-sans not-italic text-slate-400 font-normal">→</span> enesekindel roolija <span class="font-sans not-italic text-slate-400 font-normal">→</span> 1. katsega sooritatud riiklik eksam
+    </p>
+
+  </div>
+
+  <!-- =======================================================================
+       STEPPER: Interactive 1 to 9 Days Header (No duplicate buttons on top)
+       ======================================================================= -->
+  <div class="mb-8 w-full">
+    
+    <!-- Guidance Sub-header (Single clear affordance without duplicate buttons) -->
+    <div class="flex items-center justify-between px-1 mb-3">
+      <div class="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400">
+        <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-blue-100 dark:bg-blue-900/60 text-brand-blue dark:text-blue-300 text-[10px] font-extrabold">i</span>
+        <span>Vali päev 1–9 või kasuta allolevaid nooli:</span>
+      </div>
+      <div class="text-xs font-extrabold text-brand-blue dark:text-blue-400 tracking-wide">
+        <span id="topStepCounter">1 / 9</span>
+      </div>
+    </div>
+
+    <!-- Horizontal Stepper Row: Rigid Non-Jumping Fixed 78px Slots -->
+    <div class="flex items-start justify-between gap-1 sm:gap-2 overflow-x-auto pb-2 pt-1 px-1 no-scrollbar w-full">
+      
+      <!-- Day 1 -->
+      <button onclick="selectDay(1)" id="stepBtn-1" class="day-step-btn is-active" aria-label="Vali päev 1: Tervikpilt">
+        <div class="day-step-circle">1</div>
+        <span class="day-step-label">Tervikpilt</span>
+        <div class="day-step-dot-wrap"><span class="day-step-dot"></span></div>
+      </button>
+
+      <!-- Day 2 -->
+      <button onclick="selectDay(2)" id="stepBtn-2" class="day-step-btn" aria-label="Vali päev 2: Pedaalitunnetus">
+        <div class="day-step-circle">2</div>
+        <span class="day-step-label">Pedaalid</span>
+        <div class="day-step-dot-wrap"><span class="day-step-dot"></span></div>
+      </button>
+
+      <!-- Day 3 -->
+      <button onclick="selectDay(3)" id="stepBtn-3" class="day-step-btn" aria-label="Vali päev 3: Põhireeglid">
+        <div class="day-step-circle">3</div>
+        <span class="day-step-label">Reeglid</span>
+        <div class="day-step-dot-wrap"><span class="day-step-dot"></span></div>
+      </button>
+
+      <!-- Day 4 -->
+      <button onclick="selectDay(4)" id="stepBtn-4" class="day-step-btn" aria-label="Vali päev 4: Äärelinn">
+        <div class="day-step-circle">4</div>
+        <span class="day-step-label">Äärelinn</span>
+        <div class="day-step-dot-wrap"><span class="day-step-dot"></span></div>
+      </button>
+
+      <!-- Day 5 -->
+      <button onclick="selectDay(5)" id="stepBtn-5" class="day-step-btn" aria-label="Vali päev 5: Tipptund">
+        <div class="day-step-circle">5</div>
+        <span class="day-step-label">Tipptund</span>
+        <div class="day-step-dot-wrap"><span class="day-step-dot"></span></div>
+      </button>
+
+      <!-- Day 6 -->
+      <button onclick="selectDay(6)" id="stepBtn-6" class="day-step-btn" aria-label="Vali päev 6: Ringristmikud">
+        <div class="day-step-circle">6</div>
+        <span class="day-step-label">Ringid</span>
+        <div class="day-step-dot-wrap"><span class="day-step-dot"></span></div>
+      </button>
+
+      <!-- Day 7 -->
+      <button onclick="selectDay(7)" id="stepBtn-7" class="day-step-btn" aria-label="Vali päev 7: Parkimiskunst">
+        <div class="day-step-circle">7</div>
+        <span class="day-step-label">Parkimine</span>
+        <div class="day-step-dot-wrap"><span class="day-step-dot"></span></div>
+      </button>
+
+      <!-- Day 8 -->
+      <button onclick="selectDay(8)" id="stepBtn-8" class="day-step-btn" aria-label="Vali päev 8: Simulatsioon">
+        <div class="day-step-circle">8</div>
+        <span class="day-step-label">Eksamiproov</span>
+        <div class="day-step-dot-wrap"><span class="day-step-dot"></span></div>
+      </button>
+
+      <!-- Day 9 -->
+      <button onclick="selectDay(9)" id="stepBtn-9" class="day-step-btn" aria-label="Vali päev 9: Eksami edu">
+        <div class="day-step-circle">9</div>
+        <span class="day-step-label">Load käes</span>
+        <div class="day-step-dot-wrap"><span class="day-step-dot"></span></div>
+      </button>
+
+    </div>
+
+    <!-- Progress Track & Count -->
+    <div class="mt-2 flex items-center justify-between gap-4 text-xs font-bold text-slate-500 dark:text-slate-400">
+      <span>Progress</span>
+      <div class="flex-1 max-w-md stepper-progress-bar">
+        <div id="progressFill" class="stepper-progress-fill" style="width: 11.11%;"></div>
+      </div>
+      <span id="progressText" class="font-extrabold text-brand-blue dark:text-blue-400">1 / 9 päeva vaadatud</span>
+    </div>
+
+  </div>
+
+  <!-- =======================================================================
+       CONTENT CARD: Active Day Details + Visual Context Image (Zero Movement)
+       ======================================================================= -->
+  <div class="program-content-card p-6 sm:p-8 lg:p-9 mb-8 w-full">
+    
+    <!-- Top Meta Row: Locked 32px height -->
+    <div class="w-full flex items-center justify-between pb-3 mb-5 border-b border-slate-200/70 dark:border-slate-800 h-8 flex-shrink-0">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-brand-blue animate-pulse"></span>
+        <span id="dayHeaderTag" class="text-xs font-black tracking-widest text-brand-blue dark:text-blue-400 uppercase">
+          TERVIKPILT & MENTORIGA TUTVUMINE
+        </span>
+      </div>
+      <div id="dayCounter" class="text-xs font-black text-slate-400 dark:text-slate-500 tracking-wider">
+        1 / 9
+      </div>
+    </div>
+
+    <!-- Grid: Left Narrative + Right Curated Visual Image (minmax(0,1fr) ensures platform NEVER expands/contracts) -->
+    <div id="smoothStage" class="smooth-stage grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-8 items-start w-full flex-1">
+      
+      <!-- Left Column: Fixed slots for every text block -->
+      <div class="w-full min-w-0 flex flex-col justify-between space-y-4">
+        
+        <!-- Focus Habit Pod: Locked 84px height -->
+        <div class="program-focus-pod w-full h-[84px] min-h-[84px] max-h-[84px] flex flex-col justify-center overflow-hidden">
+          <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1 flex items-center gap-2">
+            <span>🎯 HARJUMUS FOOKUSES</span>
+            <span class="text-brand-blue">•</span>
+            <span id="focusSkill" class="text-brand-navy dark:text-slate-200 font-bold truncate">Istud rooli rahulikult, ilma ärevuseta</span>
+          </div>
+          <div id="focusQuote" class="text-sm font-bold text-brand-navy dark:text-white italic line-clamp-1">
+            "Enne kui reageerin, vaatan peeglitesse ja hingan rahulikult välja."
+          </div>
+        </div>
+
+        <!-- Main Day Headline: Locked 60px height -->
+        <h3 id="dayTitle" class="text-xl sm:text-2xl font-black text-brand-navy dark:text-white tracking-tight leading-snug h-[60px] min-h-[60px] max-h-[60px] flex items-center overflow-hidden">
+          Tervikpilt — õpi tajuma autot oma keha pikendusena
+        </h3>
+
+        <!-- Narrative Description: Locked 96px height -->
+        <p id="dayDescription" class="text-sm sm:text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed font-normal h-[96px] min-h-[96px] max-h-[96px] overflow-hidden">
+          Kõik algab tervikpildist: esimesel päeval ei visata sind otse tipptundi. Kohandame istmeasendi, peeglid ja rooli sinu pikkuse järgi, ühendame bluetoothiga sinu Spotify ja harjutame suletud platsil auto gabariitide tajumist. Tulemus: null paanikat, kindel istumisasend ja selge arusaam, mida auto igast nupust oodata.
+        </p>
+
+        <!-- Outcome Highlights: Locked 96px height container with 3 bullet items -->
+        <div class="h-[96px] min-h-[96px] max-h-[96px] flex flex-col justify-between overflow-hidden pt-1">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-brand-navy dark:text-white">
+            PÄEVA TULEMUSED:
+          </div>
+          <ul id="dayOutcomes" class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300 font-medium">
+            <li class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0"></span>
+              <span class="truncate">Ergonoomiline isteasend ja pimedate nurkade peegliseadistus</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0"></span>
+              <span class="truncate">Sujuv käivitamine, parkimisasendid ja tulede automaatika</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0"></span>
+              <span class="truncate">Õppuri ja mentori vaheline usaldus ja stressi täielik maandamine</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Visual Stage Image (Strictly Locked 320px x 320px) -->
+      <div class="w-full lg:w-[320px] min-w-[320px] max-w-[320px] h-[320px] min-h-[320px] max-h-[320px] rounded-2xl overflow-hidden shadow-md group relative flex-shrink-0">
+        <img 
+          id="dayImage" 
+          src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=700&q=80" 
+          alt="Päeva teema foto" 
+          class="w-full h-full object-cover object-center transform group-hover:scale-104 transition-transform duration-500 ease-out"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+        />
+        <!-- Ambient Overlay with Badge -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent pointer-events-none"></div>
+        <div class="absolute bottom-4 left-4 right-4 text-white">
+          <span id="imageTag" class="inline-block px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-[10px] font-extrabold uppercase tracking-wider border border-white/20 mb-1">
+            Platsiharjutus
+          </span>
+          <div id="imageCaption" class="text-xs font-bold leading-tight drop-shadow-sm truncate">
+            Tuttuus hübriidauto ja rahulik stardiharjutus
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- In-Box Stepper Bar: STRICTLY FIXED 160px BUTTONS WITHOUT DIGITS (Zero Size Change) -->
+    <div class="mt-6 pt-4 border-t border-slate-200/70 dark:border-slate-800 flex items-center justify-between w-full h-14 flex-shrink-0">
+      
+      <!-- Prev Button: Fixed 160px width, Frosted Ghost Glass -->
+      <button onclick="prevDay()" id="prevDayBtn" class="nav-btn-prev glass-btn-ghost" disabled aria-label="Mine eelmisele päevale">
+        <span>← Eelmine päev</span>
+      </button>
+
+      <!-- Center Status: Fixed position -->
+      <div class="text-xs font-extrabold text-slate-500 dark:text-slate-400 tracking-wide text-center">
+        <span id="currentStepIndicator">1. Päev: Tervikpilt</span>
+      </div>
+
+      <!-- Next Button: Fixed 160px width, Sapphire Glass (No fluctuating digits) -->
+      <button onclick="nextDay()" id="nextDayBtn" class="nav-btn-next glass-btn-primary" aria-label="Mine järgmisele päevale">
+        <span>Järgmine päev →</span>
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- =======================================================================
+       BOTTOM CTA ACTIONS (Exact Sapphire Glass & Ghost Glass from instructor-hero.html)
+       ======================================================================= -->
+  <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+    
+    <!-- Primary CTA: Exact glass-btn-primary from instructor-hero.html -->
+    <button onclick="openProgramModal()" class="glass-btn-primary w-full sm:w-auto">
+      <span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center font-bold text-xs">→</span>
+      <span>VAATA PROGRAMMI DETAILSELT</span>
+    </button>
+
+    <!-- Secondary CTA: Exact glass-btn-ghost from instructor-hero.html -->
+    <button onclick="openSyllabusModal()" class="glass-btn-ghost w-full sm:w-auto">
+      <span>VAATA ARENGUPROGRAMMI ÕPPEKAVA</span>
+    </button>
+
+  </div>
+
+</section>
+
+<!-- ==========================================================================
+     MODAL 1: Complete Program Details Modal
+     ========================================================================== -->
+<div id="programModal" class="fixed inset-0 z-50 hidden bg-[#0D1B2A]/70 dark:bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+  <div class="modal-glass w-full max-w-2xl rounded-3xl p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+    
+    <div class="flex items-center justify-between border-b border-slate-200/70 dark:border-slate-800 pb-4 mb-5">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-brand-blue animate-pulse"></span>
+          <h4 class="text-lg font-bold text-brand-navy dark:text-white">9-Päevane Kursify Arenguprogramm</h4>
+        </div>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Struktureeritud teekond 0-st kuni Transpordiameti eksamiprotokollini</p>
+      </div>
+      <button onclick="closeProgramModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-brand-navy dark:hover:text-white flex items-center justify-center font-bold text-sm transition cursor-pointer" aria-label="Sulge">✕</button>
+    </div>
+
+    <div class="space-y-3 text-xs text-slate-600 dark:text-slate-300">
+      <div class="p-4 rounded-2xl bg-blue-50/90 dark:bg-blue-950/40 border border-blue-200/70 dark:border-blue-900/60">
+        <strong class="font-bold text-brand-navy dark:text-white block text-sm mb-1">Miks just 9 etappi?</strong>
+        Kursify metoodika ei sunni sind tuimalt tunde täis sõitma. Igal päeval on konkreetne reflektsioon ja harjumuse ankur. Nii omandad vilumuse 2x kiiremini kui traditsioonilises autokoolis ilma lisaeksamite kuluta.
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+        <div class="p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-800/40">
+          <strong class="text-brand-navy dark:text-white block font-bold">1–3. Päev: Alusmüür</strong>
+          Auto füüsika, automaat/manuaal pedaalitunnetus, peeglite automaatne kontroll.
+        </div>
+        <div class="p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-800/40">
+          <strong class="text-brand-navy dark:text-white block font-bold">4–6. Päev: Linnarütm</strong>
+          Tallinna & Tartu tipptund, mitmerealised ringristmikud, ohutu pikivahe.
+        </div>
+        <div class="p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-800/40">
+          <strong class="text-brand-navy dark:text-white block font-bold">7. Päev: Parkimiskunst</strong>
+          Paralleel-, nurk- ja tagurpidi parkimine kaubanduskeskuste vahel.
+        </div>
+        <div class="p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-800/40">
+          <strong class="text-brand-navy dark:text-white block font-bold">8–9. Päev: Eksami simulatsioon</strong>
+          Ametliku eksamimarsruudi läbisõit ilma mentori sekkumiseta + vigade analüüs.
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 pt-4 border-t border-slate-200/70 dark:border-slate-800 flex items-center justify-between">
+      <span class="text-xs text-slate-500 dark:text-slate-400 font-semibold">94% sooritab riikliku eksami 1. katsega</span>
+      <button onclick="closeProgramModal()" class="glass-btn-primary text-xs py-3 px-6">
+        <span>ALUSTA PROOVISÕIDUGA →</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==========================================================================
+     MODAL 2: Full Syllabus Document Modal
+     ========================================================================== -->
+<div id="syllabusModal" class="fixed inset-0 z-50 hidden bg-[#0D1B2A]/70 dark:bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+  <div class="modal-glass w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+    <div class="flex items-center justify-between border-b border-slate-200/70 dark:border-slate-800 pb-4 mb-4">
+      <h4 class="text-base font-bold text-brand-navy dark:text-white">Kursify Ametlik Õppekava (B-kat)</h4>
+      <button onclick="closeSyllabusModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-brand-navy dark:hover:text-white flex items-center justify-center font-bold text-sm transition cursor-pointer" aria-label="Sulge">✕</button>
+    </div>
+    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+      Õppekava vastab 100% Majandus- ja Kommunikatsiooniministeeriumi ning Transpordiameti riiklikule B-kategooria mootorsõidukijuhi ettevalmistamise eeskirjale.
+    </p>
+    <div class="space-y-2 text-xs text-slate-600 dark:text-slate-300 mb-6">
+      <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800/60 font-semibold">
+        <span>Teooriaõpe e-keskkonnas:</span>
+        <span class="font-bold text-brand-blue">28 akadeemilist tundi</span>
+      </div>
+      <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800/60 font-semibold">
+        <span>Sõiduõpe (reaalne liiklus + plats):</span>
+        <span class="font-bold text-brand-blue">30 sõidutundi (à 45 min)</span>
+      </div>
+      <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800/60 font-semibold">
+        <span>Pimeda aja & libedasõidu koolitus:</span>
+        <span class="font-bold text-emerald-600 dark:text-emerald-400">Kaasas paketis</span>
+      </div>
+    </div>
+    <button onclick="closeSyllabusModal()" class="glass-btn-primary w-full py-3">
+      <span>SELGELT MÕISTETAV • SULGE</span>
+    </button>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     INTERACTIVE ZERO-JUMP STATE MACHINE (Days 1 to 9 Data)
+     ========================================================================== -->
+<script>
+  const daysData = {
+    1: {
+      name: "Tervikpilt",
+      headerTag: "TERVIKPILT & MENTORIGA TUTVUMINE",
+      focusSkill: "Istud rooli rahulikult, ilma ärevuseta",
+      focusQuote: '"Enne kui reageerin, vaatan peeglitesse ja hingan rahulikult välja."',
+      title: "Tervikpilt — õpi tajuma autot oma keha pikendusena",
+      description: "Kõik algab tervikpildist: esimesel päeval ei visata sind otse tipptundi. Kohandame istmeasendi, peeglid ja rooli sinu pikkuse järgi, ühendame bluetoothiga sinu Spotify ja harjutame suletud platsil auto gabariitide tajumist. Tulemus: null paanikat, kindel istumisasend ja selge arusaam, mida auto igast nupust oodata.",
+      outcomes: [
+        "Ergonoomiline isteasend ja pimedate nurkade peegliseadistus",
+        "Sujuv käivitamine, parkimisasendid ja tulede automaatika",
+        "Õppuri ja mentori vaheline usaldus ja stressi täielik maandamine"
+      ],
+      image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=700&q=80",
+      imageTag: "Platsiharjutus",
+      imageCaption: "Tuttuus hübriidauto ja rahulik stardiharjutus"
+    },
+    2: {
+      name: "Pedaalid",
+      headerTag: "PEDAALITUNNETUS JA PIDURDUSJÕUD",
+      focusSkill: "Pidurdamine ilma järsu nõksuta",
+      focusQuote: '"Õrn jalg, pehme peatus — kaasreisija kohvitops jääb paigale."',
+      title: "Pedaalitunnetus — sujuv stardikiirendus ja pehme peatumine",
+      description: "Teisel päeval treenime lihasmälu. Harjutame mikrokiirendust ja sujuvat peatumist sentimeetri pealt märgitud joone ees. Saad lahti hirmust, et auto 'hüppab' või 'sureb välja'. Kui sõidad automaadiga, õpid kahe pedaali sujuvat üleminekut; manuaaliga leiad siduri täpse haakepunkti.",
+      outcomes: [
+        "Sujuv pidurdamine ilma keha ettepoole kaldumiseta",
+        "Kiiruse täpne reguleerimine kitsastes ruumides (5–15 km/h)",
+        "Täielik kontroll auto liikumise üle madalatel kiirustel"
+      ],
+      image: "https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=700&q=80",
+      imageTag: "Pedaalitunnetus",
+      imageCaption: "Mikrokiirenduse ja pidurdusteekonna lihvimine"
+    },
+    3: {
+      name: "Reeglid",
+      headerTag: "PÕHIREEGLID & KÄENDUMINE",
+      focusSkill: "Pilk liigub sinna, kuhu pöörad",
+      focusQuote: '"Pilk ette, suunatuli aegsasti, pööre ilma serva riivamata."',
+      title: "Põhireeglid — paremakäe reegel ja sujuvad pöörded",
+      description: "Kolmandal päeval sõidame vaiksetel elamurajooni tänavatel. Treenime 'parema käe reeglit' seni, kuni see muutub automaatseks refleksiks. Õpid pöörama ristmikel täpselt oma sõiduritta ilma vastassuunavööndit lõikamata ja harjutad jalakäijate varajast märkamist.",
+      outcomes: [
+        "Refleksne parema käe reegli tuvastamine elamurajoonides",
+        "Õigeaegne suunamärguanne ja peeglikontroll enne pööret",
+        "Rahulik käitumine reguleerimata ülekäiguradade ees"
+      ],
+      image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=700&q=80",
+      imageTag: "Elamurajoon",
+      imageCaption: "Pöörded ja paremakäe eesõiguse harjutamine"
+    },
+    4: {
+      name: "Äärelinn",
+      headerTag: "ÄÄRELINN & KIIRUSTE TÕSTMINE",
+      focusSkill: "Sõiduraja hoidmine 70 km/h juures",
+      focusQuote: '"Ära vaata auto nina ette, vaata 100 meetrit teed ettepoole."',
+      title: "Äärelinn — pikivahe ja kiirused kuni 70 km/h",
+      description: "Neljandal päeval tõstame tempot. Väljasõit äärelinna laiadele teedele (50–70 km/h). Õpid hoidma ohutut 3-sekundi pikivahet ja sujuvalt reastuma kiirenevas liikluses. Mentor seletab lahti, miks liiga aeglaselt sõitmine on sama ohtlik kui kiiruse ületamine.",
+      outcomes: [
+        "Pikivahe 3-sekundi reegli kinnistamine kõigil kiirustel",
+        "Sujuv reavahetus peegel-suund-pimenurk kontrolliga",
+        "Kindlus suurematel maantee- ja äärelinnakiirustel"
+      ],
+      image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=700&q=80",
+      imageTag: "Äärelinnateed",
+      imageCaption: "Reavahetus ja suuremate kiiruste kindlustunne"
+    },
+    5: {
+      name: "Tipptund",
+      headerTag: "KESKLINN & TIPPTUND",
+      focusSkill: "Rahu säilitamine fooride ja ummikute rägastikus",
+      focusQuote: '"Roheline foor ei tähenda tormamist, vaid veendumist, et tee on vaba."',
+      title: "Tipptund — südalinna tihe liiklus ja foorid",
+      description: "Viiendal päeval sukeldume Kesklinna liiklusesse. Harjutame fooridega ristmike lugemist, ühissõidukiradade jälgimist ja trammiteede ületamist. Mentor on sinu kõrval ja hoiab pingevaba õhkkonda: kui tekib segadus, võtame hoo maha ja lahendame olukorra naeratusega.",
+      outcomes: [
+        "Kesklinna keeruliste noolefooride ja radade kiire dešifreerimine",
+        "Ühissõidukiradade ning trammiliikluse reeglite vaba valdamine",
+        "Paanikavaba stabiilsus tihedas tipptunni aeglases voolus"
+      ],
+      image: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=700&q=80",
+      imageTag: "Südalinn",
+      imageCaption: "Foorid, ühissõidukirajad ja tiheda liikluse rütm"
+    },
+    6: {
+      name: "Ringid",
+      headerTag: "RINGRISTMIKUD & KEERULISED MANÖÖVRID",
+      focusSkill: "Õige raja valik enne ringile sisenemist",
+      focusQuote: '"Ringil ei otsustata — otsus tehakse enne ringristmikku."',
+      title: "Ringristmikud — Haabersti, Akadeemia ja mitmerealised ringid",
+      description: "Kuues päev lahendab õppurite suurima hirmu: turboringid ja mitmerealised ringristmikud. Joonistame tahvlil läbi Haabersti ja Akadeemia ringid ning sõidame need läbi igas suunas. Õpid täpselt, millal suunda näidata ja kuidas teisi liiklejaid ette aimata.",
+      outcomes: [
+        "Õige sõiduraja valik enne mitmerealisele ringile sõitmist",
+        "Õigeaegne ja eksamile vastav väljasõidu suunamärguanne",
+        "Täielik enesekindlus mistahes Eesti linna ringristmikel"
+      ],
+      image: "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=700&q=80",
+      imageTag: "Ringristmikud",
+      imageCaption: "Haabersti ja mitmerealiste ringide veatu läbimine"
+    },
+    7: {
+      name: "Parkimine",
+      headerTag: "PARKIMISKUNST & MANÖÖVERDUS",
+      focusSkill: "Peeglite ja kaamera abil täpne joondumine",
+      focusQuote: '"Ratas sirgu, 45 kraadi nurk, auto kahe joone vahel keskel."',
+      title: "Parkimiskunst — paralleel-, tagurpidi- ja nurgaparkimine",
+      description: "Seitsmendal päeval võtame ette parkimise kaubanduskeskuste parklates (Kristiine, Rocca al Mare, Lõunakeskus). Harjutame selgete geomeetriliste orientiiride järgi: kuidas parkida ühe roolipöördega autode vahele nii, et uksi saaks laialt avada.",
+      outcomes: [
+        "Paralleelparkimine kõnnitee äärde 1 manöövriga",
+        "Tagurpidi boksi parkimine peeglite ja kaamera koostöös",
+        "Kallakul paigaltvõtt ilma sentimeetritki tagasi vajumata"
+      ],
+      image: "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=700&q=80",
+      imageTag: "Parkimiskunst",
+      imageCaption: "Paralleel- ja tagurpidi parkimise kindel tehnika"
+    },
+    8: {
+      name: "Eksamiproov",
+      headerTag: "EKSAMI REAALNE SIMULATSIOON",
+      focusSkill: "Sõit ilma mentori abita ja juhendamiseta",
+      focusQuote: '"Täna olen mina eksaminaator: kuula juhiseid ja usalda oma oskusi."',
+      title: "Simulatsioon — Transpordiameti ametliku eksami peaproov",
+      description: "Kaheksandal päeval mängime 1:1 läbi riikliku sõidueksami. Mentor ei aita ega paranda sõidu ajal, vaid teeb märkmeid Transpordiameti ametlikule hindamislehele. Sõidame läbi eksaminaatorite lemmiklõksud ja teeme pärast detailse vigadeta analüüsi.",
+      outcomes: [
+        "Eksamirutiini ja -protokolli täielik läbitunnetamine",
+        "Tüüpikate komistuskohtade ennetamine (kiirusepiirangud, ühesuunalised tänavad)",
+        "Iseseisva otsustusjulguse viimane lihv"
+      ],
+      image: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=700&q=80",
+      imageTag: "Eksami simulatsioon",
+      imageCaption: "45 minutit ametliku hindamislehe kontrollis"
+    },
+    9: {
+      name: "Load käes",
+      headerTag: "TULEMUSED & RIIGI EKSAMI EDU",
+      focusSkill: "Vankumatu enesekindlus roolis",
+      focusQuote: '"Ma oskan sõita. Ma olen valmis. Load on minu."',
+      title: "Eksami edu — vaba roolija ja juhiluba esimese katsega käes",
+      description: "Üheksas päev on tulemuste vili! Viimane värskendav soojendustund vahetult enne Transpordiameti eksamit. Sinu pulss on rahulik, teadmised kristallselged ja auto tuttav. 94% Kursify programmi läbinutest sooritab riikliku eksami esimese katsega!",
+      outcomes: [
+        "Vaimne ja tehniline valmisolek riiklikuks eksamiks",
+        "Juhilubade kättesaamine ilma närvesöövate korduseksamiteta",
+        "Eluaegne turvalise ja vaba sõidu harjumus"
+      ],
+      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=700&q=80",
+      imageTag: "Load käes",
+      imageCaption: "Eksam sooritatud ja juhiluba taskus"
+    }
+  };
+
+  let currentActiveDay = 1;
+  let isUpdating = false;
+
+  function selectDay(dayNumber) {
+    if (dayNumber < 1 || dayNumber > 9 || isUpdating) return;
+    isUpdating = true;
+    currentActiveDay = dayNumber;
+    const data = daysData[dayNumber];
+    if (!data) return;
+
+    // Smooth subtle fade of the stage content (Zero Layout Shift)
+    const stage = document.getElementById('smoothStage');
+    if (stage) stage.classList.add('is-transitioning');
+
+    setTimeout(() => {
+      // Update Stepper buttons state
+      for (let i = 1; i <= 9; i++) {
+        const btn = document.getElementById(`stepBtn-${i}`);
+        if (btn) {
+          if (i === dayNumber) {
+            btn.classList.add('is-active');
+            btn.setAttribute('aria-selected', 'true');
+          } else {
+            btn.classList.remove('is-active');
+            btn.setAttribute('aria-selected', 'false');
+          }
+        }
+      }
+
+      // Update Progress Bar & Counters
+      const progressPercent = (dayNumber / 9) * 100;
+      const progressFill = document.getElementById('progressFill');
+      const progressText = document.getElementById('progressText');
+      const topStepCounter = document.getElementById('topStepCounter');
+      
+      if (progressFill) progressFill.style.width = `${progressPercent}%`;
+      if (progressText) progressText.textContent = `${dayNumber} / 9 päeva vaadatud`;
+      if (topStepCounter) topStepCounter.textContent = `${dayNumber} / 9`;
+
+      // Update Card Meta
+      document.getElementById('dayHeaderTag').textContent = data.headerTag;
+      document.getElementById('dayCounter').textContent = `${dayNumber} / 9`;
+      document.getElementById('focusSkill').textContent = data.focusSkill;
+      document.getElementById('focusQuote').textContent = data.focusQuote;
+      document.getElementById('dayTitle').textContent = data.title;
+      document.getElementById('dayDescription').textContent = data.description;
+
+      // Update Outcomes with fixed bullet structure
+      const outcomesList = document.getElementById('dayOutcomes');
+      if (outcomesList) {
+        outcomesList.innerHTML = '';
+        data.outcomes.forEach(item => {
+          const li = document.createElement('li');
+          li.className = 'flex items-center gap-2';
+          li.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0"></span><span class="truncate">${item}</span>`;
+          outcomesList.appendChild(li);
+        });
+      }
+
+      // Update Right Image and Caption
+      const dayImage = document.getElementById('dayImage');
+      if (dayImage) dayImage.src = data.image;
+      document.getElementById('imageTag').textContent = data.imageTag;
+      document.getElementById('imageCaption').textContent = data.imageCaption;
+
+      // Update In-box Nav Buttons State (STRICTLY FIXED LABELS, NO DIGITS)
+      const prevBtn = document.getElementById('prevDayBtn');
+      const nextBtn = document.getElementById('nextDayBtn');
+      const currentIndicator = document.getElementById('currentStepIndicator');
+
+      if (currentIndicator) {
+        currentIndicator.textContent = `${dayNumber}. Päev: ${data.name}`;
+      }
+
+      if (prevBtn) {
+        prevBtn.disabled = (dayNumber === 1);
+      }
+
+      if (nextBtn) {
+        if (dayNumber === 9) {
+          nextBtn.innerHTML = `<span>Alusta uuesti ↺</span>`;
+          nextBtn.onclick = () => selectDay(1);
+        } else {
+          nextBtn.innerHTML = `<span>Järgmine päev →</span>`;
+          nextBtn.onclick = () => selectDay(dayNumber + 1);
+        }
+      }
+
+      // Restore stage opacity
+      if (stage) stage.classList.remove('is-transitioning');
+      isUpdating = false;
+    }, 100);
+  }
+
+  function prevDay() {
+    if (currentActiveDay > 1) {
+      selectDay(currentActiveDay - 1);
+    }
+  }
+
+  function nextDay() {
+    if (currentActiveDay < 9) {
+      selectDay(currentActiveDay + 1);
+    } else {
+      selectDay(1);
+    }
+  }
+
+  // Keyboard accessibility
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') nextDay();
+    if (e.key === 'ArrowLeft') prevDay();
+    if (e.key >= '1' && e.key <= '9') {
+      selectDay(parseInt(e.key, 10));
+    }
+  });
+
+  // Modal Handlers
+  function openProgramModal() {
+    const modal = document.getElementById('programModal');
+    if (modal) {
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+  function closeProgramModal() {
+    const modal = document.getElementById('programModal');
+    if (modal) {
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+  }
+
+  function openSyllabusModal() {
+    const modal = document.getElementById('syllabusModal');
+    if (modal) {
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+  function closeSyllabusModal() {
+    const modal = document.getElementById('syllabusModal');
+    if (modal) {
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+  }
+
+  // Close modals when clicking backdrop
+  window.addEventListener('click', (e) => {
+    const pModal = document.getElementById('programModal');
+    const sModal = document.getElementById('syllabusModal');
+    if (e.target === pModal) closeProgramModal();
+    if (e.target === sModal) closeSyllabusModal();
+  });
+
+  // Theme Toggle
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.classList.toggle('dark');
+    document.getElementById('themeToggleText').textContent = isDark ? 'Light' : 'Dark';
+    try {
+      localStorage.setItem('kursify-theme', isDark ? 'dark' : 'light');
+    } catch (e) {}
+  }
+
+  // Initialize theme
+  (function initTheme() {
+    try {
+      const saved = localStorage.getItem('kursify-theme');
+      if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        const text = document.getElementById('themeToggleText');
+        if (text) text.textContent = 'Light';
+      }
+    } catch (e) {}
+  })();
+</script>
+
+</body>
+</html>
