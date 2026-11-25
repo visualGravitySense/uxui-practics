@@ -1,0 +1,362 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Viktorija: материалы кампании</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one readable column; the deliverables table and the calendar strip are the two wide elements. */
+:root {
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --fg: #141a2b;
+  --muted: #59627a;
+  --line: #dde1ec;
+  --blue: #1765b8;
+  --orange: #d9600c;
+  --orange-soft: #fff1e6;
+  --blue-soft: #e8f1fc;
+  --stop: #b4232c;
+  --stop-soft: #fdecee;
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1020; --surface: #121a2e; --fg: #e8ecf6; --muted: #9aa5c0; --line: #24304d;
+    --blue: #6aa9ef; --orange: #ff9a4d; --orange-soft: #2c1d12; --blue-soft: #14243d;
+    --stop: #ff7b84; --stop-soft: #2e1419; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b1020; --surface: #121a2e; --fg: #e8ecf6; --muted: #9aa5c0; --line: #24304d;
+  --blue: #6aa9ef; --orange: #ff9a4d; --orange-soft: #2c1d12; --blue-soft: #14243d;
+  --stop: #ff7b84; --stop-soft: #2e1419; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font: 15px/1.6 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+main { max-width: 980px; margin: 0 auto; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(28px, 5vw, 40px); }
+h2 { font-size: 22px; }
+h3 { font-size: 16px; }
+p { margin: 0; max-width: 68ch; }
+a { color: var(--blue); }
+a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.eyebrow { font: 600 12px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--orange); }
+.head { display: grid; gap: 12px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--muted); font-size: 14px; }
+section { display: grid; gap: 14px; }
+.lede { font-size: 17px; }
+.slogan { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.slogan div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 6px; min-width: 0; }
+.slogan b { font-family: var(--font-display); font-size: 20px; }
+.lang { font: 600 11px/1 var(--font-mono); color: var(--muted); letter-spacing: .06em; }
+.weeks { display: grid; grid-template-columns: repeat(4, minmax(180px, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.weeks div { padding: 14px; background: var(--surface); display: grid; gap: 4px; border-right: 1px solid var(--line); }
+.weeks div:last-child { border-right: 0; }
+.weeks .now { background: var(--orange-soft); }
+.weeks small { font: 600 12px/1.3 var(--font-mono); color: var(--muted); }
+.weeks .due { font-weight: 600; color: var(--orange); }
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { width: 100%; border-collapse: collapse; min-width: 820px; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+th { font: 600 12px/1.3 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); background: var(--bg); }
+tr:last-child td { border-bottom: 0; }
+td code, .mono { font: 13px/1.5 var(--font-mono); }
+.id { font: 600 13px/1 var(--font-mono); color: var(--orange); white-space: nowrap; }
+.tag { display: inline-block; font: 600 11px/1.6 var(--font-mono); padding: 0 6px; border-radius: 4px; background: var(--blue-soft); color: var(--blue); white-space: nowrap; }
+.tag.block { background: var(--stop-soft); color: var(--stop); }
+.date { font: 600 13px/1.4 var(--font-mono); white-space: nowrap; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.box { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 10px; min-width: 0; }
+.box.stop { border-color: var(--stop); background: var(--stop-soft); }
+ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+li { max-width: 70ch; }
+.url { word-break: break-all; }
+.swatches { display: flex; flex-wrap: wrap; gap: 12px; }
+.sw { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.sw i { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); display: block; }
+@media (max-width: 640px) {
+  .weeks { grid-template-columns: 1fr 1fr; }
+  .weeks div:nth-child(2) { border-right: 0; }
+  .weeks div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+}
+</style>
+
+<main>
+  <header class="head">
+    <span class="eyebrow">Задание для дизайнера</span>
+    <h1>Viktorija Autokool: материалы кампании «Eksam enne eksamit»</h1>
+    <div class="meta">
+      <span>Автошкола в Нымме, Таллинн · сайт <a href="https://viktorija-autokool.kursify.ee" target="_blank" rel="noopener">viktorija-autokool.kursify.ee</a></span>
+      <span>Кампания 23.11 – 20.12.2026</span>
+      <span>Языки: эстонский и русский</span>
+    </div>
+    <p class="lede">Кампания ведёт людей бесплатно попробовать 3D-симулятор на сайте школы: проехать экзаменационный участок Мустамяэ или площадку ещё до первого урока. Цель — заявки в январские группы. Нужны рекламные креативы, шаблоны для соцсетей, графика для писем, профилей и Google, плюс съёмка из симулятора.</p>
+  </header>
+
+  <section>
+    <span class="eyebrow">Главное сообщение</span>
+    <div class="slogan">
+      <div><span class="lang">ET</span><b>Eksam enne eksamit. Proovi tasuta.</b><span>Sõida Mustamäe eksamilõik 3D-s läbi juba täna — enne esimest tundi.</span><span class="mono">CTA: Proovi simulaatorit · #EksamEnneEksamit</span></div>
+      <div><span class="lang">RU</span><b>Экзамен до экзамена. Попробуй бесплатно.</b><span>Проедь экзаменационный участок Мустамяэ в 3D уже сегодня — до первого урока.</span><span class="mono">CTA: Попробовать симулятор · #ЭкзаменДоЭкзамена</span></div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Сроки</span>
+    <h2>Когда что нужно</h2>
+    <div class="scroll" style="border:0;background:none">
+      <div class="weeks">
+        <div class="now"><small>Неделя 1 · 23–29.11</small><b>Органика и поиск Google</b><span class="due">Видео и шаблоны соцсетей — до 26.11</span></div>
+        <div><small>Неделя 2 · 30.11–6.12</small><b>Реклама Meta: симулятор</b><span class="due">Креативы 1–3 — до 28.11</span></div>
+        <div><small>Неделя 3 · 7–13.12</small><b>Родители, сертификат</b><span class="due">Креатив 4 — до 4.12</span></div>
+        <div><small>Неделя 4 · 14–20.12</small><b>Ретаргетинг</b><span class="due">Креатив 5 и баннеры — до 11.12</span></div>
+      </div>
+    </div>
+    <p>Профили (обложки, аватары) и Google Business — до 26.11, они нужны уже на первой неделе.</p>
+  </section>
+
+  <section>
+    <span class="eyebrow">Что сделать</span>
+    <h2>Список материалов</h2>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>№</th><th>Материал</th><th>Форматы</th><th>Текст (ET / RU)</th><th>Срок</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="id">A1</td>
+            <td><b>Видео «Где ошибаются чаще всего».</b> Запись симулятора: машина проходит участок Heli – Sõpruse, подпись вопросом.</td>
+            <td>9:16 1080×1920 и 4:5 1080×1350, 15 с, субтитры</td>
+            <td>Kas sa tead, kus eksamil kõige rohkem eksitakse?<br>Знаешь, где на экзамене ошибаются чаще всего?</td>
+            <td class="date">28.11</td>
+          </tr>
+          <tr>
+            <td class="id">A2</td>
+            <td><b>Видео «разделённый экран».</b> Слева ученик нервничает за рулём, справа спокойно едет в симуляторе.</td>
+            <td>9:16, 15 с, субтитры</td>
+            <td>Harjuta enne, kui päriselt sõidad.<br>Тренируйся до того, как сядешь за руль.</td>
+            <td class="date">28.11 <span class="tag block">нужна съёмка</span></td>
+          </tr>
+          <tr>
+            <td class="id">A3</td>
+            <td><b>Карусель «Поместишься?»</b> Парковка между двумя машинами, вид сверху, 3 кадра.</td>
+            <td>1:1 1080×1080 × 3 кадра</td>
+            <td>Kas mahuks? Proovi platsieksamit 3D-s.<br>Поместишься? Проверь себя на площадке в 3D.</td>
+            <td class="date">28.11</td>
+          </tr>
+          <tr>
+            <td class="id">A4</td>
+            <td><b>Родителям: «Подари права».</b> Родитель и подросток с одним телефоном, новогодний фон.</td>
+            <td>4:5 1080×1350 и 1:1 1080×1080</td>
+            <td>Kingi juhiluba. Esimene samm — simulaator.<br>Подари права. Первый шаг — симулятор.</td>
+            <td class="date">4.12 <span class="tag block">ждём сумму</span></td>
+          </tr>
+          <tr>
+            <td class="id">A5</td>
+            <td><b>Ретаргетинг.</b> Карточка результата симулятора и дата январской группы.</td>
+            <td>4:5, 9:16 и набор Google Display (ниже)</td>
+            <td>Simulaator läbitud. Järgmine samm — jaanuari grupp.<br>Симулятор пройден. Следующий шаг — январская группа.</td>
+            <td class="date">11.12 <span class="tag block">ждём дату</span></td>
+          </tr>
+          <tr>
+            <td class="id">A6</td>
+            <td><b>Google Display к A5.</b> Адаптивные баннеры и классические размеры.</td>
+            <td>1200×628, 1200×1200, логотип 1200×1200 и 1200×300; 300×250, 336×280, 300×600, 728×90, 320×100</td>
+            <td>Как в A5</td>
+            <td class="date">11.12</td>
+          </tr>
+          <tr>
+            <td class="id">S1</td>
+            <td><b>Шаблон рубрики «Маршрут за 30 секунд».</b> Инструктор комментирует проезд в симуляторе. Обложка, плашка с именем, стиль субтитров.</td>
+            <td>9:16 (TikTok, Reels), обложка 1080×1920</td>
+            <td>Тексты пишет школа, дизайнер делает шаблон</td>
+            <td class="date">26.11</td>
+          </tr>
+          <tr>
+            <td class="id">S2</td>
+            <td><b>Челлендж «Одна ошибка».</b> Пост и Story: пройди сценарий, пришли скриншот, розыгрыш урока.</td>
+            <td>Пост 1080×1350, Story 1080×1920</td>
+            <td>Üks viga — neli instruktorit. Kas saad hakkama?<br>Одна ошибка — четыре инструктора. Справишься?</td>
+            <td class="date">26.11</td>
+          </tr>
+          <tr>
+            <td class="id">S3</td>
+            <td><b>Шаблоны «Инструктор отвечает» и Stories с опросом.</b> Вопрос на обложке, ответ в видео.</td>
+            <td>9:16, 1080×1920</td>
+            <td>Вопросы из FAQ сайта</td>
+            <td class="date">26.11</td>
+          </tr>
+          <tr>
+            <td class="id">P1</td>
+            <td><b>Профили.</b> Обложка Facebook, аватары Instagram и TikTok (логотип), обложки Highlights.</td>
+            <td>FB 1640×624 (важное в центре 820×312), аватар 320×320, Highlights 1080×1920</td>
+            <td>—</td>
+            <td class="date">26.11</td>
+          </tr>
+          <tr>
+            <td class="id">P2</td>
+            <td><b>Google Business.</b> Пост «Uus: 3D-simulaator» и обложка профиля.</td>
+            <td>Пост 1200×900, обложка 1024×576</td>
+            <td>Uus: sõida eksamilõik 3D-s läbi juba täna<br>Новое: проедь экзаменационный участок в 3D</td>
+            <td class="date">26.11</td>
+          </tr>
+          <tr>
+            <td class="id">E1</td>
+            <td><b>Письма.</b> Шапки для 4 рассылок и 3 писем цепочки после симулятора, плюс карточка «Твой результат».</td>
+            <td>Ширина 600 px (@2x 1200), JPG до 200 КБ</td>
+            <td>Темы — в плане кампании</td>
+            <td class="date">Письмо 1 — 26.11, остальные по неделям</td>
+          </tr>
+          <tr>
+            <td class="id">G1</td>
+            <td><b>Подарочный сертификат.</b> Платформа сама собирает PDF A5 с названием и цветом школы. Нужно проверить его и сделать промо-картинку к A4.</td>
+            <td>Проверка PDF, промо 4:5</td>
+            <td>Kingi juhiluba / Подари права</td>
+            <td class="date">4.12</td>
+          </tr>
+          <tr>
+            <td class="id">W1</td>
+            <td><b>Фото для сайта.</b> Настоящее фото машины, инструктора или урока в рамку hero. Сейчас там временно стоит логотип.</td>
+            <td>От 1600×1000, JPG</td>
+            <td>—</td>
+            <td class="date">30.11 <span class="tag block">нужна съёмка</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>A — платная реклама, S — соцсети, P — профили, E — письма, G — сертификат, W — сайт. Каждый материал нужен отдельно на эстонском и на русском: в одном креативе два языка не смешиваем.</p>
+  </section>
+
+  <section>
+    <span class="eyebrow">Правила</span>
+    <h2>Что можно и что нельзя</h2>
+    <div class="cols">
+      <div class="box stop">
+        <h3>Нельзя</h3>
+        <ul>
+          <li>«Гарантия сдачи», «лучший процент в Таллинне», «suurim läbivus».</li>
+          <li>Проценты сдачи без источника. Если цифры нужны — только данные Transpordiamet: теория 80%, вождение 60% с первой попытки, с подписью «Transpordiamet».</li>
+          <li>Выдуманные отзывы и шаблонные отзывы со старого сайта школы.</li>
+          <li>Чужие лица и номера машин без размытия. Инструктора в кадре — только с его согласия.</li>
+          <li>«90% ошибаются здесь» и подобное, пока нет цифры из статистики симулятора.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>Нужно</h3>
+        <ul>
+          <li>Субтитры на каждом видео.</li>
+          <li>В вертикальных форматах текст и CTA держать вне верхних 14% и нижних 20% кадра: там интерфейс TikTok и Instagram.</li>
+          <li>Одна мысль на креатив, крупный текст, короткий CTA.</li>
+          <li>Логотип школы в углу, Kursify в рекламе не упоминаем.</li>
+          <li>Подробные размеры и безопасные зоны — в <a href="https://claude.ai/code/artifact/4720a78d-bd01-4860-8476-5a5dff827464" target="_blank" rel="noopener">спецификации баннеров Kursify</a>.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Изображения</span>
+    <h2>Симулятор, живые люди, генерация</h2>
+    <div class="cols">
+      <div class="box">
+        <h3>Кадры из симулятора — там, где речь о симуляторе</h3>
+        <p>Обязательно в A1, A3, A5, S1, S2 и в пол-экрана A2: это главная идея кампании. В остальных материалах (A4, P1, P2, E1, W1) можно и лучше использовать живые фото.</p>
+      </div>
+      <div class="box">
+        <h3>Живые люди — да, с согласием</h3>
+        <ul>
+          <li>Фото инструкторов школы (Ivan, Andrei, Igor, Maksim) использовать можно и нужно: настоящие лица дают доверие.</li>
+          <li>Фото с сайта — это не согласие на рекламу. Перед использованием школа берёт у каждого письменное «да».</li>
+          <li>Фото с сайта маленькие. Для рекламы попросить оригиналы или переснять.</li>
+          <li>Номера машин и чужие лица на фоне размыть.</li>
+        </ul>
+      </div>
+      <div class="box stop">
+        <h3>Сгенерированные люди — не как учеников и инструкторов</h3>
+        <ul>
+          <li>Нельзя выдавать сгенерированного человека за ученика, выпускника или инструктора школы. Это то же самое, что выдуманный отзыв.</li>
+          <li>Для сцен без конкретного человека (родитель и подросток в A4, «нервный ученик» в A2) лучше лицензионный сток или съёмка с согласием.</li>
+          <li>Генерацию можно использовать для фона, декора (новогодние элементы), иконок. Реалистичный ИИ-контент с людьми платформы просят помечать.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Исходники</span>
+    <h2>Что есть у дизайнера</h2>
+    <div class="cols">
+      <div class="box">
+        <h3>Бренд</h3>
+        <p>Логотип: <a class="url" href="https://cdn.sanity.io/images/kbhd1la7/production/c15cbf09f172a97ab2d09b730a98af7a372987de-1024x1024.jpg" target="_blank" rel="noopener">JPG 1024×1024</a>. Векторного логотипа нет — попросить у школы.</p>
+        <div class="swatches">
+          <span class="sw"><i style="background:#070b18"></i><span class="mono">#070B18</span> фон сайта</span>
+          <span class="sw"><i style="background:#1976D2"></i><span class="mono">#1976D2</span> акцент школы</span>
+          <span class="sw"><i style="background:#F97316"></i><span class="mono">#F97316</span> кнопки записи</span>
+        </div>
+        <p>Стиль — как на сайте: тёмный фон, синий акцент, оранжевые кнопки.</p>
+      </div>
+      <div class="box">
+        <h3>Шрифт</h3>
+        <p>Фирменного шрифта у школы нет: сайт показывает системный шрифт устройства (Segoe UI на Windows, San Francisco на iPhone). Во всех материалах используем <b>Inter</b> (бесплатно, <a href="https://fonts.google.com/specimen/Inter" target="_blank" rel="noopener">Google Fonts</a>): он ближе всего к сайту и полностью поддерживает кириллицу и эстонские õ, ä, ö, ü, š, ž.</p>
+        <ul>
+          <li>Заголовки: Inter ExtraBold 800, как заголовки на сайте.</li>
+          <li>Подзаголовки и CTA: Inter SemiBold 600.</li>
+          <li>Текст и субтитры: Inter Medium 500.</li>
+          <li>Других шрифтов не добавлять.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>Съёмка из симулятора</h3>
+        <p>Симулятор работает в браузере, записывать можно с экрана, без съёмочной группы.</p>
+        <ul>
+          <li>С улицы Jaama у школы: <span class="mono url">viktorija-autokool.kursify.ee/harjuta</span></li>
+          <li>Кинематографичный режим без интерфейса: <span class="mono url">kursify.ee/simulaator/demo?mode=mustamae&amp;demo=1&amp;hud=0&amp;tod=golden</span>, облёт камеры — добавить <span class="mono">&amp;tour=1</span>. Время суток: <span class="mono">tod=day / golden / twilight / night</span>.</li>
+          <li>Записывать в 1080p, затем резать на 9:16 и 4:5.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>Ссылки в креативах</h3>
+        <p>Пока домен школы не подключён, все ссылки ведут на <span class="mono url">viktorija-autokool.kursify.ee/harjuta</span>, русские — на <span class="mono url">/ru/harjuta</span>. В каждой ссылке UTM: <span class="mono url">utm_source=instagram&amp;utm_medium=paid&amp;utm_campaign=eksam_enne_eksamit&amp;utm_content=A1</span>.</p>
+      </div>
+      <div class="box">
+        <h3>Сдача работ</h3>
+        <ul>
+          <li>Имена файлов: <span class="mono">VIK_A1_ET_9x16.mp4</span>, <span class="mono">VIK_S2_RU_story.png</span>.</li>
+          <li>Видео MP4 (H.264), до 30 МБ; картинки PNG или JPG.</li>
+          <li>Исходники (Figma или проект монтажа) — в ту же папку.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Открытые вопросы</span>
+    <h2>Что нужно от школы, чтобы закончить</h2>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Вопрос</th><th>Для чего</th><th>Нужно к</th></tr></thead>
+        <tbody>
+          <tr><td>Дата старта январской группы B и число мест. В системе сейчас нет ни одной группы на январь.</td><td>A5, A6, письмо 4</td><td class="date">4.12</td></tr>
+          <tr><td>Подарочный сертификат: сумма, срок действия, как оплачивается.</td><td>A4, G1, письмо 3</td><td class="date">1.12</td></tr>
+          <tr><td>Оффер: бесплатный разбор результата с инструктором или скидка (сколько).</td><td>A1–A3, A5</td><td class="date">27.11</td></tr>
+          <tr><td>Кто из инструкторов снимается и даёт согласие.</td><td>A2, S1, S3, W1</td><td class="date">26.11</td></tr>
+          <tr><td>Ученик для сцены «нервничает за рулём», с письменным согласием.</td><td>A2</td><td class="date">26.11</td></tr>
+          <tr><td>Векторный логотип.</td><td>P1, A6</td><td class="date">26.11</td></tr>
+          <tr><td>Настоящие отзывы выпускников с согласием на публикацию.</td><td>Неделя 4</td><td class="date">11.12</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+</body></html>
